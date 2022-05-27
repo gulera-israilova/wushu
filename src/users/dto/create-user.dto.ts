@@ -1,5 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
 import {RoleEnum} from "../enum/role.enum";
+import {IsEmpty} from "class-validator";
 
 export class CreateUserDto {
     @ApiProperty({example:'Elon Musk',description:'Username',required:true})
@@ -23,10 +24,10 @@ export class CreateUserDto {
     @ApiProperty({example:'trainer@gmail.com',description:'User email',required:true})
     email: string
 
-    @ApiProperty({example:'password',description:'User password',required:false})
+    @IsEmpty()
     password: string
 
-    @ApiProperty({example:'0',description:'Account activation status'})
+    @IsEmpty()
     status: boolean
 
 }

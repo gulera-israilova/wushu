@@ -17,7 +17,7 @@ export class UpdateUserDto {
     @ApiProperty({example:'5',description:'Experience in years',required:false})
     experience: number
 
-    @ApiProperty({example:'trainer/judge/secretary',description:'User role',required:false})
+    @ApiProperty({example:'trainer',description:'User role:trainer/judge/secretary',required:false})
     role: RoleEnum
 
     @ApiProperty({example:'trainer@gmail.com',description:'User email',required:false})
@@ -26,6 +26,6 @@ export class UpdateUserDto {
     @ApiProperty({example:'password',description:'User password',required:false})
     password: string
 
-    @ApiProperty({example:'1',description:'Account activation status: 0/1'})
+    @ApiProperty({example:'true',description:'Account activation status: false/true',required:false})
     status: boolean
 }

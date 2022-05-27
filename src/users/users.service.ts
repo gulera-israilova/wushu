@@ -2,7 +2,6 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {UserEntity} from "./entity/user.entity";
 import {Repository} from "typeorm";
-import {CreateUserDto} from "./dto/create-user.dto";
 import {UpdateUserDto} from "./dto/update-user.dto";
 
 @Injectable()
@@ -13,15 +12,12 @@ export class UsersService {
     ) {}
 
     async createUser(createUserDto):Promise<UserEntity>{
-          try {
-            let user = await this.userRepository.findOne({where: {email: createUserDto.email}})
-            if (user) {
-                throw new HttpException("User with this email already exists", HttpStatus.BAD_REQUEST)
-           }
-            return await this.userRepository.save(createUserDto)
-           } catch (e){
-               throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
-          }
+        let user = await this.userRepository.findOne({where: {email: createUserDto.email}})
+        if (user) {
+            throw new HttpException("User with this email already exists", HttpStatus.BAD_REQUEST)
+        }
+        createUserDto.status = false
+        return await this.userRepository.save(createUserDto)
     }
 
     async findAll(page:number,limit:number) : Promise<any> {
@@ -40,18 +36,12 @@ export class UsersService {
     }
 
     async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
-        try {
-            let user = await this.userRepository.findOne(id)
-            if (!user) {
-                throw new HttpException("No user for this id", HttpStatus.BAD_REQUEST)
-            }
-
-            Object.assign(user, updateUserDto)
-
-            return await this.userRepository.save(user)
-        } catch (e){
-            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+        let user = await this.userRepository.findOne(id)
+        if (!user) {
+            throw new HttpException("No user for this id", HttpStatus.BAD_REQUEST)
         }
+        Object.assign(user, updateUserDto)
+        return await this.userRepository.save(user)
     }
 
     async destroy(id: number): Promise<void> {
@@ -61,5 +51,4 @@ export class UsersService {
         }
         await this.userRepository.delete(id);
     }
-
 }

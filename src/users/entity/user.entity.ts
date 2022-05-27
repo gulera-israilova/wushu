@@ -25,11 +25,11 @@ export class UserEntity{
     @Column({type: 'varchar', nullable: true})
     category: string
 
-    @ApiProperty({example:'5 years',description:'Experience in years'})
+    @ApiProperty({example:'5',description:'Experience in years'})
     @Column({type: 'int', nullable: true})
     experience: number
 
-    @ApiProperty({example:'trainer/judge/secretary',description:'User role'})
+    @ApiProperty({example:'trainer',description:'User role:trainer/judge/secretary'})
     @Column({type: 'enum', enum: RoleEnum, default: RoleEnum.TRAINER})
     role: RoleEnum
 
@@ -41,7 +41,7 @@ export class UserEntity{
     @Column({type: 'varchar', nullable: true})
     password: string
 
-    @ApiProperty({example:'0/1',description:'Account activation status'})
+    @ApiProperty({example:'false',description:'Account activation status:false/true'})
     @Column({type: 'boolean', nullable: true})
     status: boolean
 }
