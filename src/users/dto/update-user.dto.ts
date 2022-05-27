@@ -26,6 +26,6 @@ export class UpdateUserDto {
     @ApiProperty({example:'password',description:'User password',required:false})
     password: string
 
-    @ApiProperty({example:'0/1',description:'Account activation status'})
+    @ApiProperty({example:'1',description:'Account activation status: 0/1'})
     status: boolean
 }

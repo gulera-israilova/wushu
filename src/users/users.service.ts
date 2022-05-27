@@ -13,15 +13,15 @@ export class UsersService {
     ) {}
 
     async createUser(createUserDto):Promise<UserEntity>{
-      //  try {
+          try {
             let user = await this.userRepository.findOne({where: {email: createUserDto.email}})
             if (user) {
                 throw new HttpException("User with this email already exists", HttpStatus.BAD_REQUEST)
            }
             return await this.userRepository.save(createUserDto)
-        //} catch (e){
-          //  throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
-        //}
+           } catch (e){
+               throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+          }
     }
 
     async findAll(page:number,limit:number) : Promise<any> {
@@ -61,6 +61,5 @@ export class UsersService {
         }
         await this.userRepository.delete(id);
     }
-
 
 }

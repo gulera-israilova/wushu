@@ -1,5 +1,4 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {Column} from "typeorm";
 import {RoleEnum} from "../enum/role.enum";
 
 export class CreateUserDto {

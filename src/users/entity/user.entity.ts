@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 import {RoleEnum} from "../enum/role.enum";
 @Entity({
     name: 'user'
@@ -44,6 +44,5 @@ export class UserEntity{
     @ApiProperty({example:'0/1',description:'Account activation status'})
     @Column({type: 'boolean', nullable: true})
     status: boolean
-
 }
 
