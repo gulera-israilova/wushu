@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {UserEntity} from "./entity/user.entity";
 import {Repository} from "typeorm";
@@ -17,7 +17,11 @@ export class UsersService {
             throw new HttpException("User with this email already exists", HttpStatus.BAD_REQUEST)
         }
         createUserDto.status = false
-        return await this.userRepository.save(createUserDto)
+        try {
+            return await this.userRepository.save(createUserDto)
+        } catch (e){
+            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+        }
     }
 
     async findAll(page:number,limit:number) : Promise<any> {
@@ -32,7 +36,11 @@ export class UsersService {
     }
 
     async getById(id: number): Promise<UserEntity> {
-        return this.userRepository.findOne(id);
+        let user = await this.userRepository.findOne(id)
+        if (!user) {
+            throw new HttpException("No user for this id", HttpStatus.BAD_REQUEST)
+        }
+        return this.userRepository.findOne(id)
     }
 
     async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
@@ -40,8 +48,12 @@ export class UsersService {
         if (!user) {
             throw new HttpException("No user for this id", HttpStatus.BAD_REQUEST)
         }
-        Object.assign(user, updateUserDto)
-        return await this.userRepository.save(user)
+        try {
+            Object.assign(user, updateUserDto)
+            return await this.userRepository.save(user)
+        } catch (e){
+            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+        }
     }
 
     async destroy(id: number): Promise<void> {
@@ -49,6 +61,6 @@ export class UsersService {
         if(!user){
             throw new HttpException("No user for this id", HttpStatus.BAD_REQUEST)
         }
-        await this.userRepository.delete(id);
+        await this.userRepository.delete(id)
     }
 }
