@@ -19,8 +19,8 @@ export class UsersController {
         type: UserEntity
     })
     @Post()
-    createEmployee(@Body() createUserDto: CreateUserDto) {
-        return this.usersService.createUser(createUserDto)
+    create(@Body() createUserDto: CreateUserDto) {
+        return this.usersService.create(createUserDto)
     }
 
     @ApiOperation({summary: 'Get a list of all users'})
@@ -32,11 +32,11 @@ export class UsersController {
         type: [UserEntity],
     })
     @Get()
-    async findAll(
+    async get(
         @Query('page') page: number,
         @Query('limit') limit: number
     ) {
-        return this.usersService.findAll(page,limit)
+        return this.usersService.get(page,limit)
     }
 
     @ApiOperation({summary: 'Get user by id'})

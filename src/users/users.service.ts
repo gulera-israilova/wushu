@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {UserEntity} from "./entity/user.entity";
 import {Repository} from "typeorm";
@@ -11,7 +11,7 @@ export class UsersService {
         private userRepository: Repository<UserEntity>
     ) {}
 
-    async createUser(createUserDto):Promise<UserEntity>{
+    async create(createUserDto):Promise<UserEntity>{
         let user = await this.userRepository.findOne({where: {email: createUserDto.email}})
         if (user) {
             throw new HttpException("User with this email already exists", HttpStatus.BAD_REQUEST)
@@ -24,7 +24,7 @@ export class UsersService {
         }
     }
 
-    async findAll(page:number,limit:number) : Promise<any> {
+    async get(page:number,limit:number) : Promise<any> {
         const take = limit || 10
         const skip = page * limit || 0
         const [users,total] = await this.userRepository.findAndCount({
@@ -38,7 +38,7 @@ export class UsersService {
     async getById(id: number): Promise<UserEntity> {
         let user = await this.userRepository.findOne(id)
         if (!user) {
-            throw new HttpException("No user for this id", HttpStatus.BAD_REQUEST)
+            throw new NotFoundException("No user for this id")
         }
         return this.userRepository.findOne(id)
     }
@@ -58,9 +58,13 @@ export class UsersService {
 
     async destroy(id: number): Promise<void> {
         let user = await this.userRepository.findOne(id)
-        if(!user){
-            throw new HttpException("No user for this id", HttpStatus.BAD_REQUEST)
+        if (!user) {
+            throw new NotFoundException("No user for this id")
         }
-        await this.userRepository.delete(id)
+        try {
+            await this.userRepository.delete(id)
+        } catch (e) {
+            throw new BadGatewayException('Deletion didn\'t happen')
+        }
     }
 }
