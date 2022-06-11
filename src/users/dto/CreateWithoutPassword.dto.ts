@@ -17,4 +17,5 @@ export class CreateWithoutPasswordDto {
   @ApiProperty()
   email: string;
   status: number;
+  tmp: string;
 }

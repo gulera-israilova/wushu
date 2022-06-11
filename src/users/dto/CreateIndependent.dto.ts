@@ -19,6 +19,5 @@ export class CreateIndependentDto {
   email: string;
   @ApiProperty()
   password: string;
-  @ApiProperty()
   status: number;
 }

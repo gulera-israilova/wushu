@@ -14,6 +14,10 @@ import { RoleEnum } from './enum/role.enum';
 import { MailService } from '../services/mail/mail.service';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import * as bcrypt from 'bcryptjs';
+import * as generator from 'generate-password';
+
+import { AuthService } from '../auth/auth.service';
+import { CheckDto } from './dto/check.dto';
 @Injectable()
 export class UsersService {
   constructor(
@@ -39,9 +43,7 @@ export class UsersService {
     }
   }
 
-  async createWithoutPassword(
-      dto: CreateWithoutPasswordDto,
-  ): Promise<CreateWithoutPasswordDto> {
+  async createWithoutPassword(dto: CreateWithoutPasswordDto) {
     const exist = await this.userRepository.findOne({
       where: { email: dto.email },
     });
@@ -52,19 +54,38 @@ export class UsersService {
     if (dto.role === RoleEnum.ADMIN)
       throw new BadRequestException('Администратора нельзя регестрировать');
     if (!Object.values(RoleEnum).includes(dto.role))
-      throw new BadRequestException('Роль была введена неверно');
+      throw new BadRequestException('Роль был введен неверно');
     dto.status = 2;
+    const tmp = await this.genPass();
+    dto.tmp = await this.hashPass(tmp);
     try {
-      await this.mailService.sendMail(
+      const register = await this.userRepository.save(dto);
+      return await this.mailService.sendMail(
           dto.email,
-          `Создайте пароль по этой ссылке 'https://www.google.com/'`,
-      ); //Продумать логику работы с паролем,отправка писем работает,чтобы было понятно фронту и бэку только
-      return await this.userRepository.save(dto);
+          `Создайте пароль по этой ссылке https://www.google.com/${register.id}M${dto.tmp}/`,
+      ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
     } catch (e) {
       Logger.error(e);
       throw new BadRequestException(e.message);
     }
   }
+
+  async checkUser(dto: CheckDto) {
+    const user = await this.userRepository.findOne(dto.id);
+    if (!user) throw new BadRequestException('Пользователь не найден');
+    const mathces = await bcrypt.compare(dto.tmp, user.tmp);
+    if (!mathces) throw new BadRequestException('Пароль введен неверно');
+    return true;
+  }
+
+  async addPass(id: number, password: string) {
+    const user: UserEntity = await this.userRepository.findOne(id);
+    if (!user) throw new BadRequestException('Пользователь не найден');
+    user.tmp = null;
+    user.password = await this.hashPass(password);
+    return await this.userRepository.save(user);
+  }
+
   async createIndependent(dto: CreateIndependentDto) {
     const exist = await this.userRepository.findOne({
       where: { email: dto.email },
@@ -77,7 +98,6 @@ export class UsersService {
       throw new BadRequestException('Может быть зарегестрирован только Тренер');
     dto.status = 0;
     dto.password = await this.hashPass(dto.password);
-    console.log(dto);
     try {
       await this.mailService.sendMail(
           dto.email,
@@ -88,6 +108,11 @@ export class UsersService {
       Logger.error(e);
       throw new BadRequestException(e.message);
     }
+  }
+  async updateStatus1(id: number) {
+    const user = await this.userRepository.findOne(id);
+    user.status = 1;
+    return await this.userRepository.save(user);
   }
   async get(page: number, limit: number): Promise<any> {
     const take = limit || 10;
@@ -101,7 +126,21 @@ export class UsersService {
       total: total,
     };
   }
-
+  async forgotPassword(email: string) {
+    const user = await this.userRepository.findOne({ email: email });
+    if(!user)throw new BadRequestException('This email is not registered')
+    const tmp = await this.genPass();
+    user.tmp = await this.hashPass(tmp);
+    try {
+      return await this.mailService.sendMail(
+          email,
+          `Создайте пароль по этой ссылке https://www.google.com/${user.id}M${user.tmp}/`,
+      ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
+    } catch (e) {
+      Logger.error(e);
+      throw new BadRequestException(e.message);
+    }
+  }
   async getById(id: number): Promise<UserEntity> {
     let user = await this.userRepository.findOne(id);
     if (!user) {
@@ -143,5 +182,8 @@ export class UsersService {
   private async hashPass(password) {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(password, salt);
+  }
+  private async genPass() {
+    return generator.generate({ length: 12, numbers: true });
   }
 }
