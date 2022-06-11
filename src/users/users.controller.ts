@@ -29,17 +29,6 @@ import { CheckDto } from './dto/check.dto';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'Create user' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiResponse({
-    status: 201,
-    description: 'Successfully created user will be returned',
-    type: UserEntity,
-  })
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
   @ApiOperation({ summary: `admin registers smb` })
   @ApiResponse({
     status: 201,
