@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { ClubsModule } from './clubs/clubs.module';
 
 
+
 @Module({
   imports: [TypeOrmModule.forRoot(DB_CONFIG), UsersModule, ClubsModule]
 })

@@ -32,7 +32,7 @@ export class ClubsService {
             newClub.name = createClubDto.name
             newClub.trainers = trainers
             return await this.clubRepository.save(newClub)
-        } catch (e){
+        } catch (e) {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
         }
     }

@@ -14,6 +14,7 @@ export class ClubEntity{
     @Column({type: 'varchar', nullable: false,unique:true})
     name: string
 
+    @ApiProperty({type: 'array',  items: { type: 'number'}})
     @ManyToMany(() => UserEntity,{eager:true})
     @JoinTable()
     trainers: UserEntity[]
