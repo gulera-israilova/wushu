@@ -73,6 +73,7 @@ export class UsersController {
   }
   @ApiOperation({summary:`Make confirmed status`})
   @Patch('/update-registered-status/:id')
+
   async udpateStatus(id: number) {
     await this.usersService.updateStatus1(id);
   }
