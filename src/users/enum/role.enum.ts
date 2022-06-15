@@ -3,5 +3,4 @@ export enum RoleEnum {
     TRAINER = 'trainer',
     SECRETARY = 'secretary',
     JUDGE = 'judge'
-
 }

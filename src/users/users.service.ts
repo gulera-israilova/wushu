@@ -25,23 +25,6 @@ export class UsersService {
       private readonly mailService: MailService,
   ) {}
 
-  async create(createUserDto): Promise<UserEntity> {
-    let user = await this.userRepository.findOne({
-      where: { email: createUserDto.email },
-    });
-    if (user) {
-      throw new HttpException(
-          'User with this email already exists',
-          HttpStatus.BAD_REQUEST,
-      );
-    }
-    createUserDto.status = false;
-    try {
-      return await this.userRepository.save(createUserDto);
-    } catch (e) {
-      throw new HttpException('Incorrect input data', HttpStatus.BAD_REQUEST);
-    }
-  }
 
   async createWithoutPassword(dto: CreateWithoutPasswordDto) {
     const exist = await this.userRepository.findOne({
