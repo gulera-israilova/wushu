@@ -3,11 +3,8 @@ import {SportsmenService} from "./sportsmen.service";
 import {ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {CreateSportsmanDto} from "./dto/create-sportsman.dto";
 import {FileInterceptor} from "@nestjs/platform-express";
-import {ClubEntity} from "../clubs/entity/club.entity";
-import {UpdateClubDto} from "../clubs/dto/update-club.dto";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
 import {filter} from "../utils/file-filter";
-
 
 @Controller('sportsmen')
 @ApiTags('sportsmen')
@@ -38,13 +35,31 @@ export class SportsmenController {
         type: [CreateSportsmanDto],
     })
 
+    @ApiOperation({summary: 'Get a list of all sportsmen'})
+    @ApiResponse({
+        status: 201,
+        description: 'List of sportsmen returned successfully',
+        type: [CreateSportsmanDto],
+    })
     @Get()
     async get() {
         return this.sportsmenService.get()
     }
 
+    @ApiOperation({summary: 'Get sportsman by id'})
+    @ApiParam({name: 'id', description: 'Sportsman id'})
+    @ApiResponse({
+        status: 200,
+        description: 'Sportsman returned successfully',
+        type: CreateSportsmanDto
+    })
+    @Get('/getById/:id')
+    async getById(@Param('id') id: number) {
+        return this.sportsmenService.getById(id);
+    }
+
     @Patch(':id')
-    @ApiOperation({summary: 'Update sportsmen'})
+    @ApiOperation({summary: 'Update sportsman'})
     @ApiConsumes('multipart/form-data')
     @ApiParam({name: 'id', description: 'Identification number' })
     @ApiBody({type: UpdateSportsmanDto})

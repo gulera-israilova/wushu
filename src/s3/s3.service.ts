@@ -18,8 +18,8 @@ export class S3Service {
     }
 
     async uploadNews(file) {
-        const { originalName } = file;
-        return await this.s3_upload(file.buffer, this.AWS_S3_BUCKET_NEWS, originalName, file.mimetype);
+        const { originalname } = file;
+        return await this.s3_upload(file.buffer, this.AWS_S3_BUCKET_NEWS, originalname, file.mimetype);
     }
 
     async s3_upload(file, bucket, name, mimetype) {

@@ -4,6 +4,7 @@ import {S3Service} from "../s3/s3.service";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
+import {NewsEntity} from "../news/entity/news.entity";
 
 
 @Injectable()
@@ -42,6 +43,14 @@ export class SportsmenService {
         return await this.sportsmanRepository.find()
     }
 
+    async getById(id: number): Promise<SportsmanEntity> {
+        let sportsman = await this.sportsmanRepository.findOne(id)
+        if (!sportsman) {
+            throw new NotFoundException("No sportsman for this id")
+        }
+        return this.sportsmanRepository.findOne(id)
+    }
+
     async update(id: number, updateSportsmanDto: UpdateSportsmanDto,reference): Promise<SportsmanEntity> {
         let sportsman = await this.sportsmanRepository.findOne(id)
         if (!sportsman) {
@@ -64,7 +73,7 @@ export class SportsmenService {
 
     async destroy(id: number): Promise<void> {
         const sportsman = await this.sportsmanRepository.findOne({id})
-        if (!sportsman) {throw new NotFoundException("No club for this id")}
+        if (!sportsman) {throw new NotFoundException("No sportsman for this id")}
         try{
             await this.s3Service.deleteFile(sportsman.referenceKey)
             await this.sportsmanRepository.delete(sportsman)
