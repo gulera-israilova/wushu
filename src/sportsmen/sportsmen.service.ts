@@ -4,7 +4,6 @@ import {S3Service} from "../s3/s3.service";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
-import {NewsEntity} from "../news/entity/news.entity";
 
 
 @Injectable()
@@ -36,7 +35,7 @@ export class SportsmenService {
                 throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
             }
 
-        return  await this.sportsmanRepository.save(createSportsmanDto)
+        return  await this.sportsmanRepository.save(createSportsmanDto);
     }
 
     async get(): Promise<SportsmanEntity[]> {
@@ -48,7 +47,15 @@ export class SportsmenService {
         if (!sportsman) {
             throw new NotFoundException("No sportsman for this id")
         }
-        return this.sportsmanRepository.findOne(id)
+        return sportsman;
+    }
+
+    async getByClub(id: number): Promise<SportsmanEntity[]> {
+        return await this.sportsmanRepository.find({
+            where: {
+                club: id,
+            }
+        });
     }
 
     async update(id: number, updateSportsmanDto: UpdateSportsmanDto,reference): Promise<SportsmanEntity> {
@@ -67,19 +74,20 @@ export class SportsmenService {
             Object.assign(sportsman, updateSportsmanDto)
             return await this.sportsmanRepository.save(sportsman)
         } catch (e) {
-            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }
     }
 
     async destroy(id: number): Promise<void> {
-        const sportsman = await this.sportsmanRepository.findOne({id})
+        const sportsman = await this.sportsmanRepository.findOne(id)
         if (!sportsman) {throw new NotFoundException("No sportsman for this id")}
         try{
             await this.s3Service.deleteFile(sportsman.referenceKey)
             await this.sportsmanRepository.delete(sportsman)
 
         } catch (e){
-            throw new BadGatewayException('Deletion didn\'t happen')}
+            throw new BadGatewayException('Deletion didn\'t happen');
+        }
     }
 
     async checkSportsmanDto(createSportsmanDto: any) {
@@ -95,9 +103,8 @@ export class SportsmenService {
         if (typeof createSportsmanDto.power === 'string' && createSportsmanDto.power !== '') createSportsmanDto.power = +createSportsmanDto.power
         if (typeof createSportsmanDto.speed === 'string' && createSportsmanDto.speed !== '') createSportsmanDto.speed = +createSportsmanDto.speed
         if (typeof createSportsmanDto.endurance === 'string' && createSportsmanDto.endurance !== '') createSportsmanDto.endurance = +createSportsmanDto.endurance
-        return createSportsmanDto
+        return createSportsmanDto;
         }
-
     }
 
 

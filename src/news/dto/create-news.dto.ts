@@ -1,5 +1,4 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {Column} from "typeorm";
 import {IsEmpty} from "class-validator";
 
 export class CreateNewsDto {

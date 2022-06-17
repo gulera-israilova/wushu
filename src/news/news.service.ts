@@ -1,6 +1,6 @@
 import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
+import {getConnection, Repository} from "typeorm";
 import {S3Service} from "../s3/s3.service";
 import {NewsEntity} from "./entity/news.entity";
 import {UpdateNewsDto} from "./dto/update-news.dto";
@@ -69,11 +69,17 @@ export class NewsService {
     async destroy(id: number): Promise<void> {
         const news = await this.newsRepository.findOne({id})
         if (!news) {throw new NotFoundException("No news for this id")}
-       try {
-            await this.s3Service.deleteFile(news.imageKey)
-            await this.newsRepository.delete(news)
+           try {
+                await this.s3Service.deleteFile(news.imageKey)
+                await getConnection()
+                   .createQueryBuilder()
+                   .delete()
+                   .from(NewsEntity)
+                   .where("id = :id", { id: id })
+                   .execute();
 
-        } catch (e){
-            throw new BadGatewayException('Deletion didn\'t happen')}
-    }
-}
+               } catch (e){
+                throw new BadGatewayException('Deletion didn\'t happen')
+            }
+        }
+ }

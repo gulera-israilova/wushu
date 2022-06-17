@@ -17,23 +17,17 @@ export class SportsmenController {
     @ApiResponse({
         status: 201,
         description: 'Successfully created employee will be returned',
-        type: CreateSportsmanDto
+        type: CreateSportsmanDto,
     })
     @UseInterceptors(FileInterceptor('reference', {
-        fileFilter: filter
+        fileFilter: filter,
     }))
 
     @Post()
-    create(@Body() createSportsmanDto: CreateSportsmanDto,@UploadedFile() reference: Express.Multer.File) {
-        return this.sportsmenService.create(createSportsmanDto,reference)
+    create(@Body() createSportsmanDto: CreateSportsmanDto,
+           @UploadedFile() reference: Express.Multer.File) {
+        return this.sportsmenService.create(createSportsmanDto,reference);
     }
-
-    @ApiOperation({summary: 'Get a list of all sportsmen'})
-    @ApiResponse({
-        status: 201,
-        description: 'List of sportsmen returned successfully',
-        type: [CreateSportsmanDto],
-    })
 
     @ApiOperation({summary: 'Get a list of all sportsmen'})
     @ApiResponse({
@@ -43,7 +37,7 @@ export class SportsmenController {
     })
     @Get()
     async get() {
-        return this.sportsmenService.get()
+        return this.sportsmenService.get();
     }
 
     @ApiOperation({summary: 'Get sportsman by id'})
@@ -51,11 +45,23 @@ export class SportsmenController {
     @ApiResponse({
         status: 200,
         description: 'Sportsman returned successfully',
-        type: CreateSportsmanDto
+        type: CreateSportsmanDto,
     })
     @Get('/getById/:id')
     async getById(@Param('id') id: number) {
         return this.sportsmenService.getById(id);
+    }
+
+    @ApiOperation({summary: 'Get sportsmen by club'})
+    @ApiParam({name: 'id', description: 'Club id'})
+    @ApiResponse({
+        status: 200,
+        description: 'Sportsmen returned successfully',
+        type: CreateSportsmanDto,
+    })
+    @Get('/getById/:id')
+    async getByClub(@Param('id') id: number) {
+        return this.sportsmenService.getByClub(id);
     }
 
     @Patch(':id')
@@ -65,13 +71,14 @@ export class SportsmenController {
     @ApiBody({type: UpdateSportsmanDto})
     @ApiResponse({
         status: 201,
-        description: 'Successfully updated club will be returned',
+        description: 'Successfully updated sportsman will be returned',
         type: [UpdateSportsmanDto],
     })
     @UseInterceptors(FileInterceptor('reference', {
-        fileFilter: filter
+        fileFilter: filter,
     }))
-    async update(@Param('id') id: number, @Body() updateSportsmanDto: UpdateSportsmanDto,@UploadedFile() reference: Express.Multer.File) {
+    async update(@Param('id') id: number, @Body() updateSportsmanDto: UpdateSportsmanDto,
+                 @UploadedFile() reference: Express.Multer.File) {
         return await this.sportsmenService.update(id, updateSportsmanDto,reference);
     }
 
@@ -81,6 +88,6 @@ export class SportsmenController {
     @ApiResponse({status: 404, description: 'Sportsman not found'})
     @Delete(':id')
     destroy(@Param('id') id: number) {
-        return this.sportsmenService.destroy(id)
+        return this.sportsmenService.destroy(id);
     }
 }
