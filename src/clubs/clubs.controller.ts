@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
 import {ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {ClubsService} from "./clubs.service";
 import {CreateClubDto} from "./dto/create-club.dto";
@@ -15,11 +15,11 @@ export class ClubsController {
     @ApiResponse({
         status: 200,
         description: 'Successfully created club will be returned',
-        type: ClubEntity
+        type: ClubEntity,
     })
     @Post()
     create(@Body() createClubDto:CreateClubDto){
-        return this.clubsService.create(createClubDto)
+        return this.clubsService.create(createClubDto);
     }
 
 
@@ -31,7 +31,7 @@ export class ClubsController {
     })
     @Get()
     async get() {
-        return this.clubsService.get()
+        return this.clubsService.get();
     }
 
     @ApiOperation({summary: 'Get club by id'})
@@ -66,6 +66,6 @@ export class ClubsController {
     @ApiResponse({status: 404, description: 'Club not found'})
     @Delete(':id')
     destroy(@Param('id') id: number) {
-        return this.clubsService.destroy(id)
+        return this.clubsService.destroy(id);
     }
 }

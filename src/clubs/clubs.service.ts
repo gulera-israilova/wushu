@@ -4,6 +4,7 @@ import {ClubEntity} from "./entity/club.entity";
 import {Repository} from "typeorm";
 import {UsersService} from "../users/users.service";
 import {UpdateClubDto} from "./dto/update-club.dto";
+import {RoleEnum} from "../users/enum/role.enum";
 
 
 @Injectable()
@@ -26,14 +27,16 @@ export class ClubsService {
             let trainers = []
             for (let item of createClubDto.trainers) {
                 const trainer = await this.usersService.getById(item)
-                trainers.push(trainer)
+                if (trainer.role === RoleEnum.TRAINER){
+                    trainers.push(trainer)
+                } else  throw new HttpException("Please enter correct trainer IDs", HttpStatus.BAD_REQUEST);
             }
             let newClub = new ClubEntity()
             newClub.name = createClubDto.name
             newClub.trainers = trainers
             return await this.clubRepository.save(newClub)
         } catch (e) {
-            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -46,7 +49,7 @@ export class ClubsService {
         if (!club) {
             throw new NotFoundException("No club for this id")
         }
-        return this.clubRepository.findOne(id)
+        return this.clubRepository.findOne(id);
     }
 
     async update(id: number, updateClubDto: UpdateClubDto): Promise<ClubEntity> {
@@ -64,7 +67,7 @@ export class ClubsService {
             Object.assign(club, updateClubDto)
             return await this.clubRepository.save(club)
         } catch (e) {
-            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -74,6 +77,7 @@ export class ClubsService {
         try{
             await this.clubRepository.delete(club)
         } catch (e){
-            throw new BadGatewayException('Deletion didn\'t happen')}
+            throw new BadGatewayException('Deletion didn\'t happen');
+        }
     }
 }

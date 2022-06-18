@@ -18,7 +18,7 @@ export class NewsController {
     @ApiResponse({
         status: 201,
         description: 'Successfully created news will be returned',
-        type: NewsEntity
+        type: NewsEntity,
     })
     @UseInterceptors(FileInterceptor('image', {
         fileFilter: filter
@@ -26,15 +26,8 @@ export class NewsController {
 
     @Post()
     create(@Body() createNewsDto: CreateNewsDto,@UploadedFile() image: Express.Multer.File) {
-        return this.newsService.create(createNewsDto,image)
+        return this.newsService.create(createNewsDto,image);
     }
-
-    @ApiOperation({summary: 'Get a list of all news'})
-    @ApiResponse({
-        status: 201,
-        description: 'List of news returned successfully',
-        type: [CreateNewsDto],
-    })
 
     @ApiOperation({summary: 'Get a list of all news'})
     @ApiResponse({
@@ -44,7 +37,7 @@ export class NewsController {
     })
     @Get()
     async get() {
-        return this.newsService.get()
+        return this.newsService.get();
     }
 
     @ApiOperation({summary: 'Get news by id'})
@@ -82,7 +75,7 @@ export class NewsController {
     @ApiResponse({status: 404, description: 'News not found'})
     @Delete(':id')
     destroy(@Param('id') id: number) {
-        return this.newsService.destroy(id)
+        return this.newsService.destroy(id);
     }
 
 }

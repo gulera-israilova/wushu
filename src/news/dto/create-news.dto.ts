@@ -2,11 +2,19 @@ import {ApiProperty} from "@nestjs/swagger";
 import {IsEmpty} from "class-validator";
 
 export class CreateNewsDto {
-    @ApiProperty({ example: 'title', description: 'News title', required:true })
-    title: string
+    @ApiProperty({
+        example: 'title',
+        description: 'News title',
+        required:true,
+    })
+    title: string;
 
-    @ApiProperty({ example: 'text', description: 'News text', required:true })
-    text: string
+    @ApiProperty({
+        example: 'text',
+        description: 'News text',
+        required:true,
+    })
+    text: string;
 
     @ApiProperty({
         example:"https://wushubook.s3.amazonaws.com/reference/pampass.jpg",
@@ -15,8 +23,8 @@ export class CreateNewsDto {
         format: 'binary',
         type: 'string'
     })
-    image: string
+    image: string;
 
     @IsEmpty()
-    imageKey:string
+    imageKey:string;
 }

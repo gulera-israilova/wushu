@@ -32,11 +32,11 @@ export class NewsService {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
         }
 
-        return  await this.newsRepository.save(createNewsDto)
+        return  await this.newsRepository.save(createNewsDto);
     }
 
     async get(): Promise<NewsEntity[]> {
-        return await this.newsRepository.find()
+        return await this.newsRepository.find();
     }
 
     async getById(id: number): Promise<NewsEntity> {
@@ -44,7 +44,7 @@ export class NewsService {
         if (!news) {
             throw new NotFoundException("No club for this id")
         }
-        return this.newsRepository.findOne(id)
+        return this.newsRepository.findOne(id);
     }
 
     async update(id: number, updateNewsDto: UpdateNewsDto,image): Promise<NewsEntity> {
@@ -62,7 +62,7 @@ export class NewsService {
             Object.assign(news, updateNewsDto)
             return await this.newsRepository.save(news)
         } catch (e) {
-            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -79,7 +79,7 @@ export class NewsService {
                    .execute();
 
                } catch (e){
-                throw new BadGatewayException('Deletion didn\'t happen')
+                throw new BadGatewayException('Deletion didn\'t happen');
             }
         }
  }
