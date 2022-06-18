@@ -20,4 +20,6 @@ export class CreateIndependentDto {
   @ApiProperty()
   password: string;
   status: number;
+  @ApiProperty()
+  link: string;
 }

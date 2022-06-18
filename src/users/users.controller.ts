@@ -38,7 +38,7 @@ export class UsersController {
     await this.usersService.createWithoutPassword(dto);
   }
 
-  @ApiOperation({ summary: 'checkVaild' })
+  @ApiOperation({ summary: 'validate check if user is registered in db' })
   @Get('check-valid')
   async check(@Body() dto: CheckDto) {
     await this.usersService.checkUser(dto);
@@ -50,7 +50,9 @@ export class UsersController {
     await this.usersService.addPass(id, password);
   }
 
-  @ApiOperation({ summary: `independent registration` })
+  @ApiOperation({
+    summary: `independent registration(for example trainer can register on his own and the link will besnt to mail after he should wait to be confirmed by admin)`,
+  })
   @ApiResponse({
     status: 201,
     description: `User should verify email`,
@@ -59,17 +61,16 @@ export class UsersController {
   async createIndependent(@Body() dto: CreateIndependentDto) {
     await this.usersService.createIndependent(dto);
   }
-  @ApiOperation({summary:`Make confirmed status`})
+  @ApiOperation({ summary: `Make confirmed status` })
   @Patch('/update-registered-status/:id')
-
   async udpateStatus(id: number) {
     await this.usersService.updateStatus1(id);
   }
 
-  @ApiOperation({summary:`Forgot Password`})
+  @ApiOperation({ summary: `Forgot Password` })
   @Patch('forgot-password/:email')
-  async forgotPassword(@Param('email')email:string){
-    await this.usersService.forgotPassword(email)
+  async forgotPassword(@Param('email') email: string) {
+    await this.usersService.forgotPassword(email);
   }
 
   @ApiOperation({ summary: 'Get a list of all users' })

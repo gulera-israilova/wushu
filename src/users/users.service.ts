@@ -84,7 +84,7 @@ export class UsersService {
     try {
       await this.mailService.sendMail(
           dto.email,
-          `Для подтверждения почты перейдите по данной ссылке 'https://www.google.com/'`,
+          `Для подтверждения почты перейдите по данной ссылке 'https://${dto.link}'`,
       );
       return await this.userRepository.save(dto);
     } catch (e) {
