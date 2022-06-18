@@ -3,7 +3,7 @@ import { RoleEnum } from '../enum/role.enum';
 import { IsEmpty } from 'class-validator';
 
 export class CreateUserDto {
-    id: number;
+
     @ApiProperty({
         example: 'Elon Musk',
         description: 'Username',

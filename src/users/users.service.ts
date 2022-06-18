@@ -25,6 +25,7 @@ export class UsersService {
       private readonly mailService: MailService,
   ) {}
 
+
   async createWithoutPassword(dto: CreateWithoutPasswordDto) {
     const exist = await this.userRepository.findOne({
       where: { email: dto.email },
