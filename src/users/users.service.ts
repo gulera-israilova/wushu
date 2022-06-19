@@ -43,7 +43,7 @@ export class UsersService {
       const register = await this.userRepository.save(dto);
       return await this.mailService.sendMail(
         dto.email,
-        `Создайте пароль по этой ссылке https://${dto.link}/${register.id}M${dto.tmp}/`,
+        `Создайте пароль по этой ссылке ${dto.link}/${register.id}M${dto.tmp}/`,
       ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
     } catch (e) {
       Logger.error(e);
@@ -81,12 +81,15 @@ export class UsersService {
     dto.role = RoleEnum.TRAINER;
     dto.status = 0;
     dto.password = await this.hashPass(dto.password);
+    const tmp = await this.genPass();
+    dto.tmp = await this.hashPass(tmp);
     try {
+      const user = await this.userRepository.save(dto);
       await this.mailService.sendMail(
         dto.email,
-        `Для подтверждения почты перейдите по данной ссылке 'https://${dto.link}'`,
+        `Здравствуйте уважаемый ${dto.name}, 
+        Для завершения регистрации перейдите по данной ссылке ${dto.link}/${user.id}M${dto.tmp}/`,
       );
-      return await this.userRepository.save(dto);
     } catch (e) {
       Logger.error(e);
       throw new BadRequestException(e.message);

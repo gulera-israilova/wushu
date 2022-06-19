@@ -21,4 +21,5 @@ export class CreateIndependentDto {
   status: number;
   @ApiProperty()
   link: string;
+  tmp: string;
 }
