@@ -38,20 +38,20 @@ export class UsersController {
     await this.usersService.createWithoutPassword(dto);
   }
 
-  @ApiOperation({ summary: 'validate check if user is registered in db' })
-  @Get('check-valid')
-  async check(@Body() dto: CheckDto) {
-    await this.usersService.checkUser(dto);
-  }
+  // @ApiOperation({ summary: 'validate check if user is registered in db' })
+  // @Get('check-valid')
+  // async check(@Body() dto: CheckDto) {
+  //   await this.usersService.checkUser(dto);
+  // }
 
   @ApiOperation({ summary: 'add password' })
-  @Patch('addPassword')
-  async addPassword(id: number, password: string) {
+  @Patch('addPassword/:id')
+  async addPassword(@Param('id') id: number, @Body() password: string) {
     await this.usersService.addPass(id, password);
   }
 
   @ApiOperation({
-    summary: `independent registration(for example trainer can register on his own and the link will besnt to mail after he should wait to be confirmed by admin)`,
+    summary: `independent registration(for example trainer can register on his own and the link will be sent to mail after he should wait to be confirmed by admin)`,
   })
   @ApiResponse({
     status: 201,
@@ -63,7 +63,7 @@ export class UsersController {
   }
   @ApiOperation({ summary: `Make confirmed status` })
   @Patch('/update-registered-status/:id')
-  async udpateStatus(id: number) {
+  async udpateStatus(@Param('id') id: number) {
     await this.usersService.updateStatus1(id);
   }
 

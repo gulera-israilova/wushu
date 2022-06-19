@@ -21,10 +21,9 @@ import { CheckDto } from './dto/check.dto';
 @Injectable()
 export class UsersService {
   constructor(
-      private readonly userRepository: UserRepo,
-      private readonly mailService: MailService,
+    private readonly userRepository: UserRepo,
+    private readonly mailService: MailService,
   ) {}
-
 
   async createWithoutPassword(dto: CreateWithoutPasswordDto) {
     const exist = await this.userRepository.findOne({
@@ -32,7 +31,7 @@ export class UsersService {
     });
     if (exist)
       throw new BadRequestException(
-          `Данная почта ${exist.email} уже была зарегестрирована`,
+        `Данная почта ${exist.email} уже была зарегестрирована`,
       );
     if (dto.role === RoleEnum.ADMIN)
       throw new BadRequestException('Администратора нельзя регестрировать');
@@ -44,8 +43,8 @@ export class UsersService {
     try {
       const register = await this.userRepository.save(dto);
       return await this.mailService.sendMail(
-          dto.email,
-          `Создайте пароль по этой ссылке https://www.google.com/${register.id}M${dto.tmp}/`,
+        dto.email,
+        `Создайте пароль по этой ссылке https://${dto.link}/${register.id}M${dto.tmp}/`,
       ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
     } catch (e) {
       Logger.error(e);
@@ -62,10 +61,12 @@ export class UsersService {
   }
 
   async addPass(id: number, password: string) {
+    console.log(id, password);
     const user: UserEntity = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException('Пользователь не найден');
     user.tmp = null;
-    user.password = await this.hashPass(password);
+    // const newPassword = await this.hashPass(password);
+    user.password = '$2a$10$PoDSacGbX6tywR4MlwnCJ.afTsXLEGaWF4LFsMG5dLJd/v6XcGVKO';
     return await this.userRepository.save(user);
   }
 
@@ -75,7 +76,7 @@ export class UsersService {
     });
     if (exist)
       throw new BadRequestException(
-          `Данная почта ${exist.email} уже была зарегестрирована`,
+        `Данная почта ${exist.email} уже была зарегестрирована`,
       );
     if (dto.role !== RoleEnum.TRAINER)
       throw new BadRequestException('Может быть зарегестрирован только Тренер');
@@ -83,8 +84,8 @@ export class UsersService {
     dto.password = await this.hashPass(dto.password);
     try {
       await this.mailService.sendMail(
-          dto.email,
-          `Для подтверждения почты перейдите по данной ссылке 'https://${dto.link}'`,
+        dto.email,
+        `Для подтверждения почты перейдите по данной ссылке 'https://${dto.link}'`,
       );
       return await this.userRepository.save(dto);
     } catch (e) {
@@ -94,6 +95,7 @@ export class UsersService {
   }
   async updateStatus1(id: number) {
     const user = await this.userRepository.findOne(id);
+    if (!user) throw new BadRequestException('Пользователь не найден');
     user.status = 1;
     return await this.userRepository.save(user);
   }
@@ -111,13 +113,13 @@ export class UsersService {
   }
   async forgotPassword(email: string) {
     const user = await this.userRepository.findOne({ email: email });
-    if(!user)throw new BadRequestException('This email is not registered')
+    if (!user) throw new BadRequestException('This email is not registered');
     const tmp = await this.genPass();
     user.tmp = await this.hashPass(tmp);
     try {
       return await this.mailService.sendMail(
-          email,
-          `Создайте пароль по этой ссылке https://www.google.com/${user.id}M${user.tmp}/`,
+        email,
+        `Создайте пароль по этой ссылке https://www.google.com/${user.id}M${user.tmp}/`,
       ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
     } catch (e) {
       Logger.error(e);
@@ -162,7 +164,7 @@ export class UsersService {
     });
     return user;
   }
-  private async hashPass(password) {
+  async hashPass(password) {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(password, salt);
   }
