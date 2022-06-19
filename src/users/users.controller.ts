@@ -39,7 +39,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'validate check if user is registered in db' })
   @Get('check-valid')
-  async check(@Query('id') id: number, @Query('tmp') tmp: string) {
+  async check(@Query('id') id: number, @Query('tmp') tmp: string):Promise<string> {
     await this.usersService.checkUser(id, tmp);
   }
 

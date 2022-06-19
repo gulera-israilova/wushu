@@ -50,12 +50,12 @@ export class UsersService {
     }
   }
 
-  async checkUser(id, tmp) {
+  async checkUser(id, tmp): Promise<string> {
     const user = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException('Пользователь не найден');
     const mathces = await bcrypt.compare(tmp, user.tmp);
     if (!mathces) throw new BadRequestException('Пароль введен неверно');
-    return true;
+    return `true`;
   }
 
   async addPass(id: number, password: string) {
