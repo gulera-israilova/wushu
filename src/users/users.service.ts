@@ -42,7 +42,7 @@ export class UsersService {
       const register = await this.userRepository.save(dto);
       return await this.mailService.sendMail(
         dto.email,
-        `Создайте пароль по этой ссылке ${dto.link}/${register.id}M${dto.tmp}/`,
+        `Создайте пароль по этой ссылке ${dto.link}/${register.id}M${tmp}/`,
       ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
     } catch (e) {
       Logger.error(e);
@@ -87,7 +87,7 @@ export class UsersService {
       await this.mailService.sendMail(
         dto.email,
         `Здравствуйте уважаемый ${dto.name}, 
-        Для завершения регистрации перейдите по данной ссылке ${dto.link}/${user.id}M${dto.tmp}/`,
+        Для завершения регистрации перейдите по данной ссылке ${dto.link}/${user.id}M${tmp}/`,
       );
     } catch (e) {
       Logger.error(e);
