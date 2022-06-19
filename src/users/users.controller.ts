@@ -21,7 +21,6 @@ import { UserEntity } from './entity/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateWithoutPasswordDto } from './dto/CreateWithoutPassword.dto';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
-import { CheckDto } from './dto/check.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -38,11 +37,11 @@ export class UsersController {
     await this.usersService.createWithoutPassword(dto);
   }
 
-  // @ApiOperation({ summary: 'validate check if user is registered in db' })
-  // @Get('check-valid')
-  // async check(@Body() dto: CheckDto) {
-  //   await this.usersService.checkUser(dto);
-  // }
+  @ApiOperation({ summary: 'validate check if user is registered in db' })
+  @Get('check-valid')
+  async check(@Query('id') id: number, @Query('tmp') tmp: string ){
+    await this.usersService.checkUser(id,tmp);
+  }
 
   @ApiOperation({ summary: 'add password' })
   @Patch('addPassword/:id')

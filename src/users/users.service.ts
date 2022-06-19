@@ -15,7 +15,6 @@ import { MailService } from '../services/mail/mail.service';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import * as bcrypt from 'bcryptjs';
 import * as generator from 'generate-password';
-import { CheckDto } from './dto/check.dto';
 
 @Injectable()
 export class UsersService {
@@ -51,10 +50,10 @@ export class UsersService {
     }
   }
 
-  async checkUser(dto: CheckDto) {
-    const user = await this.userRepository.findOne(dto.id);
+  async checkUser(id, tmp) {
+    const user = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException('Пользователь не найден');
-    const mathces = await bcrypt.compare(dto.tmp, user.tmp);
+    const mathces = await bcrypt.compare(tmp, user.tmp);
     if (!mathces) throw new BadRequestException('Пароль введен неверно');
     return true;
   }
@@ -64,7 +63,7 @@ export class UsersService {
     const user: UserEntity = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException('Пользователь не найден');
     user.tmp = null;
-    // const newPassword = await this.hashPass(password);
+    const newPassword = await this.hashPass(password);
     user.password =
       '$2a$10$PoDSacGbX6tywR4MlwnCJ.afTsXLEGaWF4LFsMG5dLJd/v6XcGVKO';
     return await this.userRepository.save(user);
