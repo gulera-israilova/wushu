@@ -15,9 +15,8 @@ import { MailService } from '../services/mail/mail.service';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import * as bcrypt from 'bcryptjs';
 import * as generator from 'generate-password';
-
-import { AuthService } from '../auth/auth.service';
 import { CheckDto } from './dto/check.dto';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -66,7 +65,8 @@ export class UsersService {
     if (!user) throw new BadRequestException('Пользователь не найден');
     user.tmp = null;
     // const newPassword = await this.hashPass(password);
-    user.password = '$2a$10$PoDSacGbX6tywR4MlwnCJ.afTsXLEGaWF4LFsMG5dLJd/v6XcGVKO';
+    user.password =
+      '$2a$10$PoDSacGbX6tywR4MlwnCJ.afTsXLEGaWF4LFsMG5dLJd/v6XcGVKO';
     return await this.userRepository.save(user);
   }
 
@@ -78,8 +78,7 @@ export class UsersService {
       throw new BadRequestException(
         `Данная почта ${exist.email} уже была зарегестрирована`,
       );
-    if (dto.role !== RoleEnum.TRAINER)
-      throw new BadRequestException('Может быть зарегестрирован только Тренер');
+    dto.role = RoleEnum.TRAINER;
     dto.status = 0;
     dto.password = await this.hashPass(dto.password);
     try {
