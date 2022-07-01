@@ -3,11 +3,19 @@ import {IsArray, IsString} from "class-validator";
 
 
 export class CreateClubDto{
-    @ApiProperty({description:'The name of the club', required:true})
-    @IsString({message:'Must be a string value'})
-    name: string
+    @ApiProperty({
+        description:'The name of the club',
+        required:true,
+    })
+    @IsString({ message:'Must be a string value' })
+    name: string;
 
-    @ApiProperty({type: 'array',  items: { type: 'number'}})
+    @ApiProperty({
+        type: 'array',
+        items: {
+            type: 'number',
+        },
+    })
     @IsArray()
-    trainers: number[]
+    trainers: number[];
 }

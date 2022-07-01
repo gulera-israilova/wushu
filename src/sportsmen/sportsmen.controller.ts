@@ -20,7 +20,7 @@ export class SportsmenController {
         type: CreateSportsmanDto,
     })
     @UseInterceptors(FileInterceptor('reference', {
-        fileFilter: filter,
+        fileFilter: filter
     }))
 
     @Post()
@@ -75,7 +75,7 @@ export class SportsmenController {
         type: [UpdateSportsmanDto],
     })
     @UseInterceptors(FileInterceptor('reference', {
-        fileFilter: filter,
+        fileFilter: filter
     }))
     async update(@Param('id') id: number, @Body() updateSportsmanDto: UpdateSportsmanDto,
                  @UploadedFile() reference: Express.Multer.File) {

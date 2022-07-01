@@ -39,7 +39,7 @@ export class SportsmenService {
     }
 
     async get(): Promise<SportsmanEntity[]> {
-        return await this.sportsmanRepository.find()
+        return await this.sportsmanRepository.find();
     }
 
     async getById(id: number): Promise<SportsmanEntity> {
