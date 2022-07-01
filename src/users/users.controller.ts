@@ -21,6 +21,7 @@ import { UserEntity } from './entity/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateWithoutPasswordDto } from './dto/CreateWithoutPassword.dto';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -47,9 +48,9 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'add password' })
-  @Patch('addPassword/:id')
-  async addPassword(@Param('id') id: number, @Body() password: string) {
-    return await this.usersService.addPass(id, password);
+  @Patch('addPassword')
+  async addPassword(@Body() dto: ChangePasswordDto) {
+    return await this.usersService.addPass(dto);
   }
 
   @ApiOperation({

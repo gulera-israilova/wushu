@@ -15,6 +15,7 @@ import { MailService } from '../services/mail/mail.service';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import * as bcrypt from 'bcryptjs';
 import * as generator from 'generate-password';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -57,15 +58,15 @@ export class UsersService {
     if (!mathces) throw new BadRequestException('Пароль введен неверно');
     return `true`;
   }
-
-  async addPass(id: number, password: string) {
-    console.log(id, password);
-    const user: UserEntity = await this.userRepository.findOne(id);
+  async addPass(dto: ChangePasswordDto) {
+    const user: UserEntity = await this.userRepository.findOne(dto.id);
     if (!user) throw new BadRequestException('Пользователь не найден');
+    const match = await bcrypt.compare(dto.tmp, user.tmp);
+    console.log(dto.tmp);
+    console.log(user.tmp);
+    if (!match) throw new BadRequestException('Пароли не совпадают');
     user.tmp = null;
-    const newPassword = await this.hashPass(password);
-    user.password =
-      '$2a$10$PoDSacGbX6tywR4MlwnCJ.afTsXLEGaWF4LFsMG5dLJd/v6XcGVKO';
+    user.password = await this.hashPass(dto.password);
     return await this.userRepository.save(user);
   }
 
@@ -120,7 +121,7 @@ export class UsersService {
     try {
       return await this.mailService.sendMail(
         email,
-        `Создайте пароль по этой ссылке https://www.google.com/${user.id}M${user.tmp}/`,
+        `Создайте пароль по этой ссылке https://www.google.com/${user.id}M${tmp}/`,
       ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
     } catch (e) {
       Logger.error(e);
