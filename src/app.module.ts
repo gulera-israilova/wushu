@@ -8,6 +8,9 @@ import { SportsmenModule } from './sportsmen/sportsmen.module';
 import { S3Module } from './s3/s3.module';
 import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
+import { MessagesModule } from './messages/messages.module';
+import { DialogModule } from './dialog/dialog.module';
+import { GroupChatModule } from './group_chat/group_chat.module';
 
 @Module({
   imports: [
@@ -19,6 +22,9 @@ import { EventsModule } from './events/events.module';
     S3Module,
     NewsModule,
     EventsModule,
+    MessagesModule,
+    DialogModule,
+    GroupChatModule,
   ],
 })
 export class AppModule {}
