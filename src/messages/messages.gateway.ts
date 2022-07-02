@@ -32,13 +32,6 @@ export class MessagesGateway {
     this.server.emit('message', message);
     return message;
   }
-  @SubscribeMessage('join')
-  async joinRoom(
-    @MessageBody('name') name: string,
-    @ConnectedSocket() client: Socket,
-  ) {
-    return await this.messagesService.identify(name, client.id);
-  }
   @SubscribeMessage('typing')
   async isTyping(
     @MessageBody('isTyping') isTyping: boolean,
@@ -48,20 +41,19 @@ export class MessagesGateway {
     const name = await this.messagesService.getClientName(req.user.id);
     client.broadcast.emit('typing', { name, isTyping });
   }
-
-  @SubscribeMessage('findAllMessages')
-  async findAll() {
-    return await this.messagesService.findAll();
-  }
   @SubscribeMessage('updateMessage')
-  async update(@MessageBody() updateMessageDto: UpdateMessageDto) {
+  async update(
+    @MessageBody() updateMessageDto: UpdateMessageDto,
+    @Request() req,
+  ) {
     return await this.messagesService.update(
       updateMessageDto.id,
       updateMessageDto,
+      req.user.id,
     );
   }
   @SubscribeMessage('removeMessage')
-  async remove(@MessageBody() id: number) {
-    return await this.messagesService.remove(id);
+  async remove(@MessageBody() id: number, @Request() req) {
+    await this.messagesService.remove(id, req.user.id);
   }
 }

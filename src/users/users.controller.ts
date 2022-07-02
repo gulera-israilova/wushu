@@ -22,6 +22,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateWithoutPasswordDto } from './dto/CreateWithoutPassword.dto';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { RoleEnum } from './enum/role.enum';
 
 @Controller('users')
 @ApiTags('users')
@@ -79,14 +80,19 @@ export class UsersController {
   @ApiOperation({ summary: 'Get a list of all users' })
   @ApiQuery({ name: 'page', description: 'Page number', required: false })
   @ApiQuery({ name: 'limit', description: 'Item limit', required: false })
+  @ApiQuery({ name: 'role', description: 'user role', required: false })
   @ApiResponse({
     status: 201,
     description: 'List of users returned successfully',
     type: [UserEntity],
   })
   @Get()
-  async get(@Query('page') page: number, @Query('limit') limit: number) {
-    return await this.usersService.get(page, limit);
+  async get(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('role') role: RoleEnum,
+  ) {
+    return await this.usersService.get(page, limit, role);
   }
 
   @ApiOperation({ summary: 'Get user by id' })

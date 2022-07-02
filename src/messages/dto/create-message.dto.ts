@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { MessageStatusEnum } from '../enums/message.status.enum';
 
 export class CreateMessageDto {
   user: number;
-  @ApiProperty()
-  message: string;
+  text: string;
   date: Date;
   edited: boolean;
+  read: MessageStatusEnum;
 }

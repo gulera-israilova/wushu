@@ -16,6 +16,7 @@ import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import * as bcrypt from 'bcryptjs';
 import * as generator from 'generate-password';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -101,12 +102,15 @@ export class UsersService {
     user.status = 1;
     return await this.userRepository.save(user);
   }
-  async get(page: number, limit: number): Promise<any> {
+  async get(page: number, limit: number, role: RoleEnum): Promise<any> {
     const take = limit || 10;
     const skip = page * limit || 0;
     const [users, total] = await this.userRepository.findAndCount({
       take: take,
       skip: skip,
+      where: {
+        role: Like(`%${role ? role : ''}%`),
+      },
     });
     return {
       data: users,

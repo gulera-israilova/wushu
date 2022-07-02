@@ -1,10 +1,12 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateMessageDto } from './create-message.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { MessageStatusEnum } from '../enums/message.status.enum';
+import { IsEnum } from 'class-validator';
 
 export class UpdateMessageDto extends PartialType(CreateMessageDto) {
   id: number;
-  @ApiProperty()
-  message: string;
+  text: string;
+  @IsEnum(MessageStatusEnum)
+  read: MessageStatusEnum;
   edited: boolean;
 }
