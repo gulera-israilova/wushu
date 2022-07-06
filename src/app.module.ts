@@ -10,6 +10,7 @@ import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
 import { DirectModule } from './direct/direct.module';
+import { LobbyModule } from './lobby/lobby.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { DirectModule } from './direct/direct.module';
     EventsModule,
     MessagesModule,
     DirectModule,
+    LobbyModule,
   ],
 })
 export class AppModule {}

@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   EntityRepository,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   Repository,
@@ -26,8 +27,12 @@ export class MessageEntity {
   edited: boolean;
   @Column()
   read: MessageStatusEnum;
-  @ManyToOne(() => DirectEntity, (direct) => direct.id)
-  directId: number;
+  @ManyToOne(() => DirectEntity, (direct) => direct.id, { nullable: true })
+  @JoinColumn({ name: 'direct_id' })
+  direct: number;
+  @ManyToOne(() => DirectEntity, (direct) => direct.id, { nullable: true })
+  @JoinColumn({ name: 'lobby_id' })
+  lobby: number;
   // @Column()
   // attachment: string; add photo and audio
 }

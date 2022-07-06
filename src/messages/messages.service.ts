@@ -20,6 +20,8 @@ export class MessagesService {
       date: new Date(),
       edited: false,
       read: MessageStatusEnum.SENT,
+      direct: createMessageDto.direct,
+      lobby: createMessageDto.lobby,
     };
     return await this.repo.save(message);
   }

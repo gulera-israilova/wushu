@@ -6,4 +6,6 @@ export class CreateMessageDto {
   date: Date;
   edited: boolean;
   read: MessageStatusEnum;
+  direct?: number;
+  lobby?: number;
 }

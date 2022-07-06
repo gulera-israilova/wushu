@@ -3,10 +3,12 @@ import {
   Column,
   Entity,
   EntityRepository,
+  OneToMany,
   PrimaryGeneratedColumn,
   Repository,
 } from 'typeorm';
 import { RoleEnum } from '../enum/role.enum';
+import { User_lobbyEntity } from '../../lobby/entities/user_lobby.entity';
 @Entity({
   name: 'user',
 })
@@ -116,6 +118,9 @@ export class UserEntity {
     nullable: false,
   })
   status: number;
+  @ApiProperty()
+  @OneToMany(() => User_lobbyEntity, (user_lobby) => user_lobby.user)
+  public user_lobby!: User_lobbyEntity[];
 }
 
 @EntityRepository(UserEntity)
