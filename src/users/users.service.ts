@@ -17,7 +17,6 @@ import * as bcrypt from 'bcryptjs';
 import * as generator from 'generate-password';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Like } from 'typeorm';
-import { CloudinaryService } from '../services/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UsersService {
@@ -106,17 +105,28 @@ export class UsersService {
   async get(page: number, limit: number, role: RoleEnum): Promise<any> {
     const take = limit || 10;
     const skip = page * limit || 0;
-    const [users, total] = await this.userRepository.findAndCount({
-      take: take,
-      skip: skip,
-      where: {
-        role: Like(`%${role ? role : ''}%`),
-      },
-    });
-    return {
-      data: users,
-      total: total,
-    };
+    if (role) {
+      const [users, total] = await this.userRepository.findAndCount({
+        take: take,
+        skip: skip,
+        where: {
+          role: Like(`%${role ? role : ''}%`),
+        },
+      });
+      return {
+        data: users,
+        total: total,
+      };
+    } else {
+      const [users, total] = await this.userRepository.findAndCount({
+        take: take,
+        skip: skip,
+      });
+      return {
+        data: users,
+        total: total,
+      };
+    }
   }
   async forgotPassword(email: string) {
     const user = await this.userRepository.findOne({ email: email });
@@ -147,12 +157,9 @@ export class UsersService {
     if (!user) {
       throw new HttpException('No user for this id', HttpStatus.BAD_REQUEST);
     }
-    try {
-      Object.assign(user, updateUserDto);
-      return await this.userRepository.save(user);
-    } catch (e) {
-      throw new HttpException('Incorrect input data', HttpStatus.BAD_REQUEST);
-    }
+    console.log(updateUserDto)
+    const updated = Object.assign(user, updateUserDto);
+    return await this.userRepository.save(updated)
   }
 
   async destroy(id: number): Promise<void> {

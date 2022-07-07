@@ -35,7 +35,6 @@ export class UserEntity {
     description: 'Appointment date',
   })
   @Column({
-    type: 'date',
     nullable: true,
   })
   appointment_date: string;
