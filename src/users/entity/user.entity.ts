@@ -80,7 +80,12 @@ export class UserEntity {
     default: RoleEnum.TRAINER,
   })
   role: RoleEnum;
-
+  @ApiProperty({
+    example: 'here will be saved a link of photo that u send',
+    description: 'photo',
+  })
+  @Column({ nullable: true })
+  photo: string;
   @ApiProperty({
     example: 'trainer@gmail.com',
     description: 'User email',
@@ -100,7 +105,24 @@ export class UserEntity {
     nullable: true,
   })
   password: string;
-
+  @ApiProperty({
+    example: '0558885555',
+    description: 'phone',
+  })
+  @Column({ nullable: true })
+  phone: string;
+  @ApiProperty({
+    example: 'Kyrgyzstan',
+    description: 'country',
+  })
+  @Column({ nullable: true })
+  country: string;
+  @ApiProperty({
+    example: 'Bishkek',
+    description: 'city',
+  })
+  @Column({ nullable: true })
+  city: string;
   @Column({
     type: 'varchar',
     nullable: true,

@@ -11,7 +11,7 @@ import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
 import { DirectModule } from './direct/direct.module';
 import { LobbyModule } from './lobby/lobby.module';
-import { ToTestModule } from './to_test/to_test.module';
+import { ToTestModule } from './to-test/to-test.module';
 
 @Module({
   imports: [
