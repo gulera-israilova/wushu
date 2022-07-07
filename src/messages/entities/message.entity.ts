@@ -19,7 +19,7 @@ export class MessageEntity {
   id: number;
   @ManyToOne(() => UserEntity, (user) => user.id)
   user: number;
-  @Column({ nullable: false, type: 'text' })
+  @Column({ nullable: true, type: 'text' })
   text: string;
   @Column({ default: new Date() })
   date: Date;
@@ -33,8 +33,10 @@ export class MessageEntity {
   @ManyToOne(() => DirectEntity, (direct) => direct.id, { nullable: true })
   @JoinColumn({ name: 'lobby_id' })
   lobby: number;
-  // @Column()
-  // attachment: string; add photo and audio
+  @Column({
+    nullable: true,
+  })
+  attachment: string;
 }
 @EntityRepository(MessageEntity)
 export class MessageRepository extends Repository<MessageEntity> {}

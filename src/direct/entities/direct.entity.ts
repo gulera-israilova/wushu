@@ -29,7 +29,6 @@ export class DirectEntity {
     nullable: true,
   })
   messages: MessageEntity[];
-
   @Column({ default: new Date() })
   created_date: Date;
 }

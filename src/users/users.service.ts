@@ -17,6 +17,7 @@ import * as bcrypt from 'bcryptjs';
 import * as generator from 'generate-password';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Like } from 'typeorm';
+import { CloudinaryService } from '../services/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UsersService {
@@ -132,12 +133,13 @@ export class UsersService {
       throw new BadRequestException(e.message);
     }
   }
-  async getById(id: number): Promise<UserEntity> {
+  async getById(id: number) {
     let user = await this.userRepository.findOne(id);
     if (!user) {
       throw new NotFoundException('No user for this id');
     }
-    return this.userRepository.findOne(id);
+    const { password, tmp, ...rest } = user;
+    return rest;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {

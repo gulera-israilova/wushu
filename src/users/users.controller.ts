@@ -7,6 +7,8 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -23,6 +25,7 @@ import { CreateWithoutPasswordDto } from './dto/CreateWithoutPassword.dto';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { RoleEnum } from './enum/role.enum';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 @ApiTags('users')

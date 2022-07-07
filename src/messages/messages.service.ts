@@ -4,16 +4,30 @@ import { UpdateMessageDto } from './dto/update-message.dto';
 import { MessageRepository } from './entities/message.entity';
 import { UserRepo } from '../users/entity/user.entity';
 import { MessageStatusEnum } from './enums/message.status.enum';
+import { CloudinaryService } from '../services/cloudinary/cloudinary.service';
 
 @Injectable()
 export class MessagesService {
   constructor(
     private readonly repo: MessageRepository,
     private readonly userRepo: UserRepo,
+    private readonly cloudinary: CloudinaryService,
   ) {}
-  async create(createMessageDto: CreateMessageDto, userId: number) {
+  async create(
+    createMessageDto: CreateMessageDto,
+    userId: number,
+    attachment: Express.Multer.File,
+  ) {
     const user = await this.userRepo.findOne(userId);
     if (!user) throw new BadRequestException(`Пользователь не был найден`);
+    if (attachment) {
+      const photo = await this.cloudinary.uploadImage(attachment).catch(() => {
+        throw new BadRequestException('Invalid file type.');
+      });
+      createMessageDto.attachment = photo.secure_url;
+    } else {
+      createMessageDto.attachment = null;
+    }
     const message: CreateMessageDto = {
       user: user.id,
       text: createMessageDto.text,
@@ -22,6 +36,7 @@ export class MessagesService {
       read: MessageStatusEnum.SENT,
       direct: createMessageDto.direct,
       lobby: createMessageDto.lobby,
+      attachment: createMessageDto.attachment,
     };
     return await this.repo.save(message);
   }

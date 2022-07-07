@@ -11,6 +11,7 @@ import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
 import { DirectModule } from './direct/direct.module';
 import { LobbyModule } from './lobby/lobby.module';
+import { ToTestModule } from './to_test/to_test.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { LobbyModule } from './lobby/lobby.module';
     MessagesModule,
     DirectModule,
     LobbyModule,
+    ToTestModule,
   ],
 })
 export class AppModule {}

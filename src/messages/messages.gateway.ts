@@ -9,8 +9,14 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { Server, Socket } from 'socket.io';
-import { Request, UseGuards } from '@nestjs/common';
+import {
+  Request,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserGuard } from '../guards/user.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 @UseGuards(UserGuard)
 @WebSocketGateway({
   cors: {
@@ -23,12 +29,18 @@ export class MessagesGateway {
   constructor(private readonly messagesService: MessagesService) {}
 
   @SubscribeMessage('createMessage')
+  @UseInterceptors(FileInterceptor('attachment'))
   async create(
     @MessageBody() createMessageDto: CreateMessageDto,
+    @UploadedFile() attachment: Express.Multer.File,
     @ConnectedSocket() client: Socket,
     @Request() req,
   ) {
-    const message = this.messagesService.create(createMessageDto, req.user.id);
+    const message = this.messagesService.create(
+      createMessageDto,
+      req.user.id,
+      attachment,
+    );
     this.server.emit('message', message);
     return message;
   }
