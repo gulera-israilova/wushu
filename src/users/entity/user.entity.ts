@@ -3,10 +3,12 @@ import {
   Column,
   Entity,
   EntityRepository,
+  OneToMany,
   PrimaryGeneratedColumn,
   Repository,
 } from 'typeorm';
 import { RoleEnum } from '../enum/role.enum';
+import { User_lobbyEntity } from '../../lobby/entities/user_lobby.entity';
 @Entity({
   name: 'user',
 })
@@ -33,7 +35,6 @@ export class UserEntity {
     description: 'Appointment date',
   })
   @Column({
-    type: 'date',
     nullable: true,
   })
   appointment_date: string;
@@ -78,7 +79,12 @@ export class UserEntity {
     default: RoleEnum.TRAINER,
   })
   role: RoleEnum;
-
+  @ApiProperty({
+    example: 'here will be saved a link of photo that u send',
+    description: 'photo',
+  })
+  @Column({ nullable: true })
+  photo: string;
   @ApiProperty({
     example: 'trainer@gmail.com',
     description: 'User email',
@@ -98,7 +104,24 @@ export class UserEntity {
     nullable: true,
   })
   password: string;
-
+  @ApiProperty({
+    example: '0558885555',
+    description: 'phone',
+  })
+  @Column({ nullable: true })
+  phone: string;
+  @ApiProperty({
+    example: 'Kyrgyzstan',
+    description: 'country',
+  })
+  @Column({ nullable: true })
+  country: string;
+  @ApiProperty({
+    example: 'Bishkek',
+    description: 'city',
+  })
+  @Column({ nullable: true })
+  city: string;
   @Column({
     type: 'varchar',
     nullable: true,
@@ -116,6 +139,9 @@ export class UserEntity {
     nullable: false,
   })
   status: number;
+  @ApiProperty()
+  @OneToMany(() => User_lobbyEntity, (user_lobby) => user_lobby.user)
+  public user_lobby!: User_lobbyEntity[];
 }
 
 @EntityRepository(UserEntity)

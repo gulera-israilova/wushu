@@ -15,16 +15,15 @@ import { MailService } from '../services/mail/mail.service';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import * as bcrypt from 'bcryptjs';
 import * as generator from 'generate-password';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { Like } from 'typeorm';
 
-import { AuthService } from '../auth/auth.service';
-import { CheckDto } from './dto/check.dto';
 @Injectable()
 export class UsersService {
   constructor(
-      private readonly userRepository: UserRepo,
-      private readonly mailService: MailService,
+    private readonly userRepository: UserRepo,
+    private readonly mailService: MailService,
   ) {}
-
 
   async createWithoutPassword(dto: CreateWithoutPasswordDto) {
     const exist = await this.userRepository.findOne({
@@ -32,7 +31,7 @@ export class UsersService {
     });
     if (exist)
       throw new BadRequestException(
-          `Данная почта ${exist.email} уже была зарегестрирована`,
+        `Данная почта ${exist.email} уже была зарегестрирована`,
       );
     if (dto.role === RoleEnum.ADMIN)
       throw new BadRequestException('Администратора нельзя регестрировать');
@@ -44,8 +43,8 @@ export class UsersService {
     try {
       const register = await this.userRepository.save(dto);
       return await this.mailService.sendMail(
-          dto.email,
-          `Создайте пароль по этой ссылке https://www.google.com/${register.id}M${dto.tmp}/`,
+        dto.email,
+        `Создайте пароль по этой ссылке ${dto.link}/${register.id}M${tmp}/`,
       ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
     } catch (e) {
       Logger.error(e);
@@ -53,19 +52,22 @@ export class UsersService {
     }
   }
 
-  async checkUser(dto: CheckDto) {
-    const user = await this.userRepository.findOne(dto.id);
+  async checkUser(id, tmp): Promise<string> {
+    const user = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException('Пользователь не найден');
-    const mathces = await bcrypt.compare(dto.tmp, user.tmp);
+    const mathces = await bcrypt.compare(tmp, user.tmp);
     if (!mathces) throw new BadRequestException('Пароль введен неверно');
-    return true;
+    return `true`;
   }
-
-  async addPass(id: number, password: string) {
-    const user: UserEntity = await this.userRepository.findOne(id);
+  async addPass(dto: ChangePasswordDto) {
+    const user: UserEntity = await this.userRepository.findOne(dto.id);
     if (!user) throw new BadRequestException('Пользователь не найден');
+    const match = await bcrypt.compare(dto.tmp, user.tmp);
+    console.log(dto.tmp);
+    console.log(user.tmp);
+    if (!match) throw new BadRequestException('Пароли не совпадают');
     user.tmp = null;
-    user.password = await this.hashPass(password);
+    user.password = await this.hashPass(dto.password);
     return await this.userRepository.save(user);
   }
 
@@ -75,18 +77,20 @@ export class UsersService {
     });
     if (exist)
       throw new BadRequestException(
-          `Данная почта ${exist.email} уже была зарегестрирована`,
+        `Данная почта ${exist.email} уже была зарегестрирована`,
       );
-    if (dto.role !== RoleEnum.TRAINER)
-      throw new BadRequestException('Может быть зарегестрирован только Тренер');
+    dto.role = RoleEnum.TRAINER;
     dto.status = 0;
     dto.password = await this.hashPass(dto.password);
+    const tmp = await this.genPass();
+    dto.tmp = await this.hashPass(tmp);
     try {
+      const user = await this.userRepository.save(dto);
       await this.mailService.sendMail(
-          dto.email,
-          `Для подтверждения почты перейдите по данной ссылке 'https://www.google.com/'`,
+        dto.email,
+        `Здравствуйте уважаемый ${dto.name}, 
+        Для завершения регистрации перейдите по данной ссылке ${dto.link}/${user.id}M${tmp}/`,
       );
-      return await this.userRepository.save(dto);
     } catch (e) {
       Logger.error(e);
       throw new BadRequestException(e.message);
@@ -94,42 +98,58 @@ export class UsersService {
   }
   async updateStatus1(id: number) {
     const user = await this.userRepository.findOne(id);
+    if (!user) throw new BadRequestException('Пользователь не найден');
     user.status = 1;
     return await this.userRepository.save(user);
   }
-  async get(page: number, limit: number): Promise<any> {
+  async get(page: number, limit: number, role: RoleEnum): Promise<any> {
     const take = limit || 10;
     const skip = page * limit || 0;
-    const [users, total] = await this.userRepository.findAndCount({
-      take: take,
-      skip: skip,
-    });
-    return {
-      data: users,
-      total: total,
-    };
+    if (role) {
+      const [users, total] = await this.userRepository.findAndCount({
+        take: take,
+        skip: skip,
+        where: {
+          role: Like(`%${role ? role : ''}%`),
+        },
+      });
+      return {
+        data: users,
+        total: total,
+      };
+    } else {
+      const [users, total] = await this.userRepository.findAndCount({
+        take: take,
+        skip: skip,
+      });
+      return {
+        data: users,
+        total: total,
+      };
+    }
   }
   async forgotPassword(email: string) {
     const user = await this.userRepository.findOne({ email: email });
-    if(!user)throw new BadRequestException('This email is not registered')
+    if (!user) throw new BadRequestException('This email is not registered');
     const tmp = await this.genPass();
     user.tmp = await this.hashPass(tmp);
     try {
       return await this.mailService.sendMail(
-          email,
-          `Создайте пароль по этой ссылке https://www.google.com/${user.id}M${user.tmp}/`,
+        email,
+        `Создайте пароль по этой ссылке https://www.google.com/${user.id}M${tmp}/`,
       ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
     } catch (e) {
       Logger.error(e);
       throw new BadRequestException(e.message);
     }
   }
-  async getById(id: number): Promise<UserEntity> {
+  async getById(id: number) {
     let user = await this.userRepository.findOne(id);
     if (!user) {
       throw new NotFoundException('No user for this id');
     }
-    return this.userRepository.findOne(id);
+    const { password, tmp, ...rest } = user;
+    return rest;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
@@ -137,12 +157,9 @@ export class UsersService {
     if (!user) {
       throw new HttpException('No user for this id', HttpStatus.BAD_REQUEST);
     }
-    try {
-      Object.assign(user, updateUserDto);
-      return await this.userRepository.save(user);
-    } catch (e) {
-      throw new HttpException('Incorrect input data', HttpStatus.BAD_REQUEST);
-    }
+    console.log(updateUserDto)
+    const updated = Object.assign(user, updateUserDto);
+    return await this.userRepository.save(updated)
   }
 
   async destroy(id: number): Promise<void> {
@@ -162,7 +179,7 @@ export class UsersService {
     });
     return user;
   }
-  private async hashPass(password) {
+  async hashPass(password) {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(password, salt);
   }

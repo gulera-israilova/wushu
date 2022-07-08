@@ -18,4 +18,6 @@ export class CreateWithoutPasswordDto {
   email: string;
   status: number;
   tmp: string;
+  @ApiProperty()
+  link: string;
 }

@@ -6,10 +6,12 @@ import { UserRepo } from './entity/user.entity';
 import { ClubsModule } from '../clubs/clubs.module';
 import { AuthModule } from '../auth/auth.module';
 import { MailService } from '../services/mail/mail.service';
-
+import { CloudinaryService } from '../services/cloudinary/cloudinary.service';
+import { CloudinaryModule } from '../services/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
+    CloudinaryModule,
     TypeOrmModule.forFeature([UserRepo]),
     forwardRef(() => ClubsModule),
     AuthModule,

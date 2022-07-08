@@ -13,11 +13,13 @@ export class CreateIndependentDto {
   category: string;
   @ApiProperty()
   experience: number;
-  @ApiProperty()
   role: RoleEnum;
   @ApiProperty()
   email: string;
   @ApiProperty()
   password: string;
   status: number;
+  @ApiProperty()
+  link: string;
+  tmp: string;
 }
