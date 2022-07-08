@@ -157,7 +157,6 @@ export class UsersService {
     if (!user) {
       throw new HttpException('No user for this id', HttpStatus.BAD_REQUEST);
     }
-    console.log(updateUserDto)
     const updated = Object.assign(user, updateUserDto);
     return await this.userRepository.save(updated)
   }
