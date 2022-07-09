@@ -15,7 +15,7 @@ export class TrainerGuard implements CanActivate {
     const token = request.headers['authorization'];
     const user = await this.service.validate(token);
     if (!user) return false;
-    request.user = user;
+    request.user = user
     return user.role === RoleEnum.TRAINER;
   }
 }
