@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../users/entity/user.entity';
 import { Lobby } from './lobby.entity';
-import { MessageEntity } from '../../messages/entities/message.entity';
 
 @Entity({
   name: 'user_lobby',

@@ -59,6 +59,7 @@ export class UsersService {
     if (!mathces) throw new BadRequestException('Пароль введен неверно');
     return `true`;
   }
+  с
   async addPass(dto: ChangePasswordDto) {
     const user: UserEntity = await this.userRepository.findOne(dto.id);
     if (!user) throw new BadRequestException('Пользователь не найден');

@@ -8,5 +8,5 @@ export class CreateMessageDto {
   read: MessageStatusEnum;
   direct?: number;
   lobby?: number;
-  attachment: string;
+  attachment?: string;
 }

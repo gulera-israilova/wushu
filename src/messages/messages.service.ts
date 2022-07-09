@@ -21,7 +21,7 @@ export class MessagesService {
     const user = await this.userRepo.findOne(userId);
     if (!user) throw new BadRequestException(`Пользователь не был найден`);
     if (attachment) {
-      const photo = await this.cloudinary.uploadImage(attachment).catch(() => {
+      const photo = await this.cloudinary.upload_file(attachment).catch(() => {
         throw new BadRequestException('Invalid file type.');
       });
       createMessageDto.attachment = photo.secure_url;
