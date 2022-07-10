@@ -7,8 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -25,8 +23,7 @@ import { CreateWithoutPasswordDto } from './dto/CreateWithoutPassword.dto';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { RoleEnum } from './enum/role.enum';
-import { FileInterceptor } from '@nestjs/platform-express';
-
+import {ForgotDto} from "./dto/forgot.dto";
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
@@ -75,9 +72,9 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: `Forgot Password` })
-  @Patch('forgot-password/:email')
-  async forgotPassword(@Param('email') email: string) {
-    return await this.usersService.forgotPassword(email);
+  @Patch('forgot-password')
+  async forgotPassword(@Body()dto:ForgotDto) {
+    return await this.usersService.forgotPassword(dto);
   }
 
   @ApiOperation({ summary: 'Get a list of all users' })

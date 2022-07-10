@@ -17,6 +17,7 @@ import * as bcrypt from 'bcryptjs';
 import * as generator from 'generate-password';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Like } from 'typeorm';
+import { ForgotDto } from './dto/forgot.dto';
 
 @Injectable()
 export class UsersService {
@@ -59,13 +60,12 @@ export class UsersService {
     if (!mathces) throw new BadRequestException('Пароль введен неверно');
     return `true`;
   }
-  с
+  с;
   async addPass(dto: ChangePasswordDto) {
     const user: UserEntity = await this.userRepository.findOne(dto.id);
     if (!user) throw new BadRequestException('Пользователь не найден');
+    if (!user.tmp) throw new BadRequestException();
     const match = await bcrypt.compare(dto.tmp, user.tmp);
-    console.log(dto.tmp);
-    console.log(user.tmp);
     if (!match) throw new BadRequestException('Пароли не совпадают');
     user.tmp = null;
     user.password = await this.hashPass(dto.password);
@@ -87,10 +87,17 @@ export class UsersService {
     dto.tmp = await this.hashPass(tmp);
     try {
       const user = await this.userRepository.save(dto);
+      const getName = (name) => {
+        const str = name.split('');
+        str[str.findIndex((i) => i === '/')] = ' ';
+        return str.join('');
+      };
       await this.mailService.sendMail(
         dto.email,
-        `Здравствуйте уважаемый ${dto.name}, 
-        Для завершения регистрации перейдите по данной ссылке ${dto.link}/${user.id}M${tmp}/`,
+        `Здравствуйте уважаемый ${getName(dto.name)}, 
+        Для завершения регистрации перейдите по данной ссылке ${dto.link}/${
+          user.id
+        }M${tmp}/`,
       );
     } catch (e) {
       Logger.error(e);
@@ -129,16 +136,18 @@ export class UsersService {
       };
     }
   }
-  async forgotPassword(email: string) {
-    const user = await this.userRepository.findOne({ email: email });
+  async forgotPassword(dto: ForgotDto) {
+    const user = await this.userRepository.findOne({ email: dto.email });
     if (!user) throw new BadRequestException('This email is not registered');
     const tmp = await this.genPass();
     user.tmp = await this.hashPass(tmp);
+    await this.userRepository.save(user);
+
     try {
       return await this.mailService.sendMail(
-        email,
-        `Создайте пароль по этой ссылке https://www.google.com/${user.id}M${tmp}/`,
-      ); //При отправке на заполнение пароля мне приходит айди и временный пароль сравниваю и возвращаю булиан
+        dto.email,
+        `Создайте пароль по этой ссылке ${dto.link}/${user.id}M${tmp}/`,
+      );
     } catch (e) {
       Logger.error(e);
       throw new BadRequestException(e.message);
@@ -158,9 +167,8 @@ export class UsersService {
     if (!user) {
       throw new HttpException('No user for this id', HttpStatus.BAD_REQUEST);
     }
-    console.log(updateUserDto)
     const updated = Object.assign(user, updateUserDto);
-    return await this.userRepository.save(updated)
+    return await this.userRepository.save(updated);
   }
 
   async destroy(id: number): Promise<void> {

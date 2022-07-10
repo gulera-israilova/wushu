@@ -22,6 +22,10 @@ export class AuthService {
     if (!user || !isMatch) {
       throw new BadRequestException('Invalid login or password');
     }
+    if (user.status === 0)
+      throw new BadRequestException(
+        `Подтвердите пожалуйста свою почту`,
+      );
     const payload = {
       id: user.id,
       name: user.name,
@@ -30,7 +34,7 @@ export class AuthService {
       country: user.country,
       city: user.city,
       role: user.role,
-      image:user.photo,
+      image: user.photo,
     };
 
     const token = this.jwtService.sign(payload);
