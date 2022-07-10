@@ -8,12 +8,13 @@ import { LoginDto } from './dto/login.dto';
 import { UserPayload } from '../users/dto/user.payload';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from '../users/entity/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    private readonly jwtService: JwtService,
+    private readonly auth: JwtService,
   ) {}
 
   async login(data: LoginDto) {
@@ -23,9 +24,7 @@ export class AuthService {
       throw new BadRequestException('Invalid login or password');
     }
     if (user.status === 0)
-      throw new BadRequestException(
-        `Подтвердите пожалуйста свою почту`,
-      );
+      throw new BadRequestException(`Подтвердите пожалуйста свою почту`);
     const payload = {
       id: user.id,
       name: user.name,
@@ -37,15 +36,16 @@ export class AuthService {
       image: user.photo,
     };
 
-    const token = this.jwtService.sign(payload);
+    const token = this.auth.sign(payload);
     return { token };
   }
 
-  async validate(token: string) {
+  async validate(token: string): Promise<UserEntity> {
     try {
-      const payload: any = this.jwtService.decode(token?.split(' ').pop());
-      const user = await this.userService.findOne({ id: payload.id });
-      return user as UserPayload;
+      const payload: any = this.auth.decode(token?.split(' ')[1]);
+      if (payload === null) throw new UnauthorizedException();
+      const user = await this.userService.findForValidation(payload.id);
+      return user;
     } catch (e) {
       throw new UnauthorizedException();
     }

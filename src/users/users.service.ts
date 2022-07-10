@@ -18,6 +18,7 @@ import * as generator from 'generate-password';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Like } from 'typeorm';
 import { ForgotDto } from './dto/forgot.dto';
+import { ProfileChangePasswordDto } from './dto/profile-change-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -110,6 +111,14 @@ export class UsersService {
     user.status = 1;
     return await this.userRepository.save(user);
   }
+  async updateProfile(dto: ProfileChangePasswordDto, userId: number) {
+    const user = await this.userRepository.findOne(userId);
+    const correct = await bcrypt.compare(dto.password, user.password);
+    if (!correct) throw new BadRequestException(`Пароль введен неверно`);
+    const password = await this.hashPass(dto.password);
+    user.password = password;
+    return await this.userRepository.save(user);
+  }
   async get(page: number, limit: number, role: RoleEnum): Promise<any> {
     const take = limit || 10;
     const skip = page * limit || 0;
@@ -181,6 +190,11 @@ export class UsersService {
     } catch (e) {
       throw new BadGatewayException("Deletion didn't happen");
     }
+  }
+  async findForValidation(id: number) {
+    const user = await this.userRepository.findOne(id);
+    if (!user) throw new BadRequestException();
+    return user;
   }
   async findOne(options = {}): Promise<UserEntity | null> {
     const user = await this.userRepository.findOne({

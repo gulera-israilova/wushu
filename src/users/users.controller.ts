@@ -7,8 +7,11 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
+  Request
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -23,7 +26,9 @@ import { CreateWithoutPasswordDto } from './dto/CreateWithoutPassword.dto';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { RoleEnum } from './enum/role.enum';
-import {ForgotDto} from "./dto/forgot.dto";
+import { ForgotDto } from './dto/forgot.dto';
+import { ProfileChangePasswordDto } from './dto/profile-change-password.dto';
+import { UserGuard } from '../guards/user.guard';
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
@@ -70,10 +75,17 @@ export class UsersController {
   async udpateStatus(@Param('id') id: number) {
     return await this.usersService.updateStatus1(id);
   }
+  @ApiOperation({ summary: `Profile change password` })
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @Patch('profile-change-password')
+  async profile_change(@Body() dto: ProfileChangePasswordDto, @Request() req) {
+    return await this.usersService.updateProfile(dto, req.user.id);
+  }
 
   @ApiOperation({ summary: `Forgot Password` })
   @Patch('forgot-password')
-  async forgotPassword(@Body()dto:ForgotDto) {
+  async forgotPassword(@Body() dto: ForgotDto) {
     return await this.usersService.forgotPassword(dto);
   }
 

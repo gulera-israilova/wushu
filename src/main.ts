@@ -8,6 +8,7 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Wushu-book')
     .setDescription('The Wushu-book API description')
     .setVersion('1.0')
