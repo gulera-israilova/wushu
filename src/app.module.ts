@@ -11,6 +11,7 @@ import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
 import { DirectModule } from './direct/direct.module';
 import { LobbyModule } from './lobby/lobby.module';
+import {CloudinaryModule} from "./services/cloudinary/cloudinary.module";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { LobbyModule } from './lobby/lobby.module';
     MessagesModule,
     DirectModule,
     LobbyModule,
+      CloudinaryModule
   ],
 })
 export class AppModule {}

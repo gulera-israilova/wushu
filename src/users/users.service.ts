@@ -19,10 +19,12 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { Like } from 'typeorm';
 import { ForgotDto } from './dto/forgot.dto';
 import { ProfileChangePasswordDto } from './dto/profile-change-password.dto';
+import { CloudinaryService } from '../services/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UsersService {
   constructor(
+    private readonly cloudinary: CloudinaryService,
     private readonly userRepository: UserRepo,
     private readonly mailService: MailService,
   ) {}
@@ -57,8 +59,8 @@ export class UsersService {
   async checkUser(id, tmp): Promise<string> {
     const user = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException('Пользователь не найден');
-    const mathces = await bcrypt.compare(tmp, user.tmp);
-    if (!mathces) throw new BadRequestException('Пароль введен неверно');
+    const matches = await bcrypt.compare(tmp, user.tmp);
+    if (!matches) throw new BadRequestException('Пароль введен неверно');
     return `true`;
   }
   с;
@@ -171,10 +173,20 @@ export class UsersService {
     return rest;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+    photo: Express.Multer.File,
+  ): Promise<UserEntity> {
     let user = await this.userRepository.findOne(id);
     if (!user) {
       throw new HttpException('No user for this id', HttpStatus.BAD_REQUEST);
+    }
+    if (photo) {
+    const img = await this.cloudinary.upload_file(photo);
+    updateUserDto.photo = img.secure_url;
+    } else if (!photo) {
+      updateUserDto.photo = '';
     }
     const updated = Object.assign(user, updateUserDto);
     return await this.userRepository.save(updated);

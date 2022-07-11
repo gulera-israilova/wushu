@@ -33,4 +33,10 @@ export class UpdateUserDto {
     required: false,
   })
   phone: string;
+  @ApiProperty({
+    example: 'your photo from your device',
+    description: 'photo',
+    required: false,
+  })
+  photo: string;
 }

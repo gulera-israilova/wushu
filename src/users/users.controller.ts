@@ -8,7 +8,8 @@ import {
   Post,
   Query,
   UseGuards,
-  Request
+  Request,
+  UploadedFile,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -128,8 +129,12 @@ export class UsersController {
     description: 'Successfully updated user will be returned',
     type: [UserEntity],
   })
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(id, updateUserDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() photo: Express.Multer.File,
+  ) {
+    return await this.usersService.update(id, updateUserDto,photo);
   }
 
   @ApiOperation({ summary: 'Delete user' })
