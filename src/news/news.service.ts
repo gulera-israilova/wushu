@@ -13,14 +13,6 @@ export class NewsService {
         private s3Service: S3Service) {}
 
     async create(createNewsDto, image): Promise<NewsEntity> {
-        let news = await this.newsRepository.findOne({
-            where: {
-                title: createNewsDto.title
-            }
-        })
-        if (news) {
-            throw new HttpException("News with this title already exists", HttpStatus.BAD_REQUEST)
-        }
         try {
             if (image) {
                 const fileUpload = await this.s3Service.uploadNews(image)
@@ -36,15 +28,30 @@ export class NewsService {
     }
 
     async get(): Promise<NewsEntity[]> {
-        return await this.newsRepository.find();
+        let news = await this.newsRepository.find()
+        for (let item of news){
+           // @ts-ignore
+            item.date = item.date.toLocaleDateString('ru-RU', {
+               year: 'numeric',
+               month: '2-digit',
+               day: '2-digit',
+           }) + ' ' + item.date.getHours() + ':' + item.date.getMinutes()
+        }
+        return news;
     }
 
     async getById(id: number): Promise<NewsEntity> {
         let news = await this.newsRepository.findOne(id)
         if (!news) {
-            throw new NotFoundException("No club for this id")
+            throw new NotFoundException("No news for this id")
         }
-        return this.newsRepository.findOne(id);
+        // @ts-ignore
+        news.date = news.date.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        }) + ' ' + news.date.getHours() + ':' + news.date.getMinutes()
+        return news;
     }
 
     async update(id: number, updateNewsDto: UpdateNewsDto,image): Promise<NewsEntity> {
@@ -70,7 +77,9 @@ export class NewsService {
         const news = await this.newsRepository.findOne({id})
         if (!news) {throw new NotFoundException("No news for this id")}
            try {
+            if (news.imageKey) {
                 await this.s3Service.deleteFile(news.imageKey)
+            }
                 await getConnection()
                    .createQueryBuilder()
                    .delete()

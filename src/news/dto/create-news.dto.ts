@@ -27,4 +27,7 @@ export class CreateNewsDto {
 
     @IsEmpty()
     imageKey:string;
+
+    @IsEmpty()
+    date: string;
 }

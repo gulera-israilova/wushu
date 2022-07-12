@@ -20,20 +20,28 @@ export class EventsService {
 
     async getNewEvents(): Promise<EventEntity[]> {
         let currentDate = new Date()
-        return await this.eventRepository.find({
+        let events = await this.eventRepository.find({
             where: {
                 date: MoreThanOrEqual(currentDate)
             }
-        });
+        })
+        for (let event of events){
+           event = await this.getEventFormat(event)
+        }
+        return events;
     }
 
     async getPastEvents(): Promise<EventEntity[]> {
         let currentDate = new Date()
-        return await this.eventRepository.find({
+        let events = await this.eventRepository.find({
             where: {
                 date: LessThan(currentDate),
             }
-        });
+        })
+        for (let event of events){
+            event = await this.getEventFormat(event)
+        }
+        return events;
     }
 
     async getById(id: number): Promise<EventEntity> {
@@ -41,7 +49,8 @@ export class EventsService {
         if (!event) {
             throw new NotFoundException("No event for this id")
         }
-        return this.eventRepository.findOne(id);
+        event = await this.getEventFormat(event)
+        return event;
     }
 
     async update(id: number, updateEventDto: UpdateEventDto): Promise<EventEntity> {
@@ -65,5 +74,15 @@ export class EventsService {
         } catch (e){
             throw new BadGatewayException('Deletion didn\'t happen');
         }
+    }
+
+    private async getEventFormat(event:EventEntity){
+        let monthList = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ]
+        // @ts-ignore
+        event.date = event.date.split('-').reverse().join('.') + ',' + event.time.split('-')[0]
+        // @ts-ignore
+        event.day = +event.date.split('.')[0]
+        event.month =   monthList[new Date(event.date).getMonth()]
+        return event;
     }
 }

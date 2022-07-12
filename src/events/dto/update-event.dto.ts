@@ -1,9 +1,10 @@
 import {ApiProperty} from "@nestjs/swagger";
+import {IsEmpty} from "class-validator";
 
 export class UpdateEventDto{
 
     @ApiProperty({
-        example: 'title',
+        example: 'Title',
         description: 'Event title',
         required:false,
     })
@@ -22,4 +23,24 @@ export class UpdateEventDto{
         required: false,
     })
     date: string;
+
+    @ApiProperty({
+        example: '9:00-12:00',
+        description: 'Event time',
+        required: true,
+    })
+    time: string;
+
+    @ApiProperty({
+        example: 'Seytek',
+        description: 'Event address',
+        required: true,
+    })
+    address: string;
+
+    @IsEmpty()
+    day: number;
+
+    @IsEmpty()
+    month:string;
 }

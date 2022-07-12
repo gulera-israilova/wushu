@@ -16,7 +16,7 @@ export class EventEntity {
     id: number;
 
     @ApiProperty({
-        example: 'title',
+        example: 'Title',
         description: 'Event title',
     })
     @Column({
@@ -35,10 +35,48 @@ export class EventEntity {
     })
     city: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: '11.07.2022,9:00',
+        })
     @Column({
         type: 'date',
         nullable: false,
     })
     date: Date;
+
+    @ApiProperty({
+        example:'9:00-12:00'
+        })
+    @Column({
+        type: 'varchar',
+        nullable: false,
+    })
+    time: string;
+
+    @ApiProperty({
+        example:'Seytek'
+    })
+    @Column({
+        type: 'varchar',
+        nullable: false,
+    })
+    address: string;
+
+    @ApiProperty({
+        example:1
+        })
+    @Column({
+        type: 'int',
+        nullable: true,
+    })
+    day: number;
+
+    @ApiProperty({
+        example:'July'
+        })
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    month: string;
 }
