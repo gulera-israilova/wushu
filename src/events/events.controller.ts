@@ -23,15 +23,16 @@ export class EventsController {
     }
 
     @ApiOperation({summary: 'Get a list of all events'})
-    @ApiQuery({name: 'date', description: 'example: 2022-03-03',required:false})
+    @ApiQuery({name: 'start', description: 'example: 2022-03-03',required:false})
+    @ApiQuery({name: 'end', description: 'example: 2022-03-03',required:false})
     @ApiResponse({
         status: 201,
         description: 'List of events returned successfully',
         type: [EventEntity],
     })
     @Get()
-    async getEvents(@Query('date') date: Date) {
-        return this.eventsService.getEvents(date);
+    async getEvents(@Query('start') start: Date,@Query('end') end: Date,) {
+        return this.eventsService.getEvents(start,end);
     }
 
     @ApiOperation({summary: 'Get event by id'})

@@ -1,6 +1,6 @@
 import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {LessThan, LessThanOrEqual, MoreThanOrEqual, Repository} from "typeorm";
+import {Between, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository} from "typeorm";
 import {EventEntity} from "./entity/event.entity";
 import {UpdateEventDto} from "./dto/update-event.dto";
 
@@ -18,16 +18,16 @@ export class EventsService {
         }
     }
 
-    async getEvents(date:Date): Promise<EventEntity[]> {
+    async getEvents(start:Date,end:Date): Promise<EventEntity[]> {
         let events = []
-        if (date !== undefined) {
-            let filterDate = new Date(date)
-             events = await this.eventRepository.find({
-                 where:[
-                     { start:LessThanOrEqual(filterDate)},
-                     { end: MoreThanOrEqual(filterDate)},
-                 ]
-            })
+        if (start !== undefined && end !== undefined) {
+            let startedAt = new Date(start)
+            let endedAt = new Date(end)
+            events = await this.eventRepository.find(
+                {
+                    where:
+                        {  end: Between(startedAt, endedAt) }
+                })
         } else events = await this.eventRepository.find()
         for (let event of events){
            event = await this.getEventFormat(event)
