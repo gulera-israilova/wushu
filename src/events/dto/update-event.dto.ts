@@ -20,9 +20,16 @@ export class UpdateEventDto{
     @ApiProperty({
         example: '2022-01-01',
         description: 'Event date',
-        required: false,
+        required: true,
     })
-    date: string;
+    start: string;
+
+    @ApiProperty({
+        example: '2022-01-01',
+        description: 'Event date',
+        required: true,
+    })
+    end: string;
 
     @ApiProperty({
         example: '9:00-12:00',

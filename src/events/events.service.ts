@@ -1,6 +1,6 @@
 import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {LessThan, MoreThanOrEqual, Repository} from "typeorm";
+import {LessThan, LessThanOrEqual, MoreThanOrEqual, Repository} from "typeorm";
 import {EventEntity} from "./entity/event.entity";
 import {UpdateEventDto} from "./dto/update-event.dto";
 
@@ -18,28 +18,19 @@ export class EventsService {
         }
     }
 
-    async getNewEvents(): Promise<EventEntity[]> {
-        let currentDate = new Date()
-        let events = await this.eventRepository.find({
-            where: {
-                date: MoreThanOrEqual(currentDate)
-            }
-        })
+    async getEvents(date:Date): Promise<EventEntity[]> {
+        let events = []
+        if (date !== undefined) {
+            let filterDate = new Date(date)
+             events = await this.eventRepository.find({
+                 where:[
+                     { start:LessThanOrEqual(filterDate)},
+                     { end: MoreThanOrEqual(filterDate)},
+                 ]
+            })
+        } else events = await this.eventRepository.find()
         for (let event of events){
            event = await this.getEventFormat(event)
-        }
-        return events;
-    }
-
-    async getPastEvents(): Promise<EventEntity[]> {
-        let currentDate = new Date()
-        let events = await this.eventRepository.find({
-            where: {
-                date: LessThan(currentDate),
-            }
-        })
-        for (let event of events){
-            event = await this.getEventFormat(event)
         }
         return events;
     }
@@ -78,11 +69,15 @@ export class EventsService {
 
     private async getEventFormat(event:EventEntity){
         let monthList = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ]
+        event.month = monthList[new Date(event.start).getMonth()]
         // @ts-ignore
-        event.date = event.date.split('-').reverse().join('.') + ',' + event.time.split('-')[0]
+        event.start = event.start.split('-').reverse().join('.')
         // @ts-ignore
-        event.day = +event.date.split('.')[0]
-        event.month =   monthList[new Date(event.date).getMonth()]
+        event.end = event.end.split('-').reverse().join('.')
+        // @ts-ignore
+        event.applicationDeadline = event.applicationDeadline.split('-').reverse().join('.')
+        // @ts-ignore
+        event.day = +event.start.split('.')[0]
         return event;
     }
 }

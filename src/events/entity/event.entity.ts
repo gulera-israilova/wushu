@@ -36,13 +36,31 @@ export class EventEntity {
     city: string;
 
     @ApiProperty({
-        example: '11.07.2022,9:00',
+        example: '11.07.2022',
         })
     @Column({
         type: 'date',
         nullable: false,
     })
-    date: Date;
+    start: Date;
+
+    @ApiProperty({
+        example: '13.07.2022',
+    })
+    @Column({
+        type: 'date',
+        nullable: false,
+    })
+    end: Date;
+
+    @ApiProperty({
+        example: '11.07.2022',
+    })
+    @Column({
+        type: 'date',
+        nullable: false,
+    })
+    applicationDeadline: Date;
 
     @ApiProperty({
         example:'9:00-12:00'

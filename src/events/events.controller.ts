@@ -1,5 +1,5 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {EventsService} from "./events.service";
 import {CreateEventDto} from "./dto/create-event.dto";
 import {EventEntity} from "./entity/event.entity";
@@ -22,26 +22,16 @@ export class EventsController {
         return this.eventsService.create(createEventDto);
     }
 
-    @ApiOperation({summary: 'Get a list of all new events'})
+    @ApiOperation({summary: 'Get a list of all events'})
+    @ApiQuery({name: 'date', description: 'example: 2022-03-03',required:false})
     @ApiResponse({
         status: 201,
-        description: 'List of new events returned successfully',
+        description: 'List of events returned successfully',
         type: [EventEntity],
     })
-    @Get('/newEvents')
-    async getNewEvents() {
-        return this.eventsService.getNewEvents();
-    }
-
-    @ApiOperation({summary: 'Get a list of all past events'})
-    @ApiResponse({
-        status: 201,
-        description: 'List of past events returned successfully',
-        type: [EventEntity],
-    })
-    @Get('/pastEvents')
-    async getPastEvents() {
-        return this.eventsService.getPastEvents();
+    @Get()
+    async getEvents(@Query('date') date: Date) {
+        return this.eventsService.getEvents(date);
     }
 
     @ApiOperation({summary: 'Get event by id'})

@@ -22,7 +22,14 @@ export class CreateEventDto{
         description: 'Event date',
         required: true,
     })
-    date: string;
+    start: string;
+
+    @ApiProperty({
+        example: '2022-01-01',
+        description: 'Event date',
+        required: true,
+    })
+    end: string;
 
     @ApiProperty({
         example: '9:00-12:00',
@@ -37,6 +44,14 @@ export class CreateEventDto{
         required: true,
     })
     address: string;
+
+    @ApiProperty({
+        example: '2022-01-01',
+        description: 'Application deadline',
+        required: true,
+    })
+    applicationDeadline: string;
+
 
     @IsEmpty()
     day: number;
