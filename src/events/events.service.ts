@@ -1,6 +1,6 @@
 import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {Between, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository} from "typeorm";
+import {Between, LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository} from "typeorm";
 import {EventEntity} from "./entity/event.entity";
 import {UpdateEventDto} from "./dto/update-event.dto";
 
@@ -16,6 +16,16 @@ export class EventsService {
         } catch (e) {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    // Get event list by date (Marlen)
+    async getEventsByDate(start: Date, end: Date): Promise<EventEntity[]> {
+        if (start || end) {
+            if (!start) return this.eventRepository.find({where: { end: LessThan(new Date(end))}});
+            else if (!end) return this.eventRepository.find({where: { end: MoreThan(new Date(start))}});
+            return this.eventRepository.find({where: {end: Between(new Date(start), new Date(end))}})
+        }
+        return this.eventRepository.find();
     }
 
     async getEvents(start:Date,end:Date): Promise<EventEntity[]> {

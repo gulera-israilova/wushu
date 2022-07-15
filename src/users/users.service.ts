@@ -29,6 +29,8 @@ export class UsersService {
     private readonly mailService: MailService,
   ) {}
 
+
+  // Create user wihtout password
   async createWithoutPassword(dto: CreateWithoutPasswordDto) {
     const exist = await this.userRepository.findOne({
       where: { email: dto.email },
@@ -44,6 +46,7 @@ export class UsersService {
     dto.status = 2;
     const tmp = await this.genPass();
     dto.tmp = await this.hashPass(tmp);
+    if (dto.email === '') throw new BadRequestException('Укажите почту')
     try {
       const register = await this.userRepository.save(dto);
       return await this.mailService.sendMail(
@@ -56,6 +59,8 @@ export class UsersService {
     }
   }
 
+
+  // Check user tmp
   async checkUser(id, tmp): Promise<string> {
     const user = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException('Пользователь не найден');
@@ -63,7 +68,9 @@ export class UsersService {
     if (!matches) throw new BadRequestException('Пароль введен неверно');
     return `true`;
   }
-  с;
+
+
+  // Add password to user
   async addPass(dto: ChangePasswordDto) {
     const user: UserEntity = await this.userRepository.findOne(dto.id);
     if (!user) throw new BadRequestException('Пользователь не найден');
@@ -75,6 +82,8 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
+
+  // Create trainer by himself
   async createIndependent(dto: CreateIndependentDto) {
     const exist = await this.userRepository.findOne({
       where: { email: dto.email },
@@ -107,12 +116,24 @@ export class UsersService {
       throw new BadRequestException(e.message);
     }
   }
+
+  // Update user status to 1
   async updateStatus1(id: number) {
     const user = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException('Пользователь не найден');
     user.status = 1;
     return await this.userRepository.save(user);
   }
+
+  // Update user status to 2
+  async updateStatus2(id: number) {
+    const user = await this.userRepository.findOne(id);
+    if (!user) throw new BadRequestException('Пользователь не найден');
+    user.status = 2;
+    return await this.userRepository.save(user);
+  }
+
+  // Update user profile
   async updateProfile(dto: ProfileChangePasswordDto, userId: number) {
     const user = await this.userRepository.findOne(userId);
     const correct = await bcrypt.compare(dto.password, user.password);
@@ -121,6 +142,26 @@ export class UsersService {
     user.password = password;
     return await this.userRepository.save(user);
   }
+
+  //Find users by role and status (Marlen)
+  async getByRoleAndStatus(role: RoleEnum, status: number): Promise<UserEntity[]> {
+    if (role || status) {
+      const statusConfig = () =>  status ? {status} : '';
+      const roleConfig = () => role ? {role} : '';
+
+      return await this.userRepository.find({
+        where: {
+          ...statusConfig(),
+          ...roleConfig()
+        }
+      })
+    }
+    return await this.userRepository.find();
+  }
+
+
+  
+  // Get by roles (Time)
   async get(page: number, limit: number, role: RoleEnum): Promise<any> {
     const take = limit || 10;
     const skip = page * limit || 0;
@@ -147,6 +188,8 @@ export class UsersService {
       };
     }
   }
+
+  // Forgot password
   async forgotPassword(dto: ForgotDto) {
     const user = await this.userRepository.findOne({ email: dto.email });
     if (!user) throw new BadRequestException('This email is not registered');
@@ -164,6 +207,8 @@ export class UsersService {
       throw new BadRequestException(e.message);
     }
   }
+
+  // Get user by id
   async getById(id: number) {
     let user = await this.userRepository.findOne(id);
     if (!user) {
@@ -173,6 +218,8 @@ export class UsersService {
     return rest;
   }
 
+
+  // Update user data
   async update(
     id: number,
     updateUserDto: UpdateUserDto,
@@ -192,6 +239,7 @@ export class UsersService {
     return await this.userRepository.save(updated);
   }
 
+  // Delete user
   async destroy(id: number): Promise<void> {
     let user = await this.userRepository.findOne(id);
     if (!user) {
@@ -203,21 +251,29 @@ export class UsersService {
       throw new BadGatewayException("Deletion didn't happen");
     }
   }
+
+  // Find user for validation
   async findForValidation(id: number) {
     const user = await this.userRepository.findOne(id);
     if (!user) throw new BadRequestException();
     return user;
   }
+
+  // Find one user
   async findOne(options = {}): Promise<UserEntity | null> {
     const user = await this.userRepository.findOne({
       where: options,
     });
     return user;
   }
+
+  // Hash password
   async hashPass(password) {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(password, salt);
   }
+
+  // Generate password
   private async genPass() {
     return generator.generate({ length: 12, numbers: true });
   }
