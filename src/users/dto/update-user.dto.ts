@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { RoleEnum } from '../enum/role.enum';
+import { UserRole } from 'aws-sdk/clients/workmail';
+import { IsEnum } from 'class-validator';
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -39,4 +41,7 @@ export class UpdateUserDto {
     required: false,
   })
   photo: string;
+  @ApiProperty()
+  @IsEnum(RoleEnum)
+  role: RoleEnum;
 }
