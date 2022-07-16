@@ -8,6 +8,7 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Wushu-book')
     .setDescription('The Wushu-book API description')
     .setVersion('1.0')
@@ -15,7 +16,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('', app, document);
+  SwaggerModule.setup('api', app, document);
   const PORT = process.env.PORT;
   await app.listen(PORT || 5000, () => {
     Logger.log(`Server started on PORT ${PORT}`);

@@ -7,10 +7,12 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
+  Request,
   UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -25,13 +27,15 @@ import { CreateWithoutPasswordDto } from './dto/CreateWithoutPassword.dto';
 import { CreateIndependentDto } from './dto/CreateIndependent.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { RoleEnum } from './enum/role.enum';
-import { FileInterceptor } from '@nestjs/platform-express';
-
+import { ForgotDto } from './dto/forgot.dto';
+import { ProfileChangePasswordDto } from './dto/profile-change-password.dto';
+import { UserGuard } from '../guards/user.guard';
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  // Create user without password
   @ApiOperation({ summary: `admin registers smb` })
   @ApiResponse({
     status: 201,
@@ -42,6 +46,7 @@ export class UsersController {
     return await this.usersService.createWithoutPassword(dto);
   }
 
+  // Check tmp password
   @ApiOperation({ summary: 'validate check if user is registered in db' })
   @Get('check-valid')
   async check(
@@ -51,12 +56,14 @@ export class UsersController {
     return await this.usersService.checkUser(id, tmp);
   }
 
+  // Add password to user
   @ApiOperation({ summary: 'add password' })
   @Patch('addPassword')
   async addPassword(@Body() dto: ChangePasswordDto) {
     return await this.usersService.addPass(dto);
   }
 
+  // Create trainer by himself
   @ApiOperation({
     summary: `independent registration(for example trainer can register on his own and the link will be sent to mail after he should wait to be confirmed by admin)`,
   })
@@ -68,18 +75,52 @@ export class UsersController {
   async createIndependent(@Body() dto: CreateIndependentDto) {
     return await this.usersService.createIndependent(dto);
   }
+
+  // Change user status to 1
   @ApiOperation({ summary: `Make confirmed status` })
   @Patch('/update-registered-status/:id')
   async udpateStatus(@Param('id') id: number) {
     return await this.usersService.updateStatus1(id);
   }
 
-  @ApiOperation({ summary: `Forgot Password` })
-  @Patch('forgot-password/:email')
-  async forgotPassword(@Param('email') email: string) {
-    return await this.usersService.forgotPassword(email);
+  // Change user status to 2
+  @ApiOperation({ summary: `Make confirmed status` })
+  @Patch('/approve-user/:id')
+  async updateStatus2(@Param('id') id: number) {
+    return await this.usersService.updateStatus2(id);
   }
 
+  
+  @ApiOperation({ summary: `Profile change password` })
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @Patch('profile-change-password')
+  async profile_change(@Body() dto: ProfileChangePasswordDto, @Request() req) {
+    return await this.usersService.updateProfile(dto, req.user.id);
+  }
+
+  @ApiOperation({ summary: `Forgot Password` })
+  @Patch('forgot-password')
+  async forgotPassword(@Body() dto: ForgotDto) {
+    return await this.usersService.forgotPassword(dto);
+  }
+
+  // Find users by role
+  @ApiQuery({name: 'role', required: false})
+  @ApiQuery({name: 'status', required: false})
+  @ApiResponse({
+    status: 200,
+    type: [UserEntity]
+  })
+  @Get('get-role-status')
+  async getByRolAndStatus(
+    @Query('role') role: RoleEnum,
+    @Query('status') status: number
+  ) {
+    return await this.usersService.getByRoleAndStatus(role, status)
+  }
+
+  // Get list of users
   @ApiOperation({ summary: 'Get a list of all users' })
   @ApiQuery({ name: 'page', description: 'Page number', required: false })
   @ApiQuery({ name: 'limit', description: 'Item limit', required: false })
@@ -119,8 +160,12 @@ export class UsersController {
     description: 'Successfully updated user will be returned',
     type: [UserEntity],
   })
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(id, updateUserDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() photo: Express.Multer.File,
+  ) {
+    return await this.usersService.update(id, updateUserDto,photo);
   }
 
   @ApiOperation({ summary: 'Delete user' })

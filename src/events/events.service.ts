@@ -1,6 +1,6 @@
 import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {LessThan, MoreThanOrEqual, Repository} from "typeorm";
+import {Between, LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository} from "typeorm";
 import {EventEntity} from "./entity/event.entity";
 import {UpdateEventDto} from "./dto/update-event.dto";
 
@@ -18,22 +18,31 @@ export class EventsService {
         }
     }
 
-    async getNewEvents(): Promise<EventEntity[]> {
-        let currentDate = new Date()
-        return await this.eventRepository.find({
-            where: {
-                date: MoreThanOrEqual(currentDate)
-            }
-        });
+    // Get event list by date (Marlen)
+    async getEventsByDate(start: Date, end: Date): Promise<EventEntity[]> {
+        if (start || end) {
+            if (!start) return this.eventRepository.find({where: { end: LessThan(new Date(end))}});
+            else if (!end) return this.eventRepository.find({where: { end: MoreThan(new Date(start))}});
+            return this.eventRepository.find({where: {end: Between(new Date(start), new Date(end))}})
+        }
+        return this.eventRepository.find();
     }
 
-    async getPastEvents(): Promise<EventEntity[]> {
-        let currentDate = new Date()
-        return await this.eventRepository.find({
-            where: {
-                date: LessThan(currentDate),
-            }
-        });
+    async getEvents(start:Date,end:Date): Promise<EventEntity[]> {
+        let events = []
+        if (start !== undefined && end !== undefined) {
+            let startedAt = new Date(start)
+            let endedAt = new Date(end)
+            events = await this.eventRepository.find(
+                {
+                    where:
+                        {  end: Between(startedAt, endedAt) }
+                })
+        } else events = await this.eventRepository.find()
+        for (let event of events){
+           event = await this.getEventFormat(event)
+        }
+        return events;
     }
 
     async getById(id: number): Promise<EventEntity> {
@@ -41,7 +50,8 @@ export class EventsService {
         if (!event) {
             throw new NotFoundException("No event for this id")
         }
-        return this.eventRepository.findOne(id);
+        event = await this.getEventFormat(event)
+        return event;
     }
 
     async update(id: number, updateEventDto: UpdateEventDto): Promise<EventEntity> {
@@ -65,5 +75,19 @@ export class EventsService {
         } catch (e){
             throw new BadGatewayException('Deletion didn\'t happen');
         }
+    }
+
+    private async getEventFormat(event:EventEntity){
+        let monthList = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ]
+        event.month = monthList[new Date(event.start).getMonth()]
+        // @ts-ignore
+        event.start = event.start.split('-').reverse().join('.')
+        // @ts-ignore
+        event.end = event.end.split('-').reverse().join('.')
+        // @ts-ignore
+        event.applicationDeadline = event.applicationDeadline.split('-').reverse().join('.')
+        // @ts-ignore
+        event.day = +event.start.split('.')[0]
+        return event;
     }
 }

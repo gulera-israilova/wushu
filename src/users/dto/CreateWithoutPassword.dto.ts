@@ -16,6 +16,10 @@ export class CreateWithoutPasswordDto {
   role: RoleEnum;
   @ApiProperty()
   email: string;
+  @ApiProperty()
+  country: string;
+  @ApiProperty()
+  city: string;
   status: number;
   tmp: string;
   @ApiProperty()
