@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { RoleEnum } from '../enum/role.enum';
 import {Lobby} from "../../lobby/entities/lobby.entity";
+import {User_lobbyEntity} from "../../lobby/entities/user_lobby.entity";
 @Entity({
   name: 'user',
 })
@@ -139,8 +140,12 @@ export class UserEntity {
     nullable: false,
   })
   status: number;
-@ManyToMany(()=>Lobby,(lobby)=>lobby.users)
-  lobby:Lobby[];
+  @ApiProperty()
+  @OneToMany(
+      () => User_lobbyEntity,
+      (user_lobby) => user_lobby.user,
+  )
+  public user_lobby!: User_lobbyEntity[];
 }
 
 @EntityRepository(UserEntity)

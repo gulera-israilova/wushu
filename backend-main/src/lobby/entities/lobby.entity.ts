@@ -1,16 +1,8 @@
-import {
-  Column,
-  Entity,
-  EntityRepository,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  Repository,
-} from 'typeorm';
+import {Entity, EntityRepository, ManyToOne, OneToMany, PrimaryGeneratedColumn, Repository} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { MessageEntity } from '../../messages/entities/message.entity';
 import { UserEntity } from '../../users/entity/user.entity';
+import {User_lobbyEntity} from "./user_lobby.entity";
 
 @Entity({
   name: 'lobby',
@@ -18,19 +10,18 @@ import { UserEntity } from '../../users/entity/user.entity';
 export class Lobby {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ nullable: true })
-  name: string;
-  @Column({ nullable: true })
-  description: string;
-  @Column({ nullable: true })
-  photo: string;
   @ApiProperty({ type: () => MessageEntity })
-  @OneToMany(() => MessageEntity, (message) => message.lobby, {
-    nullable: true,
-  })
+  @OneToMany(() => MessageEntity, (message) => message.lobby)
   messages: MessageEntity[];
-  @ManyToMany(() => UserEntity, (user) => user.lobby)
-  users: UserEntity[];
+  @ApiProperty()
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  authorId: number;
+  @ApiProperty()
+  @OneToMany(
+      () => User_lobbyEntity,
+      (user_lobby) => user_lobby.lobby,
+  )
+  public user_lobby!: User_lobbyEntity[];
 }
 @EntityRepository(Lobby)
 export class LobbyRepo extends Repository<Lobby> {}
