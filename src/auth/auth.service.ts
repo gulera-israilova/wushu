@@ -34,6 +34,7 @@ export class AuthService {
       city: user.city,
       role: user.role,
       image: user.photo,
+      status: user.status,
     };
 
     const token = this.auth.sign(payload);
