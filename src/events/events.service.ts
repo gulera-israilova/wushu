@@ -36,10 +36,10 @@ export class EventsService {
             events = await this.eventRepository.find(
                 {
                     where:
-                        {  end: Between(startedAt, endedAt) }
+                        { end: Between(startedAt, endedAt) }
                 })
         } else events = await this.eventRepository.find()
-        for (let event of events){
+        for (let event of events) {
            event = await this.getEventFormat(event)
         }
         return events;

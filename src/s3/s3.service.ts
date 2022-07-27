@@ -21,7 +21,10 @@ export class S3Service {
         const { originalname } = file;
         return await this.s3_upload(file.buffer, this.AWS_S3_BUCKET_NEWS, originalname, file.mimetype);
     }
-
+    async uploadDocs(file) {
+        const { originalname } = file;
+        return await this.s3_upload(file.buffer, this.AWS_S3_BUCKET, originalname, file.mimetype);
+    }
     async s3_upload(file, bucket, name, mimetype) {
         const params =
             {
@@ -55,10 +58,24 @@ export class S3Service {
             }
             try {
                 let s3Response = await this.s3.deleteObject(params).promise();
-
             } catch (e){
                 throw new BadRequestException(e.message);
             }
-
+    }
+    async s3_get(bucket, key){
+        const params =
+            {
+                Bucket: bucket,
+                Key: key
+            }
+        try {
+            let s3Response = await this.s3.getObject(params).promise();
+            return s3Response;
+        } catch (e){
+            throw new BadRequestException(e.message);
+        }
+    }
+    async getFile(key:string) {
+       return  await this.s3_get( this.AWS_S3_BUCKET, key);
     }
 }
