@@ -1,34 +1,66 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { LobbyService } from './lobby.service';
 import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
-
+import { UserGuard } from '../guards/user.guard';
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
+@ApiTags('Lobby')
+@UseGuards(UserGuard)
+@ApiBearerAuth()
 @Controller('lobby')
 export class LobbyController {
   constructor(private readonly lobbyService: LobbyService) {}
 
-  @Post()
-  create(@Body() createLobbyDto: CreateLobbyDto) {
-    return this.lobbyService.create(createLobbyDto);
+  @ApiOperation({
+    summary: `Should provide a list of users or user to create lobby`,
+  })
+  @Post('create-lobby')
+  async create(@Body() createLobbyDto: CreateLobbyDto, @Request() req) {
+    return this.lobbyService.create(createLobbyDto, req.user.id);
   }
-  @Get()
-  findAll() {
-    return this.lobbyService.findAll();
+  @ApiOperation({
+    summary: `add user from link`,
+  })
+  @Patch('add-user')
+  async add_user(@Body() lobbyId: number, @Body() UserId: number[]) {
+    return await this.lobbyService.addUser(lobbyId, UserId);
   }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.lobbyService.findOne(+id);
+  @ApiOperation({ summary: `A list of group chats` })
+  @Get('get-my-groups')
+  async findAll(@Request() req) {
+    return this.lobbyService.findAll(req.user.id);
   }
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLobbyDto: UpdateLobbyDto) {
-    return this.lobbyService.update(+id, updateLobbyDto);
-  }
-  @Patch('leave-lobby')
-  leave(){
 
+  @ApiOperation({ summary: `Change members of group` })
+  @Patch(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateLobbyDto: UpdateLobbyDto,
+  ) {
+    return this.lobbyService.update(id, updateLobbyDto);
   }
+
+  @ApiOperation({
+    summary: `Leave the group.If the last user,deletes`,
+  })
+  @Delete('leave-lobby/:lobbyId')
+  async leave(@Param('lobbyId') lobbyId: number, @Request() req) {
+    return await this.lobbyService.leaveLobby(lobbyId, req.user.id);
+  }
+
+  @ApiOperation({ summary: `Delete group` })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.lobbyService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return this.lobbyService.remove(id);
   }
 }

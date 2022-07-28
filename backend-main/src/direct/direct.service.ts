@@ -13,11 +13,26 @@ export class DirectService {
     const partner = await this.userRepo.findOne(createDirectDto.partnerId);
     if (!partner)
       throw new BadRequestException('Данный пользователь не существует');
+
+    const chat = await this.repo.findOne({
+      authorId: userId,
+      partnerId: createDirectDto.partnerId,
+    });
+    if (chat) throw new BadRequestException(`Данный чат уже существует`);
+
+    const chatAsPartner = await this.repo.findOne({
+      authorId: createDirectDto.partnerId,
+      partnerId: userId,
+    });
+    if (chatAsPartner)
+      throw new BadRequestException(`Данный чат уже существует`);
+
     const direct: CreateDirectDto = {
       authorId: userId,
       partnerId: createDirectDto.partnerId,
       created_date: new Date(),
     };
+
     return await this.repo.save(direct);
   }
   async findAll(userId: number): Promise<any> {
@@ -28,6 +43,7 @@ export class DirectService {
     const response = await Promise.all(
       directs.map(async (e) => {
         const res = {};
+        res['direct_id'] = e.id;
         res['author.id'] = e.authorId['id'];
         res['author.name'] = e.authorId['name'];
         res['author.photo'] = e.authorId['photo'];
@@ -38,7 +54,7 @@ export class DirectService {
         return res;
       }),
     );
-    return response
+    return response;
   }
 
   async remove(id: number) {

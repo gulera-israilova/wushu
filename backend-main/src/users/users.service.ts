@@ -29,7 +29,6 @@ export class UsersService {
     private readonly mailService: MailService,
   ) {}
 
-
   // Create user wihtout password
   async createWithoutPassword(dto: CreateWithoutPasswordDto) {
     const exist = await this.userRepository.findOne({
@@ -46,7 +45,7 @@ export class UsersService {
     dto.status = 2;
     const tmp = await this.genPass();
     dto.tmp = await this.hashPass(tmp);
-    if (dto.email === '') throw new BadRequestException('Укажите почту')
+    if (dto.email === '') throw new BadRequestException('Укажите почту');
     try {
       const register = await this.userRepository.save(dto);
       return await this.mailService.sendMail(
@@ -59,7 +58,6 @@ export class UsersService {
     }
   }
 
-
   // Check user tmp
   async checkUser(id, tmp): Promise<string> {
     const user = await this.userRepository.findOne(id);
@@ -68,7 +66,6 @@ export class UsersService {
     if (!matches) throw new BadRequestException('Пароль введен неверно');
     return `true`;
   }
-
 
   // Add password to user
   async addPass(dto: ChangePasswordDto) {
@@ -144,22 +141,23 @@ export class UsersService {
   }
 
   //Find users by role and status (Marlen)
-  async getByRoleAndStatus(role: RoleEnum, status: number): Promise<UserEntity[]> {
+  async getByRoleAndStatus(
+    role: RoleEnum,
+    status: number,
+  ): Promise<UserEntity[]> {
     if (role || status) {
-      const statusConfig = () =>  status ? {status} : '';
-      const roleConfig = () => role ? {role} : '';
+      const statusConfig = () => (status ? { status } : '');
+      const roleConfig = () => (role ? { role } : '');
 
       return await this.userRepository.find({
         where: {
           ...statusConfig(),
-          ...roleConfig()
-        }
-      })
+          ...roleConfig(),
+        },
+      });
     }
     return await this.userRepository.find();
   }
-
-
 
   // Get by roles (Time)
   async get(page: number, limit: number, role: RoleEnum): Promise<any> {
@@ -218,7 +216,6 @@ export class UsersService {
     return rest;
   }
 
-
   // Update user data
   async update(
     id: number,
@@ -230,8 +227,8 @@ export class UsersService {
       throw new HttpException('No user for this id', HttpStatus.BAD_REQUEST);
     }
     if (photo) {
-    const img = await this.cloudinary.upload_file(photo);
-    updateUserDto.photo = img.secure_url;
+      const img = await this.cloudinary.upload_file(photo);
+      updateUserDto.photo = img.secure_url;
     } else if (!photo) {
       updateUserDto.photo = '';
     }
@@ -276,5 +273,11 @@ export class UsersService {
   // Generate password
   private async genPass() {
     return generator.generate({ length: 12, numbers: true });
+  }
+
+  async isRegistered(id: number): Promise<boolean> {
+    const user = await this.userRepository.findOne(id);
+    if (!user) throw new NotFoundException(`user with id ${id} Not found`);
+    return user.status === 2;
   }
 }
