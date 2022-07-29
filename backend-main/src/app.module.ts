@@ -10,7 +10,6 @@ import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
 import {CloudinaryModule} from "./services/cloudinary/cloudinary.module";
-import {DirectModule} from "./direct/direct.module";
 import { LobbyModule } from './lobby/lobby.module';
 
 @Module({
@@ -24,7 +23,6 @@ import { LobbyModule } from './lobby/lobby.module';
     NewsModule,
     EventsModule,
     MessagesModule,
-    DirectModule,
       CloudinaryModule,
       LobbyModule
   ],

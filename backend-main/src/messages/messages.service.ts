@@ -15,36 +15,32 @@ export class MessagesService {
   ) {}
   async create(
     createMessageDto: CreateMessageDto,
-    attachment: Express.Multer.File,
   ) {
     const user = await this.userRepo.findOne(createMessageDto.user);
     if (!user) throw new BadRequestException(`Пользователь не был найден`);
-    if (attachment) {
-      const photo = await this.cloudinary.upload_file(attachment).catch(() => {
-        throw new BadRequestException('Invalid file type.');
-      });
-      createMessageDto.attachment = photo.secure_url;
-    } else {
-      createMessageDto.attachment = null;
-    }
+    console.log(createMessageDto)
+    // if (attachment) {
+    //   const photo = await this.cloudinary.upload_file(attachment).catch(() => {
+    //     throw new BadRequestException('Invalid file type.');
+    //   });
+    //   createMessageDto.attachment = photo.secure_url;
+    // } else {
+    //   createMessageDto.attachment = null;
+    // }
     const message: CreateMessageDto = {
       user: user.id,
       text: createMessageDto.text,
       date: new Date(),
       edited: false,
       read: MessageStatusEnum.SENT,
-      direct: createMessageDto.direct,
       lobby: createMessageDto.lobby,
       attachment: createMessageDto.attachment,
     };
+
     return await this.repo.save(message);
   }
 
-  async getClientName(userId: number): Promise<string> {
-    const user = await this.userRepo.findOne(userId);
-    if (!user) throw new BadRequestException(`Пользователь не найден`);
-    return user.name;
-  }
+
   async update(id: number, updateMessageDto: UpdateMessageDto, userId: number) {
     const message = await this.repo.findOne(id);
     const user = await this.userRepo.findOne(userId);

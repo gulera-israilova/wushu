@@ -6,7 +6,7 @@ export class UpdateLobbyDto extends PartialType(CreateLobbyDto) {
   @ApiProperty()
   id: number;
   @ApiProperty()
-  name: string;
+  name?: string;
   @ApiProperty()
   photo?: string;
   @ApiProperty()

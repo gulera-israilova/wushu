@@ -13,7 +13,7 @@ import { LobbyService } from './lobby.service';
 import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
 import { UserGuard } from '../guards/user.guard';
-import {ApiBearerAuth, ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 @ApiTags('Lobby')
 @UseGuards(UserGuard)
 @ApiBearerAuth()
@@ -39,6 +39,11 @@ export class LobbyController {
   @Get('get-my-groups')
   async findAll(@Request() req) {
     return this.lobbyService.findAll(req.user.id);
+  }
+  @ApiOperation({summary:'get messages from lobby by id'})
+  @Get('message-lobby/:id')
+  async getMessages(@Param('id')id:number){
+    return await this.lobbyService.getMessages(id)
   }
 
   @ApiOperation({ summary: `Change members of group` })

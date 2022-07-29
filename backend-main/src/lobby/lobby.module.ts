@@ -6,9 +6,10 @@ import {LobbyRepo} from "./entities/lobby.entity";
 import {AuthModule} from "../auth/auth.module";
 import {UserLobbyRepo} from "./entities/user_lobby.entity";
 import {UsersModule} from "../users/users.module";
+import {MessageRepository} from "../messages/entities/message.entity";
 
 @Module({
-  imports:[TypeOrmModule.forFeature([LobbyRepo,UserLobbyRepo]),AuthModule,UsersModule],
+  imports:[TypeOrmModule.forFeature([LobbyRepo,UserLobbyRepo,MessageRepository]),AuthModule,UsersModule],
   controllers: [LobbyController],
   providers: [LobbyService]
 })

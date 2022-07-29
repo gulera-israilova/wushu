@@ -20,13 +20,16 @@ export class Lobby {
   id: number;
   @ApiProperty()
   @Column()
-  name:string;
+  name: string;
   @ApiProperty()
-  @Column({nullable:true})
-  photo:string;
+  @Column({ nullable: true })
+  photo: string;
   @ApiProperty()
-  @Column({nullable:true})
-  description:string;
+  @Column({ nullable: true })
+  created_date: Date;
+  @ApiProperty()
+  @Column({ nullable: true })
+  description: string;
   @ApiProperty({ type: () => MessageEntity })
   @OneToMany(() => MessageEntity, (message) => message.lobby, {
     onDelete: 'CASCADE',
@@ -34,10 +37,13 @@ export class Lobby {
   })
   messages: MessageEntity[];
   @ApiProperty()
+  @Column({ default: false })
+  direct: boolean;
+  @ApiProperty()
   @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   authorId: number;
   @ApiProperty()
-  @OneToMany(() => User_lobbyEntity, (user_lobby) => user_lobby.lobby )
+  @OneToMany(() => User_lobbyEntity, (user_lobby) => user_lobby.lobby)
   public user_lobby!: User_lobbyEntity[];
 }
 @EntityRepository(Lobby)

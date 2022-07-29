@@ -255,7 +255,12 @@ export class UsersService {
     if (!user) throw new BadRequestException();
     return user;
   }
-
+  async getWithOptions(options = {}): Promise<UserEntity[] | null> {
+    const user = await this.userRepository.find({
+      where: options,
+    });
+    return user;
+  }
   // Find one user
   async findOne(options = {}): Promise<UserEntity | null> {
     const user = await this.userRepository.findOne({
@@ -263,7 +268,15 @@ export class UsersService {
     });
     return user;
   }
+  //find special inforomation
+  async findById(options = {}): Promise<any | null> {
+    const user = await this.userRepository.findOne({
+      where: options,
+    });
+    const { id, photo, name, ...res } = user;
 
+    return { id, photo, name };
+  }
   // Hash password
   async hashPass(password) {
     const salt = await bcrypt.genSalt(10);
