@@ -1,10 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { MessageRepository } from './entities/message.entity';
 import { UserRepo } from '../users/entity/user.entity';
 import { MessageStatusEnum } from './enums/message.status.enum';
 import { CloudinaryService } from '../services/cloudinary/cloudinary.service';
+import { ReadDto } from './dto/read-dto';
+import { LobbyRepo } from '../lobby/entities/lobby.entity';
+import { UserLobbyRepo } from '../lobby/entities/user_lobby.entity';
 
 @Injectable()
 export class MessagesService {
@@ -12,13 +19,13 @@ export class MessagesService {
     private readonly repo: MessageRepository,
     private readonly userRepo: UserRepo,
     private readonly cloudinary: CloudinaryService,
+    private readonly lobby_repo: UserLobbyRepo,
   ) {}
   async create(
     createMessageDto: CreateMessageDto,
   ) {
     const user = await this.userRepo.findOne(createMessageDto.user);
     if (!user) throw new BadRequestException(`Пользователь не был найден`);
-    console.log(createMessageDto)
     // if (attachment) {
     //   const photo = await this.cloudinary.upload_file(attachment).catch(() => {
     //     throw new BadRequestException('Invalid file type.');
@@ -40,7 +47,14 @@ export class MessagesService {
     return await this.repo.save(message);
   }
 
-
+  async lastMessage(dto: ReadDto) {
+    const lobby = await this.lobby_repo.findOne({
+      where: { lobbyId: dto.lobbyId, userId: dto.userId },
+    });
+    if (!lobby) throw new NotFoundException();
+    lobby.last_message = dto.messageId;
+    return await this.lobby_repo.save(lobby);
+  }
   async update(id: number, updateMessageDto: UpdateMessageDto, userId: number) {
     const message = await this.repo.findOne(id);
     const user = await this.userRepo.findOne(userId);

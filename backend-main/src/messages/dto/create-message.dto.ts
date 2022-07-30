@@ -6,7 +6,6 @@ export class CreateMessageDto {
   date: Date;
   edited: boolean;
   read: MessageStatusEnum;
-  lobby?: number;
-
+  lobby: number;
   attachment?: string;
 }

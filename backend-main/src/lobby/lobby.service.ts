@@ -73,6 +73,7 @@ export class LobbyService {
             info.description,
           );
           res['last_message'] = await this.findLastMessages(e.lobbyId);
+          res['read_id'] =await this.findRead(e.id)
           res['direct'] = info.direct;
           return res;
         }
@@ -89,7 +90,11 @@ export class LobbyService {
       .select(['message', 'user.id', 'user.name', 'user.photo'])
       .leftJoin('message.user', 'user')
       .getMany();
-    return messages;
+    const response = messages.sort((a, b) => a.id - b.id);
+    return {
+      lobby,
+      response,
+    };
   }
 
   async leaveLobby(lobbyId: number, userId: number) {
@@ -151,6 +156,16 @@ export class LobbyService {
       return {
         text: '',
       };
+    }
+  }
+  async findRead(lobbyId:number){
+    const messageId =  await this.repo.query(`
+    select read_id from public.user_lobby where id=${lobbyId}
+    `)
+    if(messageId.pop()['read_id']===null){
+      return ''
+    }else{
+      return messageId.pop()['read_id']
     }
   }
 }
