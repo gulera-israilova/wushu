@@ -13,6 +13,7 @@ import { DirectModule } from './direct/direct.module';
 import { LobbyModule } from './lobby/lobby.module';
 import {CloudinaryModule} from "./services/cloudinary/cloudinary.module";
 import { DocsModule } from './docs/docs.module';
+import { ApplicationsModule } from './applications/applications.module';
 
 @Module({
   imports: [
@@ -27,8 +28,9 @@ import { DocsModule } from './docs/docs.module';
     MessagesModule,
     DirectModule,
     LobbyModule,
-      CloudinaryModule,
-      DocsModule
+    CloudinaryModule,
+    DocsModule,
+    ApplicationsModule
   ],
 })
 export class AppModule {}

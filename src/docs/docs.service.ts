@@ -13,7 +13,7 @@ export class DocsService {
     private docsRepository: Repository<DocsEntity>,
     private s3Service: S3Service) {}
 
-    async create(createDocsDto, docs): Promise<{ success: boolean; description: any; status: number }> {
+    async create(createDocsDto: CreateDocsDto, docs): Promise<{ success: boolean; description: any; status: number }> {
         try {
             const fileUpload = await this.s3Service.uploadDocs(docs)
             createDocsDto.docs = fileUpload.Location

@@ -6,7 +6,7 @@ import {FileInterceptor} from "@nestjs/platform-express";
 import {filter} from "../utils/file-filter";
 import {DocsEntity} from "./entity/docs.entity";
 import {UpdateDocsDto} from "./dto/update-docs.dto";
-import {CreateSportsmanDto} from "../sportsmen/dto/create-sportsman.dto";
+
 
 @Controller('docs')
 @ApiTags('docs')

@@ -25,7 +25,8 @@ export class SportsmanEntity {
         nullable: false,
     })
     name: string;
-    //
+
+
     // @ApiProperty({ example: 'male', description:"Gender: male/female" })
     // @Column({ type: 'enum', enum: GenderEnum, nullable: false})
     // gender:GenderEnum
@@ -122,67 +123,12 @@ export class SportsmanEntity {
     })
     endurance: number;
 
-    @ManyToOne(() => ClubEntity, (club) => club.id,{ nullable: true })
+    @ManyToOne(() => ClubEntity, (club) => club.id,{ nullable: false })
     @ApiProperty({
         type: ClubEntity,
     })
     club: ClubEntity;
 
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    quan_shu: string;
-
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    cisse: string;
-
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    tai_chi_quan_shu: string;
-
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    tai_chi_quan_cisse: string;
-
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    duilian: string;
-
-    @ApiProperty()
-    @Column({
-        type: "int",
-        nullable: true,
-    })
-    team_member: string;
-
-    @ApiProperty()
-    @Column({
-        type: "int",
-        nullable: true,
-    })
-    performance_duration: string;
-
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    comment: string;
 }
 
 

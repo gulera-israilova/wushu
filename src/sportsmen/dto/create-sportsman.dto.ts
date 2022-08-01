@@ -95,7 +95,7 @@ export class CreateSportsmanDto{
 
     @ApiProperty({
         description: 'Club ID',
-        required: false,
+        required: true,
     })
     club: number;
 }
