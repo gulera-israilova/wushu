@@ -1,4 +1,12 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
 import {GenderEnum} from "../enum/gender.enum";
 import {EventEntity} from "../../events/entity/event.entity";
@@ -127,5 +135,19 @@ export class ApplicationEntity{
     @ApiProperty({
         type: 'string',
     })
-    event: EventEntity
+    event: EventEntity;
+
+    @ApiProperty()
+    @Column({
+        type: 'date',
+        nullable: false,
+    })
+    createDate: Date;
+
+    @ApiProperty()
+    @UpdateDateColumn({
+        type:'timestamp',
+        nullable:true,
+    })
+    updateDate: Date;
 }

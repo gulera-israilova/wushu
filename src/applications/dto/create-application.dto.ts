@@ -67,12 +67,12 @@ export class CreateApplicationDto{
     })
     comment: string;
 
-    @ApiProperty({
-        example: 1,
-        required: true,
-    })
+    @IsEmpty()
     event: number;
 
     @IsEmpty()
     trainer:string;
+
+    @IsEmpty()
+    createDate:string;
 }

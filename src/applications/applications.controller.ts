@@ -28,11 +28,11 @@ export class ApplicationsController {
         return this.applicationsService.create(req.headers.authorization,applicationDto);
     }
 
-    @ApiOperation({summary: 'Get application by event'})
+    @ApiOperation({summary: 'Get applications by event'})
     @ApiParam({name: 'id', description: 'Event id'})
     @ApiResponse({
         status: 200,
-        description: 'Application returned successfully',
+        description: 'Applications returned successfully',
         type: [ApplicationEntity],
     })
     @Get('/getByEvent/:id')

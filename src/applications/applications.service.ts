@@ -4,31 +4,44 @@ import {Repository} from "typeorm";
 import {ApplicationEntity} from "./entity/application.entity";
 import {AuthService} from "../auth/auth.service";
 import {UpdateApplicationDto} from "./dto/update-application.dto";
+import {EventsService} from "../events/events.service";
 
 @Injectable()
 export class ApplicationsService {
     constructor(
         @InjectRepository(ApplicationEntity)
         private applicationRepository: Repository<ApplicationEntity>,
-        private auth: AuthService
+        private auth: AuthService,
+        private eventsService:EventsService
     ) {}
 
     async create(token, applicationDto): Promise<any> {
         const user = await this.auth.validate(token);
-        try {
-            for (let sportsman of applicationDto.sportsman){
+
+        const event = await this.eventsService.getById(applicationDto.event)
+        applicationDto.createDate = new Date()
+        event.applicationDeadline = new Date(event.applicationDeadline)
+        if (applicationDto.createDate > event.applicationDeadline){
+            throw new HttpException("Application time has expired", HttpStatus.BAD_REQUEST);
+        }
+
+       try {
+            for (let sportsman of applicationDto.sportsmen){
                 sportsman.trainer = user.name
+                sportsman.event = applicationDto.event
+                sportsman.createDate = applicationDto.createDate
                 await this.applicationRepository.save(sportsman)
-            }
+           }
             return {
                 status: 201,
                 success: true,
                 description: "Application successfully submitted",
             }
-       } catch (e) {
-           throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
-       }
+      } catch (e) {
+          throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
+      }
     }
+
     async getByEvent(id: number): Promise<ApplicationEntity[]> {
         let applications = await this.applicationRepository.find({
             where:{

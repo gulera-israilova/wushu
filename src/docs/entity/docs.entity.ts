@@ -15,8 +15,8 @@ export class DocsEntity{
     id: number;
 
     @ApiProperty({
-        example: 'https://wushubook.s3.amazonaws.com/reference/pampass.jpg',
-        description: "Link to docs",
+        example: 'https://wushubook.s3.amazonaws.com/document.pdf',
+        description: "Link to document",
     })
     @Column({
         type: "varchar",
@@ -24,7 +24,10 @@ export class DocsEntity{
     })
     docs: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 'document.pdf',
+        description: "Document name",
+    })
     @Column({
         type: "varchar",
         nullable: true,

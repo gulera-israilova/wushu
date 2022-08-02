@@ -14,6 +14,7 @@ import { LobbyModule } from './lobby/lobby.module';
 import {CloudinaryModule} from "./services/cloudinary/cloudinary.module";
 import { DocsModule } from './docs/docs.module';
 import { ApplicationsModule } from './applications/applications.module';
+import { SubgroupsModule } from './subgroups/subgroups.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { ApplicationsModule } from './applications/applications.module';
     LobbyModule,
     CloudinaryModule,
     DocsModule,
-    ApplicationsModule
+    ApplicationsModule,
+    SubgroupsModule
   ],
 })
 export class AppModule {}

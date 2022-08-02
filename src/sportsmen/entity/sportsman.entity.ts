@@ -1,4 +1,4 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn, Repository} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Repository} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
 import {GenderEnum} from "../enum/gender.enum";
 import {ClubEntity} from "../../clubs/entity/club.entity";
@@ -123,7 +123,7 @@ export class SportsmanEntity {
     })
     endurance: number;
 
-    @ManyToOne(() => ClubEntity, (club) => club.id,{ nullable: false })
+    @ManyToOne(() => ClubEntity, (club) => club.sportsmen,{ nullable: false })
     @ApiProperty({
         type: ClubEntity,
     })
