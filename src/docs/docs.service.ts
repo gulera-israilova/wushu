@@ -40,12 +40,12 @@ export class DocsService {
     }
 
     async getById(id: number): Promise<DocsEntity> {
-        let news = await this.docsRepository.findOne(id)
-        if (!news) {
+        let document = await this.docsRepository.findOne(id)
+        if (!document) {
             throw new NotFoundException("No news for this id")
         }
-        news.size = await this.conv_size(news.size)
-        return news;
+        document.size = await this.conv_size(document.size)
+        return document;
     }
 
     async update(id: number, updateDocsDto: UpdateDocsDto,docs): Promise<{ success: boolean; description: string; status: number }> {
@@ -73,11 +73,11 @@ export class DocsService {
     }
 
     async destroy(id: number): Promise<void> {
-        const news = await this.docsRepository.findOne({id})
-        if (!news) {throw new NotFoundException("No news for this id")}
+        const document = await this.docsRepository.findOne({id})
+        if (!document) {throw new NotFoundException("No document for this id")}
         try {
-            if (news.docsKey) {
-                await this.s3Service.deleteFile(news.docsKey)
+            if (document.docsKey) {
+                await this.s3Service.deleteFile(document.docsKey)
             }
             await getConnection()
                 .createQueryBuilder()

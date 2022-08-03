@@ -15,6 +15,7 @@ import {CloudinaryModule} from "./services/cloudinary/cloudinary.module";
 import { DocsModule } from './docs/docs.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { SubgroupsModule } from './subgroups/subgroups.module';
+import { CalendarModule } from './calendar/calendar.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { SubgroupsModule } from './subgroups/subgroups.module';
     CloudinaryModule,
     DocsModule,
     ApplicationsModule,
-    SubgroupsModule
+    SubgroupsModule,
+    CalendarModule
   ],
 })
 export class AppModule {}

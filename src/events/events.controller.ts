@@ -1,15 +1,30 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Query,
+    Req,
+    UploadedFile, UseGuards,
+    UseInterceptors
+} from '@nestjs/common';
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {EventsService} from "./events.service";
 import {CreateEventDto} from "./dto/create-event.dto";
 import {EventEntity} from "./entity/event.entity";
 import {UpdateEventDto} from "./dto/update-event.dto";
+import {AdminGuard} from "../guards/admin.guard";
+import {SecretaryGuard} from "../guards/secretary.guard";
 
 @Controller('events')
 @ApiTags('events')
 export class EventsController {
     constructor(private eventsService: EventsService) {}
 
+  //  @ApiBearerAuth()
     @ApiOperation({summary: 'Create event'})
     @ApiBody({type: CreateEventDto})
     @ApiResponse({
@@ -17,6 +32,7 @@ export class EventsController {
         description: 'Successfully created news will be returned',
         type: EventEntity,
     })
+   // @UseGuards(SecretaryGuard)
     @Post()
     create(@Body() createEventDto: CreateEventDto) {
         return this.eventsService.create(createEventDto);

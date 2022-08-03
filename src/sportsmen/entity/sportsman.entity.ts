@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Repository} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Repository} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
 import {GenderEnum} from "../enum/gender.enum";
 import {ClubEntity} from "../../clubs/entity/club.entity";
@@ -88,46 +88,20 @@ export class SportsmanEntity {
     })
     duan: number;
 
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    agility: number;
-
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    stretching: number;
-
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    power: number;
-
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    speed: number;
-
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    endurance: number;
 
     @ManyToOne(() => ClubEntity, (club) => club.sportsmen,{ nullable: false })
     @ApiProperty({
         type: ClubEntity,
     })
     club: ClubEntity;
+
+
+    // @OneToMany(() => AchievementSportsmanEntity, (achievement) => achievement.sportsman, {eager:true})
+    // @ApiProperty({
+    //     type: 'array',
+    // })
+    // achievements: AchievementSportsmanEntity[]
+
 
 }
 

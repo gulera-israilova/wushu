@@ -1,9 +1,17 @@
-import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
+import {
+    BadGatewayException,
+    BadRequestException,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    NotFoundException
+} from '@nestjs/common';
 import {SportsmanEntity} from "./entity/sportsman.entity";
 import {S3Service} from "../s3/s3.service";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
+
 
 
 @Injectable()
@@ -31,11 +39,11 @@ export class SportsmenService {
                 createSportsmanDto.referenceKey = fileUpload.Key
             } else createSportsmanDto.reference = null
 
-            } catch (e) {
-                throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
-            }
+        } catch (e) {
+            throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
+        }
 
-        return  await this.sportsmanRepository.save(createSportsmanDto);
+        return await this.sportsmanRepository.save(createSportsmanDto);
     }
 
     async get(): Promise<SportsmanEntity[]> {
@@ -51,11 +59,15 @@ export class SportsmenService {
     }
 
     async getByClub(id: number): Promise<SportsmanEntity[]> {
-        return await this.sportsmanRepository.find({
+        let sportsmen = await this.sportsmanRepository.find({
             where: {
                 club: id,
             }
         });
+        if (sportsmen.length === 0) {
+            throw new NotFoundException("No sportsmen for this club id")
+        }
+        return sportsmen;
     }
 
     async update(id: number, updateSportsmanDto: UpdateSportsmanDto,reference): Promise<SportsmanEntity> {
@@ -93,7 +105,6 @@ export class SportsmenService {
     async checkSportsmanDto(createSportsmanDto: any) {
         if (typeof createSportsmanDto.age === 'string' && createSportsmanDto.age !== '') createSportsmanDto.age = +createSportsmanDto.age
         if (typeof createSportsmanDto.club === 'string' && createSportsmanDto.club !== '') createSportsmanDto.club = +createSportsmanDto.club
-        if (typeof createSportsmanDto.club === 'string' && createSportsmanDto.club === '') createSportsmanDto.club = null
         if (typeof createSportsmanDto.dzi === 'string' && createSportsmanDto.dzi !== '') createSportsmanDto.dzi = +createSportsmanDto.dzi
         if (typeof createSportsmanDto.dzi === 'string' && createSportsmanDto.dzi === '') createSportsmanDto.dzi = 0
         if (typeof createSportsmanDto.duan === 'string' && createSportsmanDto.duan !== '') createSportsmanDto.duan = +createSportsmanDto.duan
@@ -103,6 +114,7 @@ export class SportsmenService {
         if (typeof createSportsmanDto.power === 'string' && createSportsmanDto.power !== '') createSportsmanDto.power = +createSportsmanDto.power
         if (typeof createSportsmanDto.speed === 'string' && createSportsmanDto.speed !== '') createSportsmanDto.speed = +createSportsmanDto.speed
         if (typeof createSportsmanDto.endurance === 'string' && createSportsmanDto.endurance !== '') createSportsmanDto.endurance = +createSportsmanDto.endurance
+
         return createSportsmanDto;
         }
     }

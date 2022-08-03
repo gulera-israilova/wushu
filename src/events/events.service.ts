@@ -3,14 +3,16 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Between, LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository} from "typeorm";
 import {EventEntity} from "./entity/event.entity";
 import {UpdateEventDto} from "./dto/update-event.dto";
+import {AuthService} from "../auth/auth.service";
 
 @Injectable()
 export class EventsService {
     constructor(
         @InjectRepository(EventEntity)
-        private eventRepository: Repository<EventEntity>) {}
+        private eventRepository: Repository<EventEntity>,
+        private auth: AuthService,) {}
 
-    async create(createEventDto): Promise<EventEntity> {
+    async create( createEventDto): Promise<EventEntity> {
         try {
             return  await this.eventRepository.save(createEventDto)
         } catch (e) {
@@ -21,9 +23,21 @@ export class EventsService {
     // Get event list by date (Marlen)
     async getEventsByDate(start: Date, end: Date): Promise<EventEntity[]> {
         if (start || end) {
-            if (!start) return this.eventRepository.find({where: { end: LessThan(new Date(end))}});
-            else if (!end) return this.eventRepository.find({where: { end: MoreThan(new Date(start))}});
-            return this.eventRepository.find({where: {end: Between(new Date(start), new Date(end))}})
+            if (!start) return this.eventRepository.find({
+                where: {
+                    end: LessThan(new Date(end))
+                }
+            });
+            else if (!end) return this.eventRepository.find({
+                where: {
+                    end: MoreThan(new Date(start))
+                }
+            });
+            return this.eventRepository.find({
+                where: {
+                    end: Between(new Date(start), new Date(end))
+                }
+            });
         }
         return this.eventRepository.find();
     }
@@ -36,7 +50,9 @@ export class EventsService {
             events = await this.eventRepository.find(
                 {
                     where:
-                        { end: Between(startedAt, endedAt) }
+                        {
+                            end: Between(startedAt, endedAt)
+                        }
                 })
         } else events = await this.eventRepository.find()
         for (let event of events) {

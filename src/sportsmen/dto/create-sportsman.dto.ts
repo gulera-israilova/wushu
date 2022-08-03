@@ -1,6 +1,7 @@
 import {ApiProperty} from "@nestjs/swagger";
 import {GenderEnum} from "../enum/gender.enum";
-import {IsEmpty} from "class-validator";
+import {IsArray, IsEmpty, ValidateNested} from "class-validator";
+import {Type} from "class-transformer";
 
 
 export class CreateSportsmanDto{
@@ -57,41 +58,6 @@ export class CreateSportsmanDto{
         required: false,
     })
     duan: number;
-
-    @ApiProperty( {
-        example: '9',
-        description: "Score on a 10-point scale ",
-        required: true,
-    })
-    agility: number;
-
-    @ApiProperty( {
-        example: '9',
-        description: "Score on a 10-point scale ",
-        required: true,
-    })
-    stretching: number;
-
-    @ApiProperty( {
-        example: '9',
-        description: "Score on a 10-point scale ",
-        required: true,
-    })
-    power: number;
-
-    @ApiProperty( {
-        example: '9',
-        description: "Score on a 10-point scale ",
-        required: true,
-    })
-    speed: number;
-
-    @ApiProperty( {
-        example: '9',
-        description: "Score on a 10-point scale ",
-        required: true,
-    })
-    endurance: number;
 
     @ApiProperty({
         description: 'Club ID',

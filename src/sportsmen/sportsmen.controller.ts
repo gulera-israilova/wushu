@@ -59,7 +59,7 @@ export class SportsmenController {
         description: 'Sportsmen returned successfully',
         type: CreateSportsmanDto,
     })
-    @Get('/getById/:id')
+    @Get('/getByClub/:id')
     async getByClub(@Param('id') id: number) {
         return this.sportsmenService.getByClub(id);
     }
