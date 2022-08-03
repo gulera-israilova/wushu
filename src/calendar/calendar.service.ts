@@ -10,14 +10,10 @@ export class CalendarService {
         @InjectRepository(CalendarEntity)
         private calendarRepository: Repository<CalendarEntity>) {}
 
-    async createEventForCalendar(addEventToCalendarDto): Promise<{ success: boolean; description: string; status: number }> {
+    async createEventForCalendar(addEventToCalendarDto): Promise<CalendarEntity> {
         try {
-            await this.calendarRepository.save(addEventToCalendarDto)
-            return {
-                status: 201,
-                success: true,
-                description: "The event was successfully saved to the calendar"
-            }
+            return await this.calendarRepository.save(addEventToCalendarDto)
+
         } catch (e) {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }
@@ -35,19 +31,14 @@ export class CalendarService {
         return event;
     }
 
-    async updateEventForCalendar(id :number,editEventInCalendarDto:EditEventInCalendarDto): Promise<{ success: boolean; description: string; status: number }> {
+    async updateEventForCalendar(id :number,editEventInCalendarDto:EditEventInCalendarDto): Promise<CalendarEntity> {
         let event = await this.calendarRepository.findOne(id)
         if (!event) {
             throw new HttpException("No news for this id", HttpStatus.BAD_REQUEST)
         }
         try {
             Object.assign(event, editEventInCalendarDto)
-            await this.calendarRepository.save(event)
-            return {
-                status: 201,
-                success: true,
-                description: "The event was successfully updated in the calendar"
-            };
+           return await this.calendarRepository.save(event)
         } catch (e) {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }

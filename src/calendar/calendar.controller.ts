@@ -19,6 +19,7 @@ import {CalendarEntity} from "./entity/calendar.entity";
 import {AddEventToCalendarDto} from "./dto/add-event-to-calendar.dto";
 import {EditEventInCalendarDto} from "./dto/edit-event-in-calendar.dto";
 
+
 @Controller('calendar')
 @ApiTags('calendar')
 export class CalendarController {
@@ -30,6 +31,7 @@ export class CalendarController {
     @ApiResponse({
         status: 201,
         description: 'The event was successfully saved to the calendar',
+        type: CalendarEntity,
     })
    // @UseGuards(AdminGuard)
     @Post()
@@ -68,7 +70,8 @@ export class CalendarController {
     @ApiBody({type: EditEventInCalendarDto})
     @ApiResponse({
         status: 201,
-        description: 'The event was successfully updated in the calendar'
+        description: 'The event was successfully updated in the calendar',
+        type: CalendarEntity,
     })
     async updateEventForCalendar(@Param('id') id: number, @Body() editEventInCalendarDto: EditEventInCalendarDto) {
         return await this.calendarService.updateEventForCalendar(id, editEventInCalendarDto);

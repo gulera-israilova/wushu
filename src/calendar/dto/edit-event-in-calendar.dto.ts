@@ -37,4 +37,14 @@ export class EditEventInCalendarDto {
         required: true,
     })
     time: string;
+
+    @ApiProperty({
+        required:false,
+    })
+    display: string;
+
+    @ApiProperty({
+        required:false,
+    })
+    color: string;
 }

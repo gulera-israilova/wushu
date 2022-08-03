@@ -41,6 +41,7 @@ export class CalendarEntity {
     @Column({
         type: 'date',
         nullable: false,
+
     })
     start: Date;
 
@@ -61,5 +62,19 @@ export class CalendarEntity {
         nullable: false,
     })
     time: string;
+
+    @ApiProperty({})
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    display: string;
+
+    @ApiProperty({})
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    color: string;
 
 }
