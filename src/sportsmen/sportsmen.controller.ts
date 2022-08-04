@@ -5,6 +5,7 @@ import {CreateSportsmanDto} from "./dto/create-sportsman.dto";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
 import {filter} from "../utils/file-filter";
+import {SportsmanEntity} from "./entity/sportsman.entity";
 
 @Controller('sportsmen')
 @ApiTags('sportsmen')
@@ -17,7 +18,7 @@ export class SportsmenController {
     @ApiResponse({
         status: 201,
         description: 'Successfully created employee will be returned',
-        type: CreateSportsmanDto,
+        type: SportsmanEntity,
     })
     @UseInterceptors(FileInterceptor('reference', {
         fileFilter: filter
@@ -33,7 +34,7 @@ export class SportsmenController {
     @ApiResponse({
         status: 201,
         description: 'List of sportsmen returned successfully',
-        type: [CreateSportsmanDto],
+        type: [SportsmanEntity],
     })
     @Get()
     async get() {
@@ -45,9 +46,9 @@ export class SportsmenController {
     @ApiResponse({
         status: 200,
         description: 'Sportsman returned successfully',
-        type: CreateSportsmanDto,
+        type: SportsmanEntity,
     })
-    @Get('/getById/:id')
+    @Get('/get-by-id/:id')
     async getById(@Param('id') id: number) {
         return this.sportsmenService.getById(id);
     }
@@ -57,9 +58,9 @@ export class SportsmenController {
     @ApiResponse({
         status: 200,
         description: 'Sportsmen returned successfully',
-        type: CreateSportsmanDto,
+        type: SportsmanEntity,
     })
-    @Get('/getByClub/:id')
+    @Get('/get-by-club/:id')
     async getByClub(@Param('id') id: number) {
         return this.sportsmenService.getByClub(id);
     }
@@ -72,7 +73,7 @@ export class SportsmenController {
     @ApiResponse({
         status: 201,
         description: 'Successfully updated sportsman will be returned',
-        type: [UpdateSportsmanDto],
+        type: SportsmanEntity,
     })
     @UseInterceptors(FileInterceptor('reference', {
         fileFilter: filter

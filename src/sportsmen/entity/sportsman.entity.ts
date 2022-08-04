@@ -2,6 +2,7 @@ import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn
 import {ApiProperty} from "@nestjs/swagger";
 import {GenderEnum} from "../enum/gender.enum";
 import {ClubEntity} from "../../clubs/entity/club.entity";
+import {AchievementEntity} from "../../achievements/entity/achievement.entity";
 
 @Entity({
     name:'sportsman'
@@ -88,19 +89,15 @@ export class SportsmanEntity {
     })
     duan: number;
 
-
-    @ManyToOne(() => ClubEntity, (club) => club.sportsmen,{ nullable: false })
-    @ApiProperty({
-        type: ClubEntity,
-    })
+    @ManyToOne((type) => ClubEntity, (club) => club.sportsmen,{ nullable: false })
     club: ClubEntity;
 
 
-    // @OneToMany(() => AchievementSportsmanEntity, (achievement) => achievement.sportsman, {eager:true})
+    // @OneToMany(() => AchievementEntity, (achievement) => achievement.sportsman, {eager:true})
     // @ApiProperty({
-    //     type: 'array',
+    //     type: [AchievementEntity],
     // })
-    // achievements: AchievementSportsmanEntity[]
+    // achievements: AchievementEntity[]
 
 
 }

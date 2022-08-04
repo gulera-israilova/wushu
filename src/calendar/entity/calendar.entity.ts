@@ -77,4 +77,11 @@ export class CalendarEntity {
     })
     color: string;
 
+    @ApiProperty({})
+    @Column({
+        type: 'boolean',
+        nullable: true,
+    })
+    allDay: boolean;
+
 }

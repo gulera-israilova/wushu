@@ -35,7 +35,7 @@ export class ApplicationsController {
         description: 'Applications returned successfully',
         type: [ApplicationEntity],
     })
-    @Get('/getByEvent/:id')
+    @Get('/get-by-event/:id')
     async getByEvent(@Param('id') id: number) {
         return this.applicationsService.getByEvent(id);
     }
@@ -47,7 +47,7 @@ export class ApplicationsController {
         description: 'Application returned successfully',
         type: [ApplicationEntity],
     })
-    @Get('/getById/:id')
+    @Get('/get-by-id/:id')
     async getById(@Param('id') id: number) {
         return this.applicationsService.getById(id);
     }

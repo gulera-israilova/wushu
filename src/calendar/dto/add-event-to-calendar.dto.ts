@@ -37,7 +37,6 @@ export class AddEventToCalendarDto{
     })
     time: string;
 
-
     @ApiProperty({
         required:false,
     })
@@ -48,5 +47,9 @@ export class AddEventToCalendarDto{
     })
     color: string;
 
-
+    @ApiProperty({
+        example:"false",
+        required:false,
+    })
+    allDay: boolean;
 }

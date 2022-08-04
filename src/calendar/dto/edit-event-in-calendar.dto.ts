@@ -47,4 +47,10 @@ export class EditEventInCalendarDto {
         required:false,
     })
     color: string;
+
+    @ApiProperty({
+        example:"false",
+        required:false,
+    })
+    allDay: boolean;
 }

@@ -72,7 +72,7 @@ export class EventsController {
         description: 'Events returned successfully',
         type: [EventEntity],
     })
-    @Get('/getById/:id')
+    @Get('/get-by-id/:id')
     async getById(@Param('id') id: number) {
         return this.eventsService.getById(id);
     }

@@ -33,6 +33,7 @@ export class ClubsService {
             }
             let newClub = new ClubEntity()
             newClub.name = createClubDto.name
+            newClub.options = createClubDto.options
             newClub.trainers = trainers
             return await this.clubRepository.save(newClub)
         } catch (e) {

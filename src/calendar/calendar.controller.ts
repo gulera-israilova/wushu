@@ -57,7 +57,7 @@ export class CalendarController {
         description: 'Events returned successfully',
         type: [CalendarEntity],
     })
-    @Get('/getById/:id')
+    @Get('/get-by-id/:id')
     async getByIdEventFromCalendar(@Param('id') id: number) {
         return this.calendarService.getByIdEventFromCalendar(id);
     }

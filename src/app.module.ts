@@ -16,6 +16,8 @@ import { DocsModule } from './docs/docs.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { SubgroupsModule } from './subgroups/subgroups.module';
 import { CalendarModule } from './calendar/calendar.module';
+import { AchievementsModule } from './achievements/achievements.module';
+import { StandardsModule } from './standards/standards.module';
 
 @Module({
   imports: [
@@ -34,7 +36,9 @@ import { CalendarModule } from './calendar/calendar.module';
     DocsModule,
     ApplicationsModule,
     SubgroupsModule,
-    CalendarModule
-  ],
+    CalendarModule,
+    AchievementsModule,
+    StandardsModule
+  ]
 })
 export class AppModule {}

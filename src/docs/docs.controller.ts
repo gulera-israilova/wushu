@@ -48,7 +48,7 @@ export class DocsController {
         description: 'Document returned successfully',
         type: DocsEntity,
     })
-    @Get('/getById/:id')
+    @Get('/get-by-id/:id')
     async getById(@Param('id') id: number) {
         return this.docsService.getById(id);
     }
@@ -77,5 +77,4 @@ export class DocsController {
     destroy(@Param('id') id: number) {
         return this.docsService.destroy(id);
     }
-
 }
