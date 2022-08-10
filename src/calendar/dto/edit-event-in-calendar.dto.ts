@@ -18,25 +18,18 @@ export class EditEventInCalendarDto {
     city: string;
 
     @ApiProperty({
-        example: '2022-01-01',
+        example: '2022-01-03T14:30',
         description: 'Event start date',
         required: true,
     })
     start: string;
 
     @ApiProperty({
-        example: '2022-01-03',
+        example: '2022-01-03T14:30',
         description: 'End date of the event',
         required: false,
     })
     end: string;
-
-    @ApiProperty({
-        example: '9:00-12:00',
-        description: 'Event time',
-        required: false,
-    })
-    time: string;
 
     @ApiProperty({
         required:false,
@@ -53,4 +46,9 @@ export class EditEventInCalendarDto {
         required:false,
     })
     allDay: boolean;
+
+    @ApiProperty({
+        required:false,
+    })
+    textColor: string;
 }

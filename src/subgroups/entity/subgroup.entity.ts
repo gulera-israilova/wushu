@@ -1,6 +1,7 @@
 import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
-import {EventEntity} from "../../events/entity/event.entity";
+import {EventEntity} from "../../events/entity/event.entity"
+import {ArenaEnum} from "../enum/arena.enum";
 
 @Entity({
     name:'subgroup'
@@ -38,14 +39,16 @@ export class SubgroupEntity{
 
     @ApiProperty()
     @Column({
-        type: "varchar",
-        nullable: true,
+        type: 'enum',
+        enum: ArenaEnum,
+        default: ArenaEnum.SOUTH_NORTH,
     })
-    arena: string;
+    gender: ArenaEnum;
+
 
     @ApiProperty()
     @Column({
-        type: 'date',
+        type: 'timestamptz',
         nullable: false,
     })
     start_time: Date;

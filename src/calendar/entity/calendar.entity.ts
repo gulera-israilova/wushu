@@ -36,7 +36,7 @@ export class CalendarEntity {
     city: string;
 
     @ApiProperty({
-        example: '11.07.2022',
+        example: '2022-01-03T14:30',
     })
     @Column({
         type: 'timestamp',
@@ -46,22 +46,13 @@ export class CalendarEntity {
     start: Date;
 
     @ApiProperty({
-        example: '13.07.2022',
+        example: '2022-01-03T14:30',
     })
     @Column({
         type: 'timestamp',
         nullable: true,
     })
     end: Date;
-
-    @ApiProperty({
-        example:'9:00-12:00'
-    })
-    @Column({
-        type: 'varchar',
-        nullable: true,
-    })
-    time: string;
 
     @ApiProperty({})
     @Column({
@@ -83,5 +74,12 @@ export class CalendarEntity {
         nullable: true,
     })
     allDay: boolean;
+
+    @ApiProperty({})
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    textColor: string;
 
 }

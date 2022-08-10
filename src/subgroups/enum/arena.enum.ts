@@ -3,4 +3,5 @@ export enum ArenaEnum {
     EAST = 'east',
     SOUTH = 'south',
     NORTH = 'north',
+    SOUTH_NORTH = 'south_north'
 }
