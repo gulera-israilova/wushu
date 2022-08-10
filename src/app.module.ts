@@ -18,6 +18,7 @@ import { SubgroupsModule } from './subgroups/subgroups.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { AchievementsModule } from './achievements/achievements.module';
 import { StandardsModule } from './standards/standards.module';
+import { OfpModule } from './ofp/ofp.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { StandardsModule } from './standards/standards.module';
     SubgroupsModule,
     CalendarModule,
     AchievementsModule,
-    StandardsModule
+    StandardsModule,
+    OfpModule
   ]
 })
 export class AppModule {}

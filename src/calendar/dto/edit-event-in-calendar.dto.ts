@@ -34,7 +34,7 @@ export class EditEventInCalendarDto {
     @ApiProperty({
         example: '9:00-12:00',
         description: 'Event time',
-        required: true,
+        required: false,
     })
     time: string;
 

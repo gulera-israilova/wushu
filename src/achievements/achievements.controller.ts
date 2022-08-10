@@ -49,7 +49,7 @@ export class AchievementsController {
 
     @Patch(':id')
     @ApiOperation({summary: 'Update athlete\'s achievement'})
-    @ApiParam({name: '2', description: 'Achievement id' })
+    @ApiParam({name: 'id', description: 'Achievement id' })
     @ApiBody({type: UpdateAchievementDto})
     @ApiResponse({
         status: 201,

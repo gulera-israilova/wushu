@@ -1,12 +1,11 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Repository} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {SportsmanEntity} from "../../sportsmen/entity/sportsman.entity";
 
-
 @Entity({
-   name:'standard'
+    name:'ofp'
 })
-export class StandardEntity {
+export class OfpEntity {
     @ApiProperty({
         example: '1',
         description: 'An identification number',
@@ -17,43 +16,24 @@ export class StandardEntity {
     id: number;
 
     @ApiProperty({
-        example: 'Run',
-        description: 'Type of standard',
-    })
-    @Column({
-        type: 'varchar',
-        nullable: false,
-    })
-    type: string;
-
-    @ApiProperty({
         example: '7.5',
-        description: "Standard grade",
+        description: "Ofp",
     })
     @Column({
         type:'real',
         nullable: false,
     })
-    grade:number;
-
-    @ApiProperty({
-        description: 'Note',
-    })
-    @Column({
-        type:'varchar',
-        nullable: true,
-    })
-    note: string;
+    ofp:number;
 
     @ApiProperty({
         example: '2022',
-        description: 'Date of passing standards',
+        description: 'Year of ofp',
     })
     @Column({
-        type:'date',
+        type:'int',
         nullable: false,
     })
-    date: Date;
+    year: number;
 
     @ManyToOne(() => SportsmanEntity,
         (sportsman) => sportsman.id,
@@ -70,7 +50,3 @@ export class StandardEntity {
     @JoinColumn()
     sportsman: SportsmanEntity;
 }
-
-
-
-

@@ -2,8 +2,6 @@ import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundExce
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {AchievementEntity} from "./entity/achievement.entity";
-import {SportsmanEntity} from "../sportsmen/entity/sportsman.entity";
-import {UpdateSportsmanDto} from "../sportsmen/dto/update-sportsman.dto";
 import {UpdateAchievementDto} from "./dto/update-achievement.dto";
 
 @Injectable()

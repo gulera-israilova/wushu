@@ -13,7 +13,7 @@ export class DocsService {
     private docsRepository: Repository<DocsEntity>,
     private s3Service: S3Service) {}
 
-    async create(createDocsDto: CreateDocsDto, docs): Promise<{ success: boolean; description: any; status: number }> {
+    async create(createDocsDto: CreateDocsDto, docs): Promise<DocsEntity> {
         try {
             const fileUpload = await this.s3Service.uploadDocs(docs)
             createDocsDto.docs = fileUpload.Location
@@ -23,12 +23,8 @@ export class DocsService {
         } catch (e) {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
         }
-        await this.docsRepository.save(createDocsDto)
-        return {
-            status: 201,
-            success: true,
-            description: "The created document has been successfully saved to the database"
-        };
+       return await this.docsRepository.save(createDocsDto)
+
     }
 
     async get(): Promise<DocsEntity[]> {
@@ -48,7 +44,7 @@ export class DocsService {
         return document;
     }
 
-    async update(id: number, updateDocsDto: UpdateDocsDto,docs): Promise<{ success: boolean; description: string; status: number }> {
+    async update(id: number, updateDocsDto: UpdateDocsDto,docs): Promise<DocsEntity> {
         let news = await this.docsRepository.findOne(id)
         if (!news) {
             throw new HttpException("No news for this id", HttpStatus.BAD_REQUEST)
@@ -61,12 +57,7 @@ export class DocsService {
                 updateDocsDto.docsKey = fileUpload.Key
             } else updateDocsDto.docs = news.docs
             Object.assign(news, updateDocsDto)
-            await this.docsRepository.save(news)
-            return {
-                status: 201,
-                success: true,
-                description: "The updated document has been successfully saved to the database"
-            };
+            return await this.docsRepository.save(news)
         } catch (e) {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }

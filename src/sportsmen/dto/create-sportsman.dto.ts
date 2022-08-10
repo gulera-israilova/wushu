@@ -64,4 +64,7 @@ export class CreateSportsmanDto{
         required: true,
     })
     club: number;
+
+    @IsEmpty()
+    ofp:number
 }

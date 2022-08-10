@@ -1,17 +1,11 @@
-import {
-    BadGatewayException,
-    BadRequestException,
-    HttpException,
-    HttpStatus,
-    Injectable,
-    NotFoundException
-} from '@nestjs/common';
+import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {SportsmanEntity} from "./entity/sportsman.entity";
 import {S3Service} from "../s3/s3.service";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
-
+import {OfpService} from "../ofp/ofp.service";
+import {UpdateOfpDto} from "./dto/update-ofp.dto";
 
 
 @Injectable()
@@ -19,7 +13,9 @@ export class SportsmenService {
     constructor(
         @InjectRepository(SportsmanEntity)
         private sportsmanRepository: Repository<SportsmanEntity>,
-        private s3Service: S3Service) {
+        private s3Service: S3Service,
+       // private ofpService:OfpService
+        ) {
     }
 
     async create(createSportsmanDto, reference): Promise<SportsmanEntity> {
@@ -67,6 +63,8 @@ export class SportsmenService {
         if (sportsmen.length === 0) {
             throw new NotFoundException("No sportsmen for this club id")
         }
+
+
         return sportsmen;
     }
 
@@ -88,6 +86,12 @@ export class SportsmenService {
         } catch (e) {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    async updateOfp (id:number, updateOfpDto:UpdateOfpDto){
+        let sportsman = await this.sportsmanRepository.findOne(id)
+        Object.assign(sportsman, updateOfpDto)
+        await this.sportsmanRepository.save(sportsman)
     }
 
     async destroy(id: number): Promise<void> {

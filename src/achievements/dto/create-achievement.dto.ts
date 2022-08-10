@@ -23,24 +23,34 @@ export class CreateAchievementDto{
 
     @ApiProperty({
         description: "Subgroup",
+        required:true,
     })
     subgroup:string;
 
     @ApiProperty({
+        description: "Category",
+        required:true,
+    })
+    category:string;
+
+    @ApiProperty({
         example: '1',
         description: 'Place in the championship',
+        required:false,
     })
     place: number;
 
     @ApiProperty({
         example: '2022',
         description: 'Championship year',
+        required:true,
     })
     year: number;
 
     @ApiProperty({
         example: '1',
         description: 'Sportsman id',
+        required:true,
     })
     sportsman:number;
 

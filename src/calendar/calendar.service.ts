@@ -20,7 +20,12 @@ export class CalendarService {
     }
 
     async getEventsFromCalendar(): Promise<CalendarEntity[]> {
-        return await this.calendarRepository.find();
+        let events = await this.calendarRepository.find()
+        for (let event of events){
+            event.start = new Date(event.start.getTime()+360*60000)
+            event.end = new Date (event.end.getTime()+360*60000)
+        }
+        return events;
     }
 
     async getByIdEventFromCalendar(id:number): Promise<CalendarEntity> {
@@ -28,6 +33,8 @@ export class CalendarService {
         if (!event) {
             throw new NotFoundException("No event for this id")
         }
+        event.start = new Date(event.start.getTime()+360*60000)
+        event.end = new Date (event.end.getTime()+360*60000)
         return event;
     }
 

@@ -48,6 +48,15 @@ export class AchievementEntity {
     subgroup:string;
 
     @ApiProperty({
+        description: "Category",
+    })
+    @Column({
+        type:'varchar',
+        nullable: false,
+    })
+    category:string;
+
+    @ApiProperty({
         example: '1',
         description: 'Place in the championship',
     })

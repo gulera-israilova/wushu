@@ -6,6 +6,7 @@ import {FileInterceptor} from "@nestjs/platform-express";
 import {filter} from "../utils/file-filter";
 import {DocsEntity} from "./entity/docs.entity";
 import {UpdateDocsDto} from "./dto/update-docs.dto";
+import {CalendarEntity} from "../calendar/entity/calendar.entity";
 
 
 @Controller('docs')
@@ -19,6 +20,7 @@ export class DocsController {
     @ApiResponse({
         status: 201,
         description: 'The created document has been successfully saved to the database',
+        type: DocsEntity,
     })
     @UseInterceptors(FileInterceptor('docs', {
         fileFilter: filter
@@ -61,6 +63,7 @@ export class DocsController {
     @ApiResponse({
         status: 201,
         description: 'The updated document has been successfully saved to the database',
+        type: DocsEntity,
     })
     @UseInterceptors(FileInterceptor('docs', {
         fileFilter: filter

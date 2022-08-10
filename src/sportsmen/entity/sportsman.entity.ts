@@ -92,7 +92,15 @@ export class SportsmanEntity {
     @ManyToOne((type) => ClubEntity, (club) => club.sportsmen,{ nullable: false })
     club: ClubEntity;
 
-
+    @ApiProperty({
+        example: '7.5',
+        description: "Ofp",
+    })
+    @Column({
+        type:'real',
+        nullable: true,
+    })
+    ofp:number;
     // @OneToMany(() => AchievementEntity, (achievement) => achievement.sportsman, {eager:true})
     // @ApiProperty({
     //     type: [AchievementEntity],

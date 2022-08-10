@@ -39,7 +39,7 @@ export class CalendarEntity {
         example: '11.07.2022',
     })
     @Column({
-        type: 'date',
+        type: 'timestamp',
         nullable: false,
 
     })
@@ -49,7 +49,7 @@ export class CalendarEntity {
         example: '13.07.2022',
     })
     @Column({
-        type: 'date',
+        type: 'timestamp',
         nullable: true,
     })
     end: Date;
@@ -59,7 +59,7 @@ export class CalendarEntity {
     })
     @Column({
         type: 'varchar',
-        nullable: false,
+        nullable: true,
     })
     time: string;
 

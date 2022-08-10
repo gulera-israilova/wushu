@@ -1,4 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
+import {IsDate} from "class-validator";
+import {Type} from "class-transformer";
 
 export class AddEventToCalendarDto{
 
@@ -21,6 +23,8 @@ export class AddEventToCalendarDto{
         description: 'Event start date',
         required: true,
     })
+    @IsDate()
+    @Type(() => Date)
     start: Date;
 
     @ApiProperty({
@@ -28,12 +32,14 @@ export class AddEventToCalendarDto{
         description: 'End date of the event',
         required: false,
     })
+    @IsDate()
+    @Type(() => Date)
     end: Date;
 
     @ApiProperty({
         example: '9:00-12:00',
         description: 'Event time',
-        required: true,
+        required: false,
     })
     time: string;
 

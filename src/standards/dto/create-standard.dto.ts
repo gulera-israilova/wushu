@@ -10,7 +10,7 @@ export class CreateStandardDto {
     type: string;
 
     @ApiProperty({
-        example: '7,5',
+        example: '7.5',
         description: "Standard grade",
     })
     grade: number;
@@ -21,9 +21,9 @@ export class CreateStandardDto {
     note: string;
 
     @ApiProperty({
-        example: '2022',
-        description: 'Year of passing standards',
+        example: '2022-08-15',
+        description: 'Date of passing standards',
     })
-    year: number;
+    date: Date;
 
 }
