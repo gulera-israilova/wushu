@@ -63,5 +63,9 @@ export class AchievementsService {
             throw new BadGatewayException('Deletion didn\'t happen');
         }
     }
+    private async grade(rank:string,place:number) {
+
+
+    }
 
 }

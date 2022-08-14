@@ -1,7 +1,10 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
 import {EventEntity} from "../../events/entity/event.entity"
 import {ArenaEnum} from "../enum/arena.enum";
+import {UserEntity} from "../../users/entity/user.entity";
+import {ApplicationEntity} from "../../applications/entity/application.entity";
+import {SportsmanSubgroupEntity} from "../../sportsmen-subgroups/entity/sportsman-subgroup.entity";
 
 @Entity({
     name:'subgroup'
@@ -22,7 +25,7 @@ export class SubgroupEntity{
     })
     @Column({
         type: 'varchar',
-        nullable: false,
+        nullable: true,
         unique:true,
     })
     name: string;
@@ -33,7 +36,7 @@ export class SubgroupEntity{
     })
     @Column({
         type: 'varchar',
-        nullable: false,
+        nullable: true,
     })
     description: string;
 
@@ -43,21 +46,22 @@ export class SubgroupEntity{
         enum: ArenaEnum,
         default: ArenaEnum.SOUTH_NORTH,
     })
-    gender: ArenaEnum;
+    arena: ArenaEnum;
 
 
     @ApiProperty()
     @Column({
         type: 'timestamptz',
-        nullable: false,
+        nullable: true,
     })
     start_time: Date;
 
     @ManyToOne(() => EventEntity,
         (event) => event.id,
         {
-            eager:true,
+            eager:false,
             nullable: false,
+            cascade:["insert",'update']
         })
     @JoinColumn()
     @ApiProperty({
@@ -65,4 +69,7 @@ export class SubgroupEntity{
     })
     event: EventEntity;
 
+    @OneToMany(() => SportsmanSubgroupEntity, ns => ns.subgroup,{cascade:["insert",'update'],eager:true})
+    @ApiProperty({type: SportsmanSubgroupEntity})
+    applications: SportsmanSubgroupEntity[]
 }

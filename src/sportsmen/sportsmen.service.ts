@@ -6,6 +6,7 @@ import {Repository} from "typeorm";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
 import {OfpService} from "../ofp/ofp.service";
 import {UpdateOfpDto} from "./dto/update-ofp.dto";
+import {ClubsService} from "../clubs/clubs.service";
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class SportsmenService {
         @InjectRepository(SportsmanEntity)
         private sportsmanRepository: Repository<SportsmanEntity>,
         private s3Service: S3Service,
-       // private ofpService:OfpService
+       // private clubService:ClubsService
         ) {
     }
 
@@ -47,7 +48,12 @@ export class SportsmenService {
     }
 
     async getById(id: number): Promise<SportsmanEntity> {
-        let sportsman = await this.sportsmanRepository.findOne(id)
+        let sportsman = await this.sportsmanRepository.findOne({
+            where:{
+                id:id,
+            },
+            relations:['club']
+        })
         if (!sportsman) {
             throw new NotFoundException("No sportsman for this id")
         }

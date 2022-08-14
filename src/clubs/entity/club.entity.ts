@@ -30,11 +30,11 @@ export class ClubEntity{
     @ApiProperty({
         type: 'array',
     })
-    @ManyToMany(() => UserEntity,{ eager:true })
+    @ManyToMany(() => UserEntity,{ eager:false })
     @JoinTable()
     trainers: UserEntity[];
 
-    @OneToMany(() => SportsmanEntity, (sportsman) => sportsman.club, {eager:true})
+    @OneToMany(() => SportsmanEntity, (sportsman) => sportsman.club, {eager:false})
     @ApiProperty({
         type: 'array',
     })

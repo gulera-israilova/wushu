@@ -42,11 +42,18 @@ export class ClubsService {
     }
 
     async get(): Promise<ClubEntity[]> {
-        return await this.clubRepository.find({})
+        return await this.clubRepository.find({
+            relations:['trainers','sportsmen']
+        })
     }
 
     async getById(id: number): Promise<ClubEntity> {
-        let club = await this.clubRepository.findOne(id)
+        let club = await this.clubRepository.findOne({
+            where:{
+                id:id
+            },
+            relations:['trainers','sportsmen']
+        })
         if (!club) {
             throw new NotFoundException("No club for this id")
         }

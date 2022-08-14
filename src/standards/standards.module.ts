@@ -8,7 +8,7 @@ import {OfpModule} from "../ofp/ofp.module";
 
 @Module({
   imports: [TypeOrmModule.forFeature([StandardEntity]),
-    //forwardRef(()=>SportsmenModule),
+    forwardRef(()=>SportsmenModule),
     forwardRef(() => OfpModule)],
   controllers: [StandardsController],
   providers: [StandardsService],

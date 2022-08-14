@@ -44,14 +44,15 @@ export class ApplicationsService {
 
     async getByEvent(id: number): Promise<ApplicationEntity[]> {
         let applications = await this.applicationRepository.find({
-            where:{
-                event:id,
+                where: {
+                    event: id
+                },
             }
-        })
-        for (let application of applications){
-            // @ts-ignore
-            application.event = application.event.title
-        }
+        )
+        // let applications = await this.applicationRepository.createQueryBuilder('application')
+        //     .where({event:id})
+        //     .leftJoinAndSelect('application.club', 'club').select('club.name').getMany();
+
         if (applications.length === 0) {
             throw new NotFoundException("No applications for this event")
         }
@@ -63,8 +64,6 @@ export class ApplicationsService {
         if (!application) {
             throw new NotFoundException("No application for this id")
         }
-       // @ts-ignore
-        application.event = application.event.title
         return application;
     }
 

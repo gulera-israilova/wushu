@@ -10,7 +10,8 @@ export class StandardsService {
 
     constructor(
         @InjectRepository(StandardEntity)
-        private standardRepository: Repository<StandardEntity>) {}
+        private standardRepository: Repository<StandardEntity>,
+   ) {}
 
     async create(standardDto): Promise<DeepPartial<StandardEntity>[]> {
         let response =[]
@@ -36,15 +37,11 @@ export class StandardsService {
     }
 
     async getBySportsman(id: number): Promise<StandardEntity[]> {
-        let standards = await this.standardRepository.find({
+        return await this.standardRepository.find({
             where: {
                 sportsman: id,
             }
         });
-        if (standards.length === 0) {
-            throw new NotFoundException("No standards for this sportsman")
-        }
-        return standards;
     }
 
     async update(id: number, updateStandardDto: UpdateStandardDto): Promise<StandardEntity> {

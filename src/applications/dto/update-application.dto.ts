@@ -27,39 +27,39 @@ export  class UpdateApplicationDto {
     age: number;
 
     @ApiProperty({
-        example: '1',
-        description: 'Club id',
+        example: 'Frigate',
+        description: 'Club name',
         required: false,
     })
-    club: number;
+    club: string;
 
     @ApiProperty({
-        required: true,
+        required: false,
     })
-    quan_shu: string;
+    quanShu: string;
 
     @ApiProperty({
-        required: true,
+        required: false,
     })
     cisse: string;
 
     @ApiProperty({
-        required: true,
+        required: false,
     })
     tai_chi_quan_shu: string;
 
     @ApiProperty({
-        required: true,
+        required: false,
     })
     tai_chi_quan_cisse: string;
 
     @ApiProperty({
-        required: true,
+        required: false,
     })
     duilian: string;
 
     @ApiProperty({
-        required: true,
+        required: false,
     })
     team_number: number;
 

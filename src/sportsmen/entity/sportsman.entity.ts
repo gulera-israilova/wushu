@@ -89,7 +89,7 @@ export class SportsmanEntity {
     })
     duan: number;
 
-    @ManyToOne((type) => ClubEntity, (club) => club.sportsmen,{ nullable: false })
+    @ManyToOne((type) => ClubEntity, (club) => club.sportsmen,{ nullable: false,eager:false })
     club: ClubEntity;
 
     @ApiProperty({

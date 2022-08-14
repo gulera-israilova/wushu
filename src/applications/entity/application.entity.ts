@@ -10,6 +10,7 @@ import {
 import {ApiProperty} from "@nestjs/swagger";
 import {GenderEnum} from "../enum/gender.enum";
 import {EventEntity} from "../../events/entity/event.entity";
+import {ClubEntity} from "../../clubs/entity/club.entity";
 
 @Entity({
     name:"application"
@@ -55,19 +56,31 @@ export class ApplicationEntity{
     })
     age:number;
 
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: true,
-    })
-    club: number;
+    // @ManyToOne(() => ClubEntity,
+    //     (club) => club.id,
+    //     {
+    //         eager:true,
+    //         nullable: false,
+    //     })
+    // @JoinColumn()
+    // @ApiProperty({
+    //     type: 'string',
+    // })
+    // club: ClubEntity | null
 
     @ApiProperty()
     @Column({
         type: "varchar",
         nullable: true,
     })
-    quan_shu: string;
+    club: string;
+
+    @ApiProperty()
+    @Column({
+        type: "varchar",
+        nullable: true,
+    })
+    quanShu: string;
 
     @ApiProperty()
     @Column({
@@ -128,14 +141,14 @@ export class ApplicationEntity{
     @ManyToOne(() => EventEntity,
         (event) => event.id,
         {
-            eager:true,
+            eager:false,
             nullable: false,
         })
     @JoinColumn()
     @ApiProperty({
         type: 'string',
     })
-    event: EventEntity;
+    event: EventEntity | null
 
     @ApiProperty()
     @Column({

@@ -19,6 +19,7 @@ import { CalendarModule } from './calendar/calendar.module';
 import { AchievementsModule } from './achievements/achievements.module';
 import { StandardsModule } from './standards/standards.module';
 import { OfpModule } from './ofp/ofp.module';
+import { SportsmenSubgroupsModule } from './sportsmen-subgroups/sportsmen-subgroups.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { OfpModule } from './ofp/ofp.module';
     CalendarModule,
     AchievementsModule,
     StandardsModule,
-    OfpModule
+    OfpModule,
+    SportsmenSubgroupsModule
   ]
 })
 export class AppModule {}

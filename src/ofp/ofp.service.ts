@@ -5,7 +5,6 @@ import {OfpEntity} from "./entity/ofp.entity";
 import {StandardsService} from "../standards/standards.service";
 import {CreateOfpDto} from "./dto/create-ofp.dto";
 import {SportsmenService} from "../sportsmen/sportsmen.service";
-import {UpdateOfpDto} from "../sportsmen/dto/update-ofp.dto";
 
 
 @Injectable()
@@ -55,7 +54,7 @@ export class OfpService {
         });
     }
 
-    private async  generateOfp (id:number){
+     async  generateOfp (id:number){
         let date = new Date()
         let year = date.getFullYear()
         let standards = await this.standardsService.getBySportsman(id)
@@ -90,6 +89,7 @@ export class OfpService {
             })
             if (sportsman) {
                 Object.assign(sportsman, obj)
+                await this.ofpRepository.save(sportsman)
             } else { // @ts-ignore
                 await this.ofpRepository.save(obj)
             }
@@ -97,6 +97,6 @@ export class OfpService {
 
         let currentOfp = await this.getOfpBySportsmanByYear(id,year)
         await this.sportsmenService.updateOfp(id,currentOfp)
-    }
+     }
 
 }

@@ -4,10 +4,12 @@ import { SubgroupsService } from './subgroups.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {SubgroupEntity} from "./entity/subgroup.entity";
 import {ApplicationsModule} from "../applications/applications.module";
+import {SportsmenSubgroupsModule} from "../sportsmen-subgroups/sportsmen-subgroups.module";
 
 @Module({
   imports:[TypeOrmModule.forFeature([SubgroupEntity]),
-    forwardRef(() => ApplicationsModule)],
+    forwardRef(() => ApplicationsModule),
+    forwardRef(() => SportsmenSubgroupsModule)],
   controllers: [SubgroupsController],
   providers: [SubgroupsService],
   exports:[SubgroupsService]
