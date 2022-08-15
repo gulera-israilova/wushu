@@ -1,7 +1,6 @@
 import {Controller, Get, Param, Query} from '@nestjs/common';
 import {ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {OfpService} from "./ofp.service";
-import {StandardEntity} from "../standards/entity/standard.entity";
 import {OfpEntity} from "./entity/ofp.entity";
 
 @Controller('ofp')

@@ -2,8 +2,6 @@ import {Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany,
 import {ApiProperty} from "@nestjs/swagger";
 import {EventEntity} from "../../events/entity/event.entity"
 import {ArenaEnum} from "../enum/arena.enum";
-import {UserEntity} from "../../users/entity/user.entity";
-import {ApplicationEntity} from "../../applications/entity/application.entity";
 import {SportsmanSubgroupEntity} from "../../sportsmen-subgroups/entity/sportsman-subgroup.entity";
 import {StatusEnum} from "../enum/status.enum";
 

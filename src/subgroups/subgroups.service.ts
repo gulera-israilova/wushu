@@ -153,7 +153,6 @@ export class SubgroupsService {
      async create(createSubgroupDto:CreateSubgroupDto){
 
         let newSubgroup
-        let subgroups =[]
 
         try {
         // @ts-ignore
