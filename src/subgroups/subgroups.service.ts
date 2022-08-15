@@ -8,6 +8,7 @@ import {SportsmenSubgroupsService} from "../sportsmen-subgroups/sportsmen-subgro
 import {CreateSubgroupDto} from "./dto/create-subgroup.dto";
 import {SportsmanSubgroupsDto} from "../sportsmen-subgroups/dto/sportsman-subgroups.dto";
 import {ArenaEnum} from "./enum/arena.enum";
+import {StatusEnum} from "./enum/status.enum";
 
 
 @Injectable()
@@ -109,6 +110,7 @@ export class SubgroupsService {
             let createSubgroupDto = new CreateSubgroupDto()
             createSubgroupDto.event = id
             createSubgroupDto.applications = []
+            createSubgroupDto.status = StatusEnum.PENDING
             let a = i+1
             createSubgroupDto.name = "Подгруппа " + a
             let s = 0

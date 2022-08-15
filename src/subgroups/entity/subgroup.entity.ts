@@ -5,6 +5,7 @@ import {ArenaEnum} from "../enum/arena.enum";
 import {UserEntity} from "../../users/entity/user.entity";
 import {ApplicationEntity} from "../../applications/entity/application.entity";
 import {SportsmanSubgroupEntity} from "../../sportsmen-subgroups/entity/sportsman-subgroup.entity";
+import {StatusEnum} from "../enum/status.enum";
 
 @Entity({
     name:'subgroup'
@@ -69,7 +70,16 @@ export class SubgroupEntity{
     })
     event: EventEntity;
 
+    @ApiProperty()
+    @Column({
+        type: 'enum',
+        enum: StatusEnum,
+        default: StatusEnum.PENDING,
+    })
+    status: StatusEnum;
+
     @OneToMany(() => SportsmanSubgroupEntity, ns => ns.subgroup,{cascade:["insert",'update'],eager:true})
     @ApiProperty({type: SportsmanSubgroupEntity})
     applications: SportsmanSubgroupEntity[]
+
 }

@@ -3,6 +3,7 @@ import {ArenaEnum} from "../enum/arena.enum";
 import {IsArray, IsEnum, ValidateNested} from "class-validator";
 import {SportsmanSDto, SportsmanSubgroupsDto} from "../../sportsmen-subgroups/dto/sportsman-subgroups.dto";
 import {Type} from "class-transformer";
+import {StatusEnum} from "../enum/status.enum";
 
 
 export class CreateSubgroupDto {
@@ -36,6 +37,13 @@ export class CreateSubgroupDto {
     @ValidateNested({ each: true })
     @Type(() => SportsmanSubgroupsDto)
     applications: SportsmanSubgroupsDto[]
+
+    @ApiProperty({
+        example: 'approved',
+        description: 'Arena: approved/not_approved/pending',
+    })
+    @IsEnum(StatusEnum)
+    status: StatusEnum;
 }
 
 
