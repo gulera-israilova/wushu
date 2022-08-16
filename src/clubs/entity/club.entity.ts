@@ -46,4 +46,12 @@ export class ClubEntity{
         nullable: true,
     })
     options: string;
+
+    @ApiProperty()
+    @Column({
+        type: 'real',
+        nullable: true,
+    })
+    rating: number;
+
 }

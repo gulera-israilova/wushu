@@ -54,4 +54,5 @@ export class CreateAchievementDto{
     })
     sportsman:number;
 
+    grade:number
 }

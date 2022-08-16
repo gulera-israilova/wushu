@@ -101,6 +101,16 @@ export class SportsmanEntity {
         nullable: true,
     })
     ofp:number;
+
+    @ApiProperty({
+        example: '7',
+        description: "Achievement points",
+    })
+    @Column({
+        type:'real',
+        nullable: true,
+    })
+    points:number;
     // @OneToMany(() => AchievementEntity, (achievement) => achievement.sportsman, {eager:true})
     // @ApiProperty({
     //     type: [AchievementEntity],
