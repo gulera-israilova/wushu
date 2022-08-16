@@ -5,10 +5,16 @@ import {SubgroupEntity} from "./entity/subgroup.entity";
 import {ApplicationsService} from "../applications/applications.service";
 import {ApplicationEntity} from "../applications/entity/application.entity";
 import {SportsmenSubgroupsService} from "../sportsmen-subgroups/sportsmen-subgroups.service";
-import {CreateSubgroupDto} from "./dto/create-subgroup.dto";
 import {SportsmanSubgroupsDto} from "../sportsmen-subgroups/dto/sportsman-subgroups.dto";
 import {ArenaEnum} from "./enum/arena.enum";
 import {StatusEnum} from "./enum/status.enum";
+import {
+    ApproveProtocolDto,
+    CreateGradeSportsman,
+    CreateRefereeTeamDto,
+    CreateSubgroupDto
+} from "./dto/create-subgroup.dto";
+
 
 
 @Injectable()
@@ -150,6 +156,9 @@ export class SubgroupsService {
         })
 
     }
+    async getSubgroup(id:number){
+        return await this.subgroupRepository.findOne(id)
+    }
      async create(createSubgroupDto:CreateSubgroupDto){
 
         let newSubgroup
@@ -187,7 +196,7 @@ export class SubgroupsService {
 
         if (updateSubgroupDto.applications && updateSubgroupDto.applications.length !== 0) {
             const applications = await this.sportsmenSubgroupsService.get({subgroup: subgroup.id})
-             await this.sportsmenSubgroupsService.removeUseless(applications)
+                await this.sportsmenSubgroupsService.removeUseless(applications)
 
             for (const e of updateSubgroupDto.applications) {
                  e.subgroup = subgroup.id
@@ -198,6 +207,65 @@ export class SubgroupsService {
         Object.assign(subgroup,updateSubgroupDto)
         return await this.subgroupRepository.save(subgroup)
     }
+
+    async createRefereeTeam (id: number, createRefereeTeamDto: CreateRefereeTeamDto) {
+        let findSubgroup = await this.subgroupRepository.findOne(id)
+        if (!findSubgroup) {
+            throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
+        }
+        if (findSubgroup.applications && findSubgroup.applications.length !== 0) {
+            const applications = await this.sportsmenSubgroupsService.get({subgroup: findSubgroup.id})
+            await this.sportsmenSubgroupsService.removeUseless(applications)
+
+            for (const e of findSubgroup.applications) {
+                // @ts-ignore
+                e.subgroup = findSubgroup.id
+                e.referee_team = createRefereeTeamDto.referee_team
+                await this.sportsmenSubgroupsService.create(e);
+            }
+        }
+
+        Object.assign(findSubgroup,createRefereeTeamDto)
+        return await this.subgroupRepository.save(findSubgroup)
+    }
+
+    async createGradeSportsman (id: number, createGradeSportsman: CreateGradeSportsman) {
+        let findSubgroup = await this.subgroupRepository.findOne(id)
+        if (!findSubgroup) {
+            throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
+        }
+        if (findSubgroup.applications && findSubgroup.applications.length !== 0) {
+            const applications = await this.sportsmenSubgroupsService.get({subgroup: findSubgroup.id})
+            await this.sportsmenSubgroupsService.removeUseless(applications)
+
+            for (const e of findSubgroup.applications) {
+                // @ts-ignore
+                e.subgroup = findSubgroup.id
+                await this.sportsmenSubgroupsService.create(e);
+            }
+        }
+
+        Object.assign(findSubgroup,createGradeSportsman)
+        return await this.subgroupRepository.save(findSubgroup)
+    }
+
+    async approve (id: number, approveProtocolDto: ApproveProtocolDto) {
+        let findSubgroups = await this.subgroupRepository.find({
+            where:{
+                event:id
+            }
+        })
+        for (let subgroup of findSubgroups){
+            subgroup.status = approveProtocolDto.status
+        }
+        if (findSubgroups.length===0) {
+            throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
+        }
+
+        Object.assign(findSubgroups,approveProtocolDto)
+        return await this.subgroupRepository.save(findSubgroups)
+    }
+
 
     async destroy(id: number): Promise<void> {
         const subgroup = await this.subgroupRepository.findOne({id})

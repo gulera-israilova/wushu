@@ -59,7 +59,8 @@ export class SportsmenSubgroupsService {
             await this.delete(entity.id);
         }
     }
-    async edit(id: number, data: SportsmanSubgroupsDto): Promise<any> {
+
+    async edit(id: number, data: SportsmanSubgroupEntity): Promise<any> {
         const entity: SportsmanSubgroupEntity = await this.sportsmanSubgroupRepository.findOne({id});
         if (!entity) {
             throw new NotFoundException(
