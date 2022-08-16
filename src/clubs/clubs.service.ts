@@ -57,7 +57,7 @@ export class ClubsService {
         if (!club) {
             throw new NotFoundException("No club for this id")
         }
-        return this.clubRepository.findOne(id);
+        return club;
     }
 
     async update(id: number, updateClubDto: UpdateClubDto): Promise<ClubEntity> {
