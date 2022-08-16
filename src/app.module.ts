@@ -20,6 +20,7 @@ import { AchievementsModule } from './achievements/achievements.module';
 import { StandardsModule } from './standards/standards.module';
 import { OfpModule } from './ofp/ofp.module';
 import { SportsmenSubgroupsModule } from './sportsmen-subgroups/sportsmen-subgroups.module';
+import { AchievementRatingModule } from './achievement-rating/achievement-rating.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { SportsmenSubgroupsModule } from './sportsmen-subgroups/sportsmen-subgro
     AchievementsModule,
     StandardsModule,
     OfpModule,
-    SportsmenSubgroupsModule
+    SportsmenSubgroupsModule,
+    AchievementRatingModule
   ]
 })
 export class AppModule {}

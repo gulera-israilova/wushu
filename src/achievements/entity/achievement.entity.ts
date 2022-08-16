@@ -94,6 +94,15 @@ export class AchievementEntity {
     })
     sportsman: SportsmanEntity;
 
+    @ApiProperty({
+        example: '1',
+        description: 'Achievement score',
+    })
+    @Column({
+        type:'real',
+        nullable: true,
+    })
+    grade: number;
 }
 
 

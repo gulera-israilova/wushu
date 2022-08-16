@@ -7,6 +7,8 @@ import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
 import {OfpService} from "../ofp/ofp.service";
 import {UpdateOfpDto} from "./dto/update-ofp.dto";
 import {ClubsService} from "../clubs/clubs.service";
+import {UpdateAchievementDto} from "../achievements/dto/update-achievement.dto";
+import {UpdatePointsDto} from "../achievement-rating/dto/update-points.dto";
 
 
 @Injectable()
@@ -97,6 +99,12 @@ export class SportsmenService {
     async updateOfp (id:number, updateOfpDto:UpdateOfpDto){
         let sportsman = await this.sportsmanRepository.findOne(id)
         Object.assign(sportsman, updateOfpDto)
+        await this.sportsmanRepository.save(sportsman)
+    }
+
+    async updatePoints (id:number, updatePointsDto:UpdatePointsDto){
+        let sportsman = await this.sportsmanRepository.findOne(id)
+        Object.assign(sportsman, updatePointsDto)
         await this.sportsmanRepository.save(sportsman)
     }
 

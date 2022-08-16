@@ -5,13 +5,18 @@ import {Repository} from "typeorm";
 import {UsersService} from "../users/users.service";
 import {UpdateClubDto} from "./dto/update-club.dto";
 import {RoleEnum} from "../users/enum/role.enum";
+import {AchievementRatingService} from "../achievement-rating/achievement-rating.service";
+import {OfpService} from "../ofp/ofp.service";
 
 
 @Injectable()
 export class ClubsService {
     constructor(@InjectRepository(ClubEntity)
                 private clubRepository:Repository<ClubEntity>,
-                private usersService:UsersService) {}
+                private usersService:UsersService,
+                private ofpService:OfpService,
+                private achievementRatingService:AchievementRatingService
+                ) {}
 
 
     async create(createClubDto): Promise<ClubEntity> {
@@ -42,12 +47,35 @@ export class ClubsService {
     }
 
     async get(): Promise<ClubEntity[]> {
-        return await this.clubRepository.find({
+        let date = new Date()
+        let year = date.getFullYear()
+        let clubs = await this.clubRepository.find({
             relations:['trainers','sportsmen']
         })
+        for (let club of clubs ){
+            let ofpSum = 0
+            let pointsSum = 0
+            if(club.sportsmen && club.sportsmen.length!==0){
+                for(let sportsman of club.sportsmen) {
+                    let ofp = await this.ofpService.getOfpBySportsmanByYear(sportsman.id, year)
+                    if(ofp){
+                        ofpSum += ofp.ofp
+                    }
+                    let points = await this.achievementRatingService.getOfpBySportsmanByYear(sportsman.id,year)
+                    if(points){
+                        pointsSum += points.points
+                    }
+                }
+            }
+            club.rating = ofpSum + pointsSum
+        }
+
+        return clubs;
     }
 
     async getById(id: number): Promise<ClubEntity> {
+        let date = new Date()
+        let year = date.getFullYear()
         let club = await this.clubRepository.findOne({
             where:{
                 id:id
@@ -57,6 +85,21 @@ export class ClubsService {
         if (!club) {
             throw new NotFoundException("No club for this id")
         }
+        let ofpSum = 0
+        let pointsSum = 0
+        if(club.sportsmen && club.sportsmen.length!==0){
+            for(let sportsman of club.sportsmen) {
+                let ofp = await this.ofpService.getOfpBySportsmanByYear(sportsman.id, year)
+                if(ofp){
+                    ofpSum += ofp.ofp
+                }
+                let points = await this.achievementRatingService.getOfpBySportsmanByYear(sportsman.id,year)
+                if(points){
+                    pointsSum += points.points
+                }
+            }
+        }
+        club.rating = ofpSum + pointsSum
         return club;
     }
 

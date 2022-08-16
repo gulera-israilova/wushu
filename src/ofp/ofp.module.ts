@@ -5,12 +5,14 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {OfpEntity} from "./entity/ofp.entity";
 import {StandardsModule} from "../standards/standards.module";
 import {SportsmenModule} from "../sportsmen/sportsmen.module";
+import {ClubsModule} from "../clubs/clubs.module";
 
 @Module({
   imports:[
       TypeOrmModule.forFeature([OfpEntity]),
    forwardRef(() => StandardsModule),
-   forwardRef(() => SportsmenModule)
+   forwardRef(() => SportsmenModule),
+   forwardRef(() => ClubsModule),
     ],
   controllers: [OfpController],
   providers: [OfpService],

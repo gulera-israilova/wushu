@@ -7,6 +7,7 @@ import {S3Module} from "../s3/s3.module";
 import {ClubsModule} from "../clubs/clubs.module";
 import {AchievementsModule} from "../achievements/achievements.module";
 import {OfpModule} from "../ofp/ofp.module";
+import {AchievementRatingModule} from "../achievement-rating/achievement-rating.module";
 
 
 @Module({
@@ -14,7 +15,8 @@ import {OfpModule} from "../ofp/ofp.module";
     forwardRef(() => S3Module),
     forwardRef(()=>ClubsModule),
     forwardRef(()=>AchievementsModule),
-   forwardRef(() => OfpModule)
+    forwardRef(() => OfpModule),
+    forwardRef(()=>AchievementRatingModule)
   ],
   controllers: [SportsmenController],
   providers: [SportsmenService],
