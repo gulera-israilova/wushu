@@ -28,6 +28,7 @@ export class ApplicationsService {
        try {
             for (let sportsman of applicationDto.sportsmen){
                 sportsman.trainer = user.name
+                sportsman.trainerId = user.id
                 sportsman.event = applicationDto.event
                 sportsman.createDate = applicationDto.createDate
                 await this.applicationRepository.save(sportsman)
@@ -49,9 +50,6 @@ export class ApplicationsService {
                 },
             }
         )
-        // let applications = await this.applicationRepository.createQueryBuilder('application')
-        //     .where({event:id})
-        //     .leftJoinAndSelect('application.club', 'club').select('club.name').getMany();
 
         if (applications.length === 0) {
             throw new NotFoundException("No applications for this event")
@@ -63,6 +61,19 @@ export class ApplicationsService {
         let application = await this.applicationRepository.findOne(id)
         if (!application) {
             throw new NotFoundException("No application for this id")
+        }
+        return application;
+    }
+
+    async getByTrainer(token): Promise<ApplicationEntity[]> {
+        const user = await this.auth.validate(token);
+        let application = await this.applicationRepository.find({
+            where:{
+                trainerId:user.id
+            }
+        })
+        if (!application) {
+            throw new NotFoundException("No applications by this trainer")
         }
         return application;
     }

@@ -74,5 +74,8 @@ export class CreateApplicationDto{
     trainer:string;
 
     @IsEmpty()
+    trainerId:number;
+
+    @IsEmpty()
     createDate:string;
 }

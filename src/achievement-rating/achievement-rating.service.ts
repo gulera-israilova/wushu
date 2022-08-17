@@ -5,6 +5,8 @@ import {SportsmenService} from "../sportsmen/sportsmen.service";
 import {AchievementRatingEntity} from "./entity/achievement-rating.entity";
 import {AchievementsService} from "../achievements/achievements.service";
 import {CreateAchievementRatingDto} from "./dto/create-achievement-rating-dto";
+import {UpdateOfpDto} from "../sportsmen/dto/update-ofp.dto";
+import {UpdatePointsDto} from "./dto/update-points.dto";
 
 @Injectable()
 export class AchievementRatingService {
@@ -16,9 +18,17 @@ export class AchievementRatingService {
     }
 
     async getOfp(): Promise<AchievementRatingEntity[]> {
+        let date = new Date()
+        let year = date.getFullYear()
         let sportsmen = await this.sportsmenService.get()
         for ( let sportsman of sportsmen){
             await this.generateOfp(sportsman.id)
+            let currentPoints = await this.getOfpBySportsmanByYear(sportsman.id,year)
+            if(currentPoints){
+                let updatePoints = new UpdatePointsDto()
+                updatePoints.points = currentPoints.points
+                await this.sportsmenService.updatePoints(sportsman.id,updatePoints)
+            }
         }
         return await this.achievementRatingRepository.find()
     }
@@ -54,8 +64,6 @@ export class AchievementRatingService {
     }
 
     async  generateOfp (id:number){
-        let date = new Date()
-        let year = date.getFullYear()
         let standards = await this.achievementsService.getBySportsman(id)
         let map = standards.reduce((r, i) => {
             r[i.year] = r[i.year] || [];
@@ -90,9 +98,5 @@ export class AchievementRatingService {
                 await this.achievementRatingRepository.save(obj)
             }
         }
-
-        let currentPoints = await this.getOfpBySportsmanByYear(id,year)
-        await this.sportsmenService.updatePoints(id,currentPoints)
     }
-
 }
