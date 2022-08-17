@@ -1,13 +1,10 @@
-import {BadGatewayException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {SportsmanEntity} from "./entity/sportsman.entity";
 import {S3Service} from "../s3/s3.service";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
-import {OfpService} from "../ofp/ofp.service";
 import {UpdateOfpDto} from "./dto/update-ofp.dto";
-import {ClubsService} from "../clubs/clubs.service";
-import {UpdateAchievementDto} from "../achievements/dto/update-achievement.dto";
 import {UpdatePointsDto} from "../achievement-rating/dto/update-points.dto";
 
 
@@ -16,8 +13,7 @@ export class SportsmenService {
     constructor(
         @InjectRepository(SportsmanEntity)
         private sportsmanRepository: Repository<SportsmanEntity>,
-        private s3Service: S3Service,
-       // private clubService:ClubsService
+        private s3Service: S3Service
         ) {
     }
 
@@ -71,8 +67,6 @@ export class SportsmenService {
         if (sportsmen.length === 0) {
             throw new NotFoundException("No sportsmen for this club id")
         }
-
-
         return sportsmen;
     }
 
@@ -96,13 +90,12 @@ export class SportsmenService {
         }
     }
 
-    async updateOfp (id:number, updateOfpDto:UpdateOfpDto){
+    async updateOfp(id:number,updateOfpDto:UpdateOfpDto){
         let sportsman = await this.sportsmanRepository.findOne(id)
         Object.assign(sportsman, updateOfpDto)
         await this.sportsmanRepository.save(sportsman)
     }
-
-    async updatePoints (id:number, updatePointsDto:UpdatePointsDto){
+    async updatePoints(id:number,updatePointsDto:UpdatePointsDto){
         let sportsman = await this.sportsmanRepository.findOne(id)
         Object.assign(sportsman, updatePointsDto)
         await this.sportsmanRepository.save(sportsman)
@@ -111,13 +104,13 @@ export class SportsmenService {
     async destroy(id: number): Promise<void> {
         const sportsman = await this.sportsmanRepository.findOne(id)
         if (!sportsman) {throw new NotFoundException("No sportsman for this id")}
-        try{
+       // try{
             await this.s3Service.deleteFile(sportsman.referenceKey)
             await this.sportsmanRepository.delete(sportsman)
 
-        } catch (e){
-            throw new BadGatewayException('Deletion didn\'t happen');
-        }
+        // } catch (e){
+        //     throw new BadGatewayException('Deletion didn\'t happen');
+        // }
     }
 
     async checkSportsmanDto(createSportsmanDto: any) {

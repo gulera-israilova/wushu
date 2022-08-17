@@ -4,8 +4,6 @@ import {ApplicationsService} from "./applications.service";
 import {ApplicationEntity} from "./entity/application.entity";
 import {ApplicationDto} from "./dto/application.dto";
 import {TrainerGuard} from "../guards/trainer.guard";
-import {EventEntity} from "../events/entity/event.entity";
-import {UpdateEventDto} from "../events/dto/update-event.dto";
 import {UpdateApplicationDto} from "./dto/update-application.dto";
 import {SecretaryGuard} from "../guards/secretary.guard";
 
@@ -50,6 +48,19 @@ export class ApplicationsController {
     @Get('/get-by-id/:id')
     async getById(@Param('id') id: number) {
         return this.applicationsService.getById(id);
+    }
+
+    @ApiOperation({summary: 'Get applications by trainer'})
+    @ApiResponse({
+        status: 200,
+        description: 'Application returned successfully',
+        type: [ApplicationEntity],
+    })
+    @ApiBearerAuth()
+    @UseGuards(TrainerGuard)
+    @Get('get-by-trainer')
+    async getByTrainer(@Req() req) {
+        return this.applicationsService.getByTrainer(req.headers.authorization);
     }
 
    // @ApiBearerAuth()

@@ -7,6 +7,7 @@ import {UsersModule} from "../users/users.module";
 import {AchievementEntity} from "../achievements/entity/achievement.entity";
 import {AchievementRatingModule} from "../achievement-rating/achievement-rating.module";
 import {OfpModule} from "../ofp/ofp.module";
+import {ClubRatingController} from "./club-rating.controller";
 
 
 @Module({
@@ -15,7 +16,7 @@ import {OfpModule} from "../ofp/ofp.module";
     forwardRef(()=>OfpModule),
     forwardRef(()=>AchievementRatingModule),
   ],
-  controllers: [ClubsController],
+  controllers: [ClubsController,ClubRatingController],
   providers: [ClubsService,AchievementEntity],
   exports:[ClubsService]
 })

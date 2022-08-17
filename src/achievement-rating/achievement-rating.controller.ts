@@ -31,5 +31,4 @@ export class AchievementRatingController {
     async getBySportsman(@Param('id') id: number,@Query('year') year: number) {
         return this.achievementRatingService.getBySportsman(id,year);
     }
-
 }

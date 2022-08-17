@@ -10,7 +10,6 @@ import {
 import {ApiProperty} from "@nestjs/swagger";
 import {GenderEnum} from "../enum/gender.enum";
 import {EventEntity} from "../../events/entity/event.entity";
-import {ClubEntity} from "../../clubs/entity/club.entity";
 
 @Entity({
     name:"application"
@@ -152,6 +151,21 @@ export class ApplicationEntity{
 
     @ApiProperty()
     @Column({
+        type: 'int',
+        nullable: false,
+    })
+    trainerId: number;
+
+    @ApiProperty()
+    @Column({
+        type: 'varchar',
+        nullable: false,
+    })
+    trainer: string;
+
+
+    @ApiProperty()
+    @Column({
         type: 'date',
         nullable: false,
     })
@@ -163,4 +177,6 @@ export class ApplicationEntity{
         nullable:true,
     })
     updateDate: Date;
+
+
 }

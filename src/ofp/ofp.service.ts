@@ -5,6 +5,7 @@ import {OfpEntity} from "./entity/ofp.entity";
 import {StandardsService} from "../standards/standards.service";
 import {CreateOfpDto} from "./dto/create-ofp.dto";
 import {SportsmenService} from "../sportsmen/sportsmen.service";
+import {UpdateOfpDto} from "../sportsmen/dto/update-ofp.dto";
 
 
 @Injectable()
@@ -17,9 +18,17 @@ export class OfpService {
     }
 
     async getOfp(): Promise<OfpEntity[]> {
+        let date = new Date()
+        let year = date.getFullYear()
        let sportsmen = await this.sportsmenService.get()
         for ( let sportsman of sportsmen){
             await this.generateOfp(sportsman.id)
+            let currentOfp = await this.getOfpBySportsmanByYear(sportsman.id,year)
+            if(currentOfp){
+                let updateOfp = new UpdateOfpDto()
+                updateOfp.ofp = currentOfp.ofp
+                await this.sportsmenService.updateOfp(sportsman.id,updateOfp)
+            }
         }
       return await this.ofpRepository.find()
     }
@@ -55,8 +64,6 @@ export class OfpService {
     }
 
      async  generateOfp (id:number){
-        let date = new Date()
-        let year = date.getFullYear()
         let standards = await this.standardsService.getBySportsman(id)
         let map = standards.reduce((r, i) => {
             // @ts-ignore
@@ -94,9 +101,6 @@ export class OfpService {
                 await this.ofpRepository.save(obj)
             }
         }
-
-        let currentOfp = await this.getOfpBySportsmanByYear(id,year)
-        await this.sportsmenService.updateOfp(id,currentOfp)
      }
 
 }
