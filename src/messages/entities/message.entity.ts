@@ -8,10 +8,8 @@ import {
   Repository,
 } from 'typeorm';
 import { UserEntity } from '../../users/entity/user.entity';
-import { ClubEntity } from '../../clubs/entity/club.entity';
-import { ApiProperty } from '@nestjs/swagger';
 import { MessageStatusEnum } from '../enums/message.status.enum';
-import { DirectEntity } from '../../direct/entities/direct.entity';
+import { Lobby } from '../../lobby/entities/lobby.entity';
 
 @Entity({ name: 'message' })
 export class MessageEntity {
@@ -27,10 +25,7 @@ export class MessageEntity {
   edited: boolean;
   @Column()
   read: MessageStatusEnum;
-  @ManyToOne(() => DirectEntity, (direct) => direct.id, { nullable: true })
-  @JoinColumn({ name: 'direct_id' })
-  direct: number;
-  @ManyToOne(() => DirectEntity, (direct) => direct.id, { nullable: true })
+  @ManyToOne(() => Lobby, (lobby) => lobby.id, { nullable: true })
   @JoinColumn({ name: 'lobby_id' })
   lobby: number;
   @Column({

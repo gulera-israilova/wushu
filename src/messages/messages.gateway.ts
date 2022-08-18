@@ -1,71 +1,95 @@
 import {
-  WebSocketGateway,
-  SubscribeMessage,
-  MessageBody,
-  WebSocketServer,
-  ConnectedSocket,
+    WebSocketGateway,
+    SubscribeMessage,
+    MessageBody,
+    WebSocketServer,
+    ConnectedSocket,
 } from '@nestjs/websockets';
-import { MessagesService } from './messages.service';
-import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
-import { Server, Socket } from 'socket.io';
-import {
-  Request,
-  UploadedFile,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
-import { UserGuard } from '../guards/user.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
-@UseGuards(UserGuard)
+import {MessagesService} from './messages.service';
+import {CreateMessageDto} from './dto/create-message.dto';
+import {UpdateMessageDto} from './dto/update-message.dto';
+import {Server, Socket} from 'socket.io';
+import {Request, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {ReadDto} from "./dto/Read.dto";
+import {IsTypingDto} from "./dto/isTyping.dto";
+
 @WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
+    cors: {
+        origin: '*',
+        maxHttpBufferSize: 1e8
+    },
 })
 export class MessagesGateway {
-  @WebSocketServer()
-  server: Server;
-  constructor(private readonly messagesService: MessagesService) {}
+    @WebSocketServer()
+    server: Server;
 
-  @SubscribeMessage('createMessage')
-  @UseInterceptors(FileInterceptor('attachment'))
-  async create(
-    @MessageBody() createMessageDto: CreateMessageDto,
-    @UploadedFile() attachment: Express.Multer.File,
-    @ConnectedSocket() client: Socket,
-    @Request() req,
-  ) {
-    const message = this.messagesService.create(
-      createMessageDto,
-      req.user.id,
-      attachment,
-    );
-    this.server.emit('message', message);
-    return message;
-  }
-  @SubscribeMessage('typing')
-  async isTyping(
-    @MessageBody('isTyping') isTyping: boolean,
-    @Request() req,
-    @ConnectedSocket() client: Socket,
-  ) {
-    const name = await this.messagesService.getClientName(req.user.id);
-    client.broadcast.emit('typing', { name, isTyping });
-  }
-  @SubscribeMessage('updateMessage')
-  async update(
-    @MessageBody() updateMessageDto: UpdateMessageDto,
-    @Request() req,
-  ) {
-    return await this.messagesService.update(
-      updateMessageDto.id,
-      updateMessageDto,
-      req.user.id,
-    );
-  }
-  @SubscribeMessage('removeMessage')
-  async remove(@MessageBody() id: number, @Request() req) {
-    await this.messagesService.remove(id, req.user.id);
-  }
+    constructor(private readonly messagesService: MessagesService) {
+    }
+
+    @SubscribeMessage('createMessage')
+    async create(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() createMessageDto:CreateMessageDto,
+    ) {
+        const message = await this.messagesService.create(
+            createMessageDto
+        );
+        this.server.to(createMessageDto.lobby.toString()).emit('message', message);
+    }
+
+    @SubscribeMessage('last-message')
+    async lastMessage(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() readDto: ReadDto,
+    ) {
+        const last_message = await this.messagesService.lastMessage(readDto);
+        this.server
+            .to(readDto.lobbyId.toString())
+            .emit('read_message', last_message);
+    }
+
+    @SubscribeMessage('join-to-lobby')
+    async join(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
+        console.log(data);
+        data['lobby_list'].forEach((e) => {
+            client.join(e.toString());
+        });
+    }
+
+    @SubscribeMessage('typing')
+    async isTyping(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: IsTypingDto,
+    ) {
+        console.log(data)
+        client.broadcast
+            .to(data.lobbyId.toString())
+            .emit('typing', {id: data.userId, typing: data.isTyping});
+    }
+
+    @SubscribeMessage('updateMessage')
+    async update(
+        @MessageBody() updateMessageDto: UpdateMessageDto,
+        @Request() req,
+    ) {
+        return await this.messagesService.update(
+            updateMessageDto.id,
+            updateMessageDto,
+            req.user.id,
+        );
+    }
+
+    @SubscribeMessage('removeMessage')
+    async remove(@MessageBody() id: number, @Request() req) {
+        await this.messagesService.remove(id, req.user.id);
+    }
+
+    // @UseInterceptors(new TransformInterceptor())
+    @SubscribeMessage('photo')
+    async photo(@MessageBody() data: any,
+    ) {
+        console.log(data)
+        return {hello: `hello`}
+    }
+
 }
