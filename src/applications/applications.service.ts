@@ -99,11 +99,11 @@ export class ApplicationsService {
     async destroy(id: number): Promise<void> {
         const application = await this.applicationRepository.findOne(id)
         if (!application) {throw new NotFoundException("No application for this id")}
-        try {
+       // try {
             await this.applicationRepository.delete(application)
-        } catch (e){
-            throw new BadGatewayException('Deletion didn\'t happen');
-        }
+        // } catch (e){
+        //     throw new BadGatewayException('Deletion didn\'t happen');
+        // }
     }
 
 }

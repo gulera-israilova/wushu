@@ -63,9 +63,6 @@ export class SubgroupEntity{
             cascade:["insert",'update']
         })
     @JoinColumn()
-    @ApiProperty({
-        type: 'string',
-    })
     event: EventEntity;
 
     @ApiProperty()

@@ -1,7 +1,6 @@
 import {Body, Controller, Get, Param, Patch, Post} from '@nestjs/common';
 import {SubgroupsService} from "./subgroups.service";
 import {ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {StandardEntity} from "../standards/entity/standard.entity";
 import {SubgroupEntity} from "./entity/subgroup.entity";
 import {
     ApproveProtocolDto,
@@ -9,8 +8,6 @@ import {
     CreateRefereeTeamDto,
     CreateSubgroupDto
 } from "./dto/create-subgroup.dto";
-import {UpdateEventDto} from "../events/dto/update-event.dto";
-import {EventEntity} from "../events/entity/event.entity";
 
 
 @Controller('subgroups')
@@ -105,4 +102,6 @@ export class SubgroupsController {
     async createGradeSportsman(@Param('id') id: number, @Body() createGradeSportsman: CreateGradeSportsman) {
         return await this.subgroupsService.createGradeSportsman(id, createGradeSportsman);
     }
+
+
 }

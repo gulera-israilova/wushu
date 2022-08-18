@@ -21,6 +21,7 @@ import { StandardsModule } from './standards/standards.module';
 import { OfpModule } from './ofp/ofp.module';
 import { SportsmenSubgroupsModule } from './sportsmen-subgroups/sportsmen-subgroups.module';
 import { AchievementRatingModule } from './achievement-rating/achievement-rating.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { AchievementRatingModule } from './achievement-rating/achievement-rating
     StandardsModule,
     OfpModule,
     SportsmenSubgroupsModule,
-    AchievementRatingModule
+    AchievementRatingModule,
+    NotificationsModule
   ]
 })
 export class AppModule {}
