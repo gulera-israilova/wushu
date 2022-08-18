@@ -42,7 +42,11 @@ export class SportsmenService {
     }
 
     async get(): Promise<SportsmanEntity[]> {
-        return await this.sportsmanRepository.find();
+        let sportsmen = await this.sportsmanRepository.find();
+        for (let sportsman of sportsmen){
+            sportsman.rating = sportsman.points+sportsman.ofp
+        }
+        return sportsmen;
     }
 
     async getById(id: number): Promise<SportsmanEntity> {
@@ -55,6 +59,7 @@ export class SportsmenService {
         if (!sportsman) {
             throw new NotFoundException("No sportsman for this id")
         }
+        sportsman.rating = sportsman.ofp+sportsman.points
         return sportsman;
     }
 
@@ -66,6 +71,9 @@ export class SportsmenService {
         });
         if (sportsmen.length === 0) {
             throw new NotFoundException("No sportsmen for this club id")
+        }
+        for (let sportsman of sportsmen){
+            sportsman.rating = sportsman.points+sportsman.ofp
         }
         return sportsmen;
     }

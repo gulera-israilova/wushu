@@ -89,7 +89,7 @@ export class SportsmanEntity {
     })
     duan: number;
 
-    @ManyToOne((type) => ClubEntity, (club) => club.sportsmen,{ nullable: false,eager:false,cascade:true })
+    @ManyToOne((type) => ClubEntity, (club) => club.sportsmen,{ nullable: true,eager:false,cascade:true })
     club: ClubEntity;
 
     @ApiProperty({
@@ -116,7 +116,15 @@ export class SportsmanEntity {
     //     type: [AchievementEntity],
     // })
     // achievements: AchievementEntity[]
-
+    @ApiProperty({
+        example: '7',
+        description: "Achievement points",
+    })
+    @Column({
+        type:'real',
+        nullable: true,
+    })
+    rating:number;
 
 }
 
