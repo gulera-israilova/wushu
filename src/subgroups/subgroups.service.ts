@@ -79,29 +79,37 @@ export class SubgroupsService {
         }
         if (quan_shu.length !== 0) {
              quan_shuResponse = await this.groupByQuan_shu(quan_shu)
-            for (let item of quan_shuResponse ){
-                if (item.length !== 0) response.push(item)
+            for (let arr of quan_shuResponse) {
+                for (let item of arr) {
+                    if (item.length !== 0) response.push(item)
+                }
             }
         }
 
         if (cisse.length !== 0) {
             cisseResponse = await this.groupByCisse(cisse)
-            for (let item of cisseResponse ){
-                if (item.length !== 0) response.push(item)
+            for (let arr of cisseResponse ) {
+                for (let item of arr) {
+                    if (item.length !== 0) response.push(item)
+                }
             }
         }
 
         if (tai_chi_quan_shu.length !== 0) {
             tai_chi_quan_shuResponse = await this.groupByTai_chi_quan_shu(tai_chi_quan_shu)
-            for (let item of tai_chi_quan_shuResponse ){
-                if (item.length !== 0) response.push(item)
+            for (let arr of tai_chi_quan_shuResponse) {
+                for (let item of arr) {
+                    if (item.length !== 0) response.push(item)
+                }
             }
         }
 
         if (tai_chi_quan_cisse.length !== 0) {
             tai_chi_quan_cisseResponse = await this.groupByTai_chi_quan_cisse(tai_chi_quan_cisse)
-            for (let item of tai_chi_quan_cisseResponse ){
-                if (item.length !== 0)  response.push(item)
+            for (let arr of tai_chi_quan_cisseResponse) {
+                for (let item of arr) {
+                    if (item.length !== 0) response.push(item)
+                }
             }
         }
         for (let i=0;i<response.length;i++) {
@@ -327,6 +335,7 @@ export class SubgroupsService {
 
     private async groupByQuan_shu(data:ApplicationEntity[]){
     let groups = await this.groupByGenderByAge(data)
+        let response =[]
       for (let group of groups){
           let map = group.reduce((r, i) => {
               r[i.quanShu] = r[i.quanShu] || [];
@@ -337,29 +346,32 @@ export class SubgroupsService {
           for (let key in map) {
               arr1.push(map[key]);
           }
-          return arr1
+         response.push(arr1)
       }
+      return response;
     }
 
     private async groupByCisse(data:ApplicationEntity[]){
         let groups = await this.groupByGenderByAge(data)
+        let response =[]
         for (let group of groups) {
-                let map = group.reduce((r, i) => {
-                    r[i.cisse] = r[i.cisse] || [];
-                    r[i.cisse].push(i);
-                    return r;
-                }, {});
-                let arr1 = [];
-                for (let key in map) {
-                    arr1.push(map[key]);
-                }
-                return arr1
-
+            let map = group.reduce((r, i) => {
+                r[i.cisse] = r[i.cisse] || [];
+                r[i.cisse].push(i);
+                return r;
+            }, {});
+            let arr1 = [];
+            for (let key in map) {
+                arr1.push(map[key]);
+            }
+            response.push(arr1)
         }
+        return response;
     }
 
     private async groupByTai_chi_quan_cisse(data:ApplicationEntity[]){
         let groups = await this.groupByGenderByAge(data)
+        let response =[]
         for (let group of groups){
 
                 let map = group.reduce((r, i) => {
@@ -371,12 +383,13 @@ export class SubgroupsService {
                 for (let key in map) {
                     arr1.push(map[key]);
                 }
-                return arr1
-
+            response.push(arr1)
         }
+        return response
     }
 
     private async groupByTai_chi_quan_shu(data:ApplicationEntity[]){
+        let response =[]
         let groups = await this.groupByGenderByAge(data)
         for (let group of groups){
             let map = group.reduce((r, i) => {
@@ -388,8 +401,10 @@ export class SubgroupsService {
             for (let key in map) {
                 arr1.push(map[key]);
             }
-            return arr1
+response.push(arr1)
+
         }
+        return response;
     }
 
 
