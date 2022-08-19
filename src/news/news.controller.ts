@@ -47,7 +47,7 @@ export class NewsController {
         description: 'News returned successfully',
         type: [NewsEntity],
     })
-    @Get('/getById/:id')
+    @Get('/get-by-id/:id')
     async getById(@Param('id') id: number) {
         return this.newsService.getById(id);
     }

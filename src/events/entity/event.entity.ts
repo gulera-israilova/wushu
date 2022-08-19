@@ -31,7 +31,7 @@ export class EventEntity {
     })
     @Column({
         type: 'varchar',
-        nullable: false,
+        nullable: true,
     })
     city: string;
 
@@ -49,7 +49,7 @@ export class EventEntity {
     })
     @Column({
         type: 'date',
-        nullable: false,
+        nullable: true,
     })
     end: Date;
 
@@ -76,7 +76,7 @@ export class EventEntity {
     })
     @Column({
         type: 'varchar',
-        nullable: false,
+        nullable: true,
     })
     address: string;
 
@@ -97,4 +97,5 @@ export class EventEntity {
         nullable: true,
     })
     month: string;
+
 }

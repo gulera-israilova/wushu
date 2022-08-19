@@ -29,9 +29,6 @@ export class ClubEntity{
 
     @ApiProperty({
         type: 'array',
-        items: {
-            type: 'number',
-        },
     })
     @ManyToMany(() => UserEntity,{ eager:false,cascade:true })
     @JoinTable()
