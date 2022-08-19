@@ -322,7 +322,6 @@ export class SubgroupsService {
             }
         }
         response.push(duilianChildren, duilianMale1417, duilianMale1839, duilianMale4059, duilianMale60, duilianFemale1417, duilianFemale1839, duilianFemale4059,duilianFemale60)
-        console.log('duilian',response)
         return response
     }
 
@@ -338,21 +337,25 @@ export class SubgroupsService {
           for (let key in map) {
               arr1.push(map[key]);
           }
-          console.log('quan_shu',arr1)
           return arr1
       }
     }
 
     private async groupByCisse(data:ApplicationEntity[]){
         let groups = await this.groupByGenderByAge(data)
+        console.log('groups',groups)
         for (let group of groups){
+            console.log('group',group)
             let map = group.reduce((r, i) => {
+                console.log('i.cisse',i.cisse)
                 r[i.cisse] = r[i.cisse] || [];
                 r[i.cisse].push(i);
+                console.log('r',r)
                 return r;
             }, {});
             let arr1 = [];
             for (let key in map) {
+                console.log('map[key]',map[key])
                 arr1.push(map[key]);
             }
             console.log('cisse',arr1)
@@ -372,7 +375,6 @@ export class SubgroupsService {
             for (let key in map) {
                 arr1.push(map[key]);
             }
-            console.log('groupByTai_chi_quan_cisse',arr1)
             return arr1
         }
     }
@@ -389,7 +391,6 @@ export class SubgroupsService {
             for (let key in map) {
                 arr1.push(map[key]);
             }
-            console.log('groupByTai_chi_quan_shu',arr1)
             return arr1
         }
     }
@@ -443,7 +444,6 @@ export class SubgroupsService {
             }
         }
         response.push(male810, male1113, male1417, male1839, male4059, male60, female810, female1113,female1417,female1839,female4059,female60)
-        console.log(response)
         return response
 
 }}
