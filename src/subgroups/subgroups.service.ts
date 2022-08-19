@@ -156,10 +156,10 @@ export class SubgroupsService {
         let event = await this.eventsService.getByIdEvent(id)
         event.end = new Date()
         let finished =true
-       finished = event.end < new Date;
+        finished = event.end < new Date;
         return {
-           finished,
-           data:subgroups
+            finished,
+            data:subgroups
         };
     }
 
@@ -184,12 +184,12 @@ export class SubgroupsService {
         return  await this.subgroupRepository.findOne(id)
     }
 
-     async create(createSubgroupDto:CreateSubgroupDto){
+    async create(createSubgroupDto:CreateSubgroupDto){
 
         let newSubgroup
 
         try {
-        // @ts-ignore
+            // @ts-ignore
             newSubgroup = await this.subgroupRepository.save(createSubgroupDto)
             createSubgroupDto.applications = newSubgroup.applications
 
@@ -197,14 +197,14 @@ export class SubgroupsService {
             throw new HttpException("Incorrect input data", HttpStatus.BAD_REQUEST)
         }
         try {
-        if (createSubgroupDto.applications && createSubgroupDto.applications.length !== 0) {
-            for (let e of createSubgroupDto.applications) {
-                e.subgroup = newSubgroup.id
-                await this.sportsmenSubgroupsService.create(e)
+            if (createSubgroupDto.applications && createSubgroupDto.applications.length !== 0) {
+                for (let e of createSubgroupDto.applications) {
+                    e.subgroup = newSubgroup.id
+                    await this.sportsmenSubgroupsService.create(e)
+                }
             }
-        }
-        Object.assign(newSubgroup, createSubgroupDto)
-        return await this.subgroupRepository.save(newSubgroup)
+            Object.assign(newSubgroup, createSubgroupDto)
+            return await this.subgroupRepository.save(newSubgroup)
 
         } catch (e) {
             await this.destroy(newSubgroup.id)
@@ -213,7 +213,7 @@ export class SubgroupsService {
 
     }
 
-     async update(id: number, updateSubgroupDto: CreateSubgroupDto) {
+    async update(id: number, updateSubgroupDto: CreateSubgroupDto) {
         let subgroup = await this.subgroupRepository.findOne(id)
         if (!subgroup) {
             throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
@@ -221,10 +221,10 @@ export class SubgroupsService {
 
         if (updateSubgroupDto.applications && updateSubgroupDto.applications.length !== 0) {
             const applications = await this.sportsmenSubgroupsService.get({subgroup: subgroup.id})
-                await this.sportsmenSubgroupsService.removeUseless(applications)
+            await this.sportsmenSubgroupsService.removeUseless(applications)
 
             for (const e of updateSubgroupDto.applications) {
-                 e.subgroup = subgroup.id
+                e.subgroup = subgroup.id
                 await this.sportsmenSubgroupsService.create(e);
             }
         }
@@ -245,7 +245,7 @@ export class SubgroupsService {
             for (const e of findSubgroup.applications) {
                 // @ts-ignore
                 e.subgroup = findSubgroup.id
-              //  e.referee_team = createRefereeTeamDto.referee_team
+                //  e.referee_team = createRefereeTeamDto.referee_team
                 await this.sportsmenSubgroupsService.create(e);
             }
         }
@@ -357,21 +357,21 @@ export class SubgroupsService {
     }
 
     private async groupByQuan_shu(data:ApplicationEntity[]){
-    let groups = await this.groupByGenderByAge(data)
+        let groups = await this.groupByGenderByAge(data)
         let response =[]
-      for (let group of groups){
-          let map = group.reduce((r, i) => {
-              r[i.quanShu] = r[i.quanShu] || [];
-              r[i.quanShu].push(i);
-              return r;
-          }, {});
-          let arr1 = [];
-          for (let key in map) {
-              arr1.push(map[key]);
-          }
-         response.push(arr1)
-      }
-      return response;
+        for (let group of groups){
+            let map = group.reduce((r, i) => {
+                r[i.quanShu] = r[i.quanShu] || [];
+                r[i.quanShu].push(i);
+                return r;
+            }, {});
+            let arr1 = [];
+            for (let key in map) {
+                arr1.push(map[key]);
+            }
+            response.push(arr1)
+        }
+        return response;
     }
 
     private async groupByCisse(data:ApplicationEntity[]){
@@ -397,15 +397,15 @@ export class SubgroupsService {
         let response =[]
         for (let group of groups){
 
-                let map = group.reduce((r, i) => {
-                    r[i.tai_chi_quan_cisse] = r[i.tai_chi_quan_cisse] || [];
-                    r[i.tai_chi_quan_cisse].push(i);
-                    return r;
-                }, {});
-                let arr1 = [];
-                for (let key in map) {
-                    arr1.push(map[key]);
-                }
+            let map = group.reduce((r, i) => {
+                r[i.tai_chi_quan_cisse] = r[i.tai_chi_quan_cisse] || [];
+                r[i.tai_chi_quan_cisse].push(i);
+                return r;
+            }, {});
+            let arr1 = [];
+            for (let key in map) {
+                arr1.push(map[key]);
+            }
             response.push(arr1)
         }
         return response
@@ -424,7 +424,7 @@ export class SubgroupsService {
             for (let key in map) {
                 arr1.push(map[key]);
             }
-response.push(arr1)
+            response.push(arr1)
 
         }
         return response;
@@ -455,7 +455,7 @@ response.push(arr1)
                     male.push(item)
                 } else female.push(item)
             }
-    }
+        }
 
         if (male.length !== 0) {
             for (let item of male) {
@@ -487,4 +487,4 @@ response.push(arr1)
         }
         return responseWithOutEmptyArray;
 
-}}
+    }}

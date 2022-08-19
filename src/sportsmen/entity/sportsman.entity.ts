@@ -1,8 +1,6 @@
 import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Repository} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
-import {GenderEnum} from "../enum/gender.enum";
 import {ClubEntity} from "../../clubs/entity/club.entity";
-import {AchievementEntity} from "../../achievements/entity/achievement.entity";
 
 @Entity({
     name:'sportsman'
@@ -126,7 +124,3 @@ export class SportsmanEntity {
     rating:number;
 
 }
-
-
-
-
