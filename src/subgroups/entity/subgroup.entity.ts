@@ -80,6 +80,14 @@ export class SubgroupEntity{
     })
     area:number;
 
+    @ApiProperty()
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    reason_for_rejection: string;
+
+
     @OneToMany(() => SportsmanSubgroupEntity, ns => ns.subgroup,{cascade:["insert",'update'],eager:true})
     @ApiProperty({type: SportsmanSubgroupEntity})
     applications: SportsmanSubgroupEntity[]
