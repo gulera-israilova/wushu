@@ -214,7 +214,7 @@ export class SubgroupsService {
             for (const e of findSubgroup.applications) {
                 // @ts-ignore
                 e.subgroup = findSubgroup.id
-                e.referee_team = createRefereeTeamDto.referee_team
+              //  e.referee_team = createRefereeTeamDto.referee_team
                 await this.sportsmenSubgroupsService.create(e);
             }
         }

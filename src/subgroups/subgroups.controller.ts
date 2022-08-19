@@ -77,31 +77,31 @@ export class SubgroupsController {
         return await this.subgroupsService.approve(id, approveProtocolDto);
     }
 
-    @Patch('/referee/:id')
-    @ApiOperation({summary: 'Appoint a referee'})
-    @ApiParam({name: 'id', description: 'Subgroup identification number' })
-    @ApiBody({type: CreateRefereeTeamDto})
-    @ApiResponse({
-        status: 201,
-        description: 'Successfully updated club will be returned',
-        type: [SubgroupEntity],
-    })
-    async createRefereeTeam(@Param('id') id: number, @Body() createRefereeTeamDto: CreateRefereeTeamDto) {
-        return await this.subgroupsService.createRefereeTeam(id, createRefereeTeamDto);
-    }
-
-    @Patch('/refereeGrade/:id')
-    @ApiOperation({summary: 'Referee grade'})
-    @ApiParam({name: 'id', description: 'Subgroup identification number' })
-    @ApiBody({type: CreateGradeSportsman})
-    @ApiResponse({
-        status: 201,
-        description: 'Successfully updated club will be returned',
-        type: [SubgroupEntity],
-    })
-    async createGradeSportsman(@Param('id') id: number, @Body() createGradeSportsman: CreateGradeSportsman) {
-        return await this.subgroupsService.createGradeSportsman(id, createGradeSportsman);
-    }
+    // @Patch('/referee/:id')
+    // @ApiOperation({summary: 'Appoint a referee'})
+    // @ApiParam({name: 'id', description: 'Subgroup identification number' })
+    // @ApiBody({type: CreateRefereeTeamDto})
+    // @ApiResponse({
+    //     status: 201,
+    //     description: 'Successfully updated club will be returned',
+    //     type: [SubgroupEntity],
+    // })
+    // async createRefereeTeam(@Param('id') id: number, @Body() createRefereeTeamDto: CreateRefereeTeamDto) {
+    //     return await this.subgroupsService.createRefereeTeam(id, createRefereeTeamDto);
+    // }
+    //
+    // @Patch('/refereeGrade/:id')
+    // @ApiOperation({summary: 'Referee grade'})
+    // @ApiParam({name: 'id', description: 'Subgroup identification number' })
+    // @ApiBody({type: CreateGradeSportsman})
+    // @ApiResponse({
+    //     status: 201,
+    //     description: 'Successfully updated club will be returned',
+    //     type: [SubgroupEntity],
+    // })
+    // async createGradeSportsman(@Param('id') id: number, @Body() createGradeSportsman: CreateGradeSportsman) {
+    //     return await this.subgroupsService.createGradeSportsman(id, createGradeSportsman);
+    // }
 
 
 }
