@@ -104,7 +104,6 @@ export class SubgroupsService {
                 if (item.length !== 0)  response.push(item)
             }
         }
-        console.log(response)
         for (let i=0;i<response.length;i++) {
             let createSubgroupDto = new CreateSubgroupDto()
             createSubgroupDto.event = id
@@ -121,8 +120,8 @@ export class SubgroupsService {
                 s += item.performance_duration
                 if (item.age >= 8 && item.age < 14){ age = 13}
             }
-            //let length = response[i].length
-          //  s = s/length
+            let length = response[i].length
+            s = s/length
             if (age == 13 && s < 1) createSubgroupDto.arena = ArenaEnum.EAST
             if (age!==13 && s > 1 ) createSubgroupDto.arena = ArenaEnum.SOUTH_NORTH
             if (age!==13 && s < 1 ) createSubgroupDto.arena = ArenaEnum.NORTH
@@ -323,6 +322,7 @@ export class SubgroupsService {
             }
         }
         response.push(duilianChildren, duilianMale1417, duilianMale1839, duilianMale4059, duilianMale60, duilianFemale1417, duilianFemale1839, duilianFemale4059,duilianFemale60)
+        console.log('duilian',response)
         return response
     }
 
@@ -338,6 +338,7 @@ export class SubgroupsService {
           for (let key in map) {
               arr1.push(map[key]);
           }
+          console.log('quan_shu',arr1)
           return arr1
       }
     }
@@ -354,6 +355,7 @@ export class SubgroupsService {
             for (let key in map) {
                 arr1.push(map[key]);
             }
+            console.log('cisse',arr1)
             return arr1
         }
     }
@@ -370,6 +372,7 @@ export class SubgroupsService {
             for (let key in map) {
                 arr1.push(map[key]);
             }
+            console.log('groupByTai_chi_quan_cisse',arr1)
             return arr1
         }
     }
@@ -386,6 +389,7 @@ export class SubgroupsService {
             for (let key in map) {
                 arr1.push(map[key]);
             }
+            console.log('groupByTai_chi_quan_shu',arr1)
             return arr1
         }
     }
