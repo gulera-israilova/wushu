@@ -5,7 +5,6 @@ import {CreateSportsmanDto} from "./dto/create-sportsman.dto";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {UpdateSportsmanDto} from "./dto/update-sportsman.dto";
 import {filter} from "../utils/file-filter";
-import {SportsmanEntity} from "./entity/sportsman.entity";
 
 @Controller('sportsmen')
 @ApiTags('sportsmen')
@@ -18,7 +17,7 @@ export class SportsmenController {
     @ApiResponse({
         status: 201,
         description: 'Successfully created employee will be returned',
-        type: SportsmanEntity,
+        type: CreateSportsmanDto,
     })
     @UseInterceptors(FileInterceptor('reference', {
         fileFilter: filter
@@ -34,7 +33,7 @@ export class SportsmenController {
     @ApiResponse({
         status: 201,
         description: 'List of sportsmen returned successfully',
-        type: [SportsmanEntity],
+        type: [CreateSportsmanDto],
     })
     @Get()
     async get() {
@@ -46,9 +45,9 @@ export class SportsmenController {
     @ApiResponse({
         status: 200,
         description: 'Sportsman returned successfully',
-        type: SportsmanEntity,
+        type: CreateSportsmanDto,
     })
-    @Get('/get-by-id/:id')
+    @Get('/getById/:id')
     async getById(@Param('id') id: number) {
         return this.sportsmenService.getById(id);
     }
@@ -58,9 +57,9 @@ export class SportsmenController {
     @ApiResponse({
         status: 200,
         description: 'Sportsmen returned successfully',
-        type: SportsmanEntity,
+        type: CreateSportsmanDto,
     })
-    @Get('/get-by-club/:id')
+    @Get('/getById/:id')
     async getByClub(@Param('id') id: number) {
         return this.sportsmenService.getByClub(id);
     }
@@ -73,7 +72,7 @@ export class SportsmenController {
     @ApiResponse({
         status: 201,
         description: 'Successfully updated sportsman will be returned',
-        type: SportsmanEntity,
+        type: [UpdateSportsmanDto],
     })
     @UseInterceptors(FileInterceptor('reference', {
         fileFilter: filter

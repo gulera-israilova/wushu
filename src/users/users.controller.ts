@@ -36,7 +36,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   // Create user without password
-  @ApiOperation({ summary: `Admin registers smb` })
+  @ApiOperation({ summary: `admin registers smb` })
   @ApiResponse({
     status: 201,
     description: 'The link is sent',
@@ -47,7 +47,7 @@ export class UsersController {
   }
 
   // Check tmp password
-  @ApiOperation({ summary: 'Validate check if user is registered in db' })
+  @ApiOperation({ summary: 'validate check if user is registered in db' })
   @Get('check-valid')
   async check(
     @Query('id') id: number,
@@ -57,7 +57,7 @@ export class UsersController {
   }
 
   // Add password to user
-  @ApiOperation({ summary: 'Add password' })
+  @ApiOperation({ summary: 'add password' })
   @Patch('addPassword')
   async addPassword(@Body() dto: ChangePasswordDto) {
     return await this.usersService.addPass(dto);
@@ -65,7 +65,7 @@ export class UsersController {
 
   // Create trainer by himself
   @ApiOperation({
-    summary: `Independent registration(for example trainer can register on his own and the link will be sent to mail after he should wait to be confirmed by admin)`,
+    summary: `independent registration(for example trainer can register on his own and the link will be sent to mail after he should wait to be confirmed by admin)`,
   })
   @ApiResponse({
     status: 201,
@@ -146,7 +146,7 @@ export class UsersController {
     description: 'User returned successfully',
     type: [UserEntity],
   })
-  @Get('/get-by-id/:id')
+  @Get('/getById/:id')
   async getById(@Param('id') id: number) {
     return await this.usersService.getById(id);
   }

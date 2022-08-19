@@ -1,5 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {IsArray, IsEmpty, IsString} from "class-validator";
+import {IsArray, IsString} from "class-validator";
 
 
 export class CreateClubDto{
@@ -18,15 +18,4 @@ export class CreateClubDto{
     })
     @IsArray()
     trainers: number[];
-
-
-    @ApiProperty({
-        required:false,
-    })
-    @IsString({ message:'Must be a string value' })
-    options: string;
-
-    @IsEmpty()
-    rating:number;
-
 }

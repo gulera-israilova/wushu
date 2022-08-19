@@ -17,10 +17,4 @@ export class UpdateClubDto{
     })
     @IsArray()
     trainers: number[];
-
-    @ApiProperty({
-        required:false,
-    })
-    @IsString({ message:'Must be a string value' })
-    options: string;
 }

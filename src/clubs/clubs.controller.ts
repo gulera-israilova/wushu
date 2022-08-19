@@ -41,7 +41,7 @@ export class ClubsController {
         description: 'Club returned successfully',
         type: [ClubEntity],
     })
-    @Get('/get-by-id/:id')
+    @Get('/getById/:id')
     async getById(@Param('id') id: number) {
         return this.clubsService.getById(id);
     }

@@ -9,17 +9,8 @@ import { S3Module } from './s3/s3.module';
 import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
-import { LobbyModule } from './lobby/lobby.module';
 import {CloudinaryModule} from "./services/cloudinary/cloudinary.module";
-import { DocsModule } from './docs/docs.module';
-import { ApplicationsModule } from './applications/applications.module';
-import { SubgroupsModule } from './subgroups/subgroups.module';
-import { CalendarModule } from './calendar/calendar.module';
-import { AchievementsModule } from './achievements/achievements.module';
-import { StandardsModule } from './standards/standards.module';
-import { OfpModule } from './ofp/ofp.module';
-import { SportsmenSubgroupsModule } from './sportsmen-subgroups/sportsmen-subgroups.module';
-import { AchievementRatingModule } from './achievement-rating/achievement-rating.module';
+import { LobbyModule } from './lobby/lobby.module';
 
 @Module({
   imports: [
@@ -32,17 +23,8 @@ import { AchievementRatingModule } from './achievement-rating/achievement-rating
     NewsModule,
     EventsModule,
     MessagesModule,
-    LobbyModule,
-    CloudinaryModule,
-    DocsModule,
-    ApplicationsModule,
-    SubgroupsModule,
-    CalendarModule,
-    AchievementsModule,
-    StandardsModule,
-    OfpModule,
-    SportsmenSubgroupsModule,
-    AchievementRatingModule
-  ]
+      CloudinaryModule,
+      LobbyModule
+  ],
 })
 export class AppModule {}
