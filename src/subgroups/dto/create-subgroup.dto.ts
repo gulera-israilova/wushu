@@ -75,5 +75,11 @@ export class CreateSubgroupDto {
      })
      @IsEnum(StatusEnum)
      status: StatusEnum;
+
+     @ApiProperty(
+         {required:false}
+     )
+     reason_for_rejection: string;
+
  }
 

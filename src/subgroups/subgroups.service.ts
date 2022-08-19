@@ -282,6 +282,7 @@ export class SubgroupsService {
         })
         for (let subgroup of findSubgroups){
             subgroup.status = approveProtocolDto.status
+            subgroup.reason_for_rejection = approveProtocolDto.reason_for_rejection
         }
         if (findSubgroups.length===0) {
             throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
