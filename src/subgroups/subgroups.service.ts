@@ -14,6 +14,7 @@ import {
     CreateRefereeTeamDto,
     CreateSubgroupDto
 } from "./dto/create-subgroup.dto";
+import {EventsService} from "../events/events.service";
 
 
 
@@ -22,13 +23,14 @@ export class SubgroupsService {
     constructor(@InjectRepository(SubgroupEntity)
                 private subgroupRepository: Repository<SubgroupEntity>,
                 private applicationsService: ApplicationsService,
-                private sportsmenSubgroupsService:SportsmenSubgroupsService) {
+                private sportsmenSubgroupsService:SportsmenSubgroupsService,
+                private eventsService:EventsService) {
     }
 
     async formProtocol(id: number): Promise<any> {
 
         let participants = await this.applicationsService.getByEvent(id)
-        let duilian =[]
+        let duilian = []
         let duilianResponse = []
         let quan_shu = []
         let quan_shuResponse = []
@@ -39,7 +41,7 @@ export class SubgroupsService {
         let tai_chi_quan_cisse = []
         let tai_chi_quan_cisseResponse = []
         let response = []
-        let subgroups =[]
+        let subgroups = []
 
 
         for (let participant of participants) {
@@ -72,13 +74,13 @@ export class SubgroupsService {
         }
 
         if (duilian.length !== 0) {
-             duilianResponse = await this.groupByDuilian(duilian)
-            for (let item of duilianResponse ){
-                if (item.length !== 0)  response.push(item)
+            duilianResponse = await this.groupByDuilian(duilian)
+            for (let item of duilianResponse) {
+                if (item.length !== 0) response.push(item)
             }
         }
         if (quan_shu.length !== 0) {
-             quan_shuResponse = await this.groupByQuan_shu(quan_shu)
+            quan_shuResponse = await this.groupByQuan_shu(quan_shu)
             for (let arr of quan_shuResponse) {
                 for (let item of arr) {
                     if (item.length !== 0) response.push(item)
@@ -88,7 +90,7 @@ export class SubgroupsService {
 
         if (cisse.length !== 0) {
             cisseResponse = await this.groupByCisse(cisse)
-            for (let arr of cisseResponse ) {
+            for (let arr of cisseResponse) {
                 for (let item of arr) {
                     if (item.length !== 0) response.push(item)
                 }
@@ -112,36 +114,38 @@ export class SubgroupsService {
                 }
             }
         }
-        for (let i=0;i<response.length;i++) {
+        for (let i = 0; i < response.length; i++) {
             let createSubgroupDto = new CreateSubgroupDto()
             createSubgroupDto.event = id
             createSubgroupDto.applications = []
             createSubgroupDto.status = StatusEnum.PENDING
-            let a = i+1
+            let a = i + 1
             createSubgroupDto.name = "Подгруппа " + a
             let s = 0
             let age = 0
-            for(let item of response[i]) {
+            for (let item of response[i]) {
                 let sportsmanSubgroupDto = new SportsmanSubgroupsDto()
                 sportsmanSubgroupDto.application = item
                 createSubgroupDto.applications.push(sportsmanSubgroupDto)
                 s += item.performance_duration
-                if (item.age >= 8 && item.age < 14){ age = 13}
+                if (item.age >= 8 && item.age < 14) {
+                    age = 13
+                }
             }
             let length = response[i].length
-            s = s/length
-            if (age == 13 && s < 1) createSubgroupDto.arena = ArenaEnum.EAST
-            if (age!==13 && s > 1 ) createSubgroupDto.arena = ArenaEnum.SOUTH_NORTH
-            if (age!==13 && s < 1 ) createSubgroupDto.arena = ArenaEnum.NORTH
+            s = s / length
+            if (age == 13 && s < 1) createSubgroupDto.arena = ArenaEnum.WEST_OR_EAST
+            if (age !== 13 && s > 1) createSubgroupDto.arena = ArenaEnum.SOUTH_NORTH
+            if (age !== 13 && s < 1) createSubgroupDto.arena = ArenaEnum.SOUTH_OR_NORTH
 
             let checkSubgroupName = await this.subgroupRepository.findOne({
                 where:
                     {
-                       name:createSubgroupDto.name
+                        name: createSubgroupDto.name
                     }
             })
-            if(checkSubgroupName){
-                let subgroup = await this.update(checkSubgroupName.id,createSubgroupDto)
+            if (checkSubgroupName) {
+                let subgroup = await this.update(checkSubgroupName.id, createSubgroupDto)
                 subgroups.push(subgroup)
             } else {
                 let subgroup = await this.create(createSubgroupDto)
@@ -149,19 +153,37 @@ export class SubgroupsService {
             }
 
         }
-        return subgroups;
+        let event = await this.eventsService.getByIdEvent(id)
+        event.end = new Date()
+        let finished =true
+       finished = event.end < new Date;
+        return {
+           finished,
+           data:subgroups
+        };
     }
+
+
     async get(id:number){
-        return  await this.subgroupRepository.find({
+        let subgroups = await this.subgroupRepository.find({
             where:{
                 event:id
             }
         })
+        let event = await this.eventsService.getByIdEvent(id)
+        event.end = new Date()
+        let finished =true
+        finished = event.end < new Date;
+        return {
+            finished,
+            data:subgroups
+        };
+    }
 
-    }
     async getSubgroup(id:number){
-        return await this.subgroupRepository.findOne(id)
+        return  await this.subgroupRepository.findOne(id)
     }
+
      async create(createSubgroupDto:CreateSubgroupDto){
 
         let newSubgroup

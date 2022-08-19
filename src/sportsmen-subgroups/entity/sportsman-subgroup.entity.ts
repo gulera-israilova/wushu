@@ -52,12 +52,6 @@ export class SportsmanSubgroupEntity{
     })
     formula_score:number
 
-    @ApiProperty()
-    @Column({
-        type:"int",
-        nullable:true
-    })
-    area:number
 
     // @ApiProperty()
     // @Column({
