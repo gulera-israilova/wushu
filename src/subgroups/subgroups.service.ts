@@ -443,6 +443,7 @@ export class SubgroupsService {
             }
         }
         response.push(male810, male1113, male1417, male1839, male4059, male60, female810, female1113,female1417,female1839,female4059,female60)
+        console.log(response)
         return response
 
 }}
