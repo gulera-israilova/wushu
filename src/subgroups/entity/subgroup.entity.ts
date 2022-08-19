@@ -77,9 +77,9 @@ export class SubgroupEntity{
     @ApiProperty({type: SportsmanSubgroupEntity})
     applications: SportsmanSubgroupEntity[]
 
-    @Column({
-        type:'jsonb',
-        nullable:true
-    })
-    referee_team: object[]
+    // @Column({
+    //     type:'jsonb',
+    //     nullable:true
+    // })
+    // referee_team: object[]
 }

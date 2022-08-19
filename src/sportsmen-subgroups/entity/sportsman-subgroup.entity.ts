@@ -59,11 +59,11 @@ export class SportsmanSubgroupEntity{
     })
     area:number
 
-    @ApiProperty()
-    @Column({
-        type:"jsonb",
-        nullable:true
-    })
-    referee_team:object[]
+    // @ApiProperty()
+    // @Column({
+    //     type:"jsonb",
+    //     nullable:true
+    // })
+    // referee_team:object[]
 
 }
