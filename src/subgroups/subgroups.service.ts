@@ -70,41 +70,41 @@ export class SubgroupsService {
                 tai_chi_quan_cisse.push(participant)
             }
         }
-        console.log(duilian)
+
         if (duilian.length !== 0) {
              duilianResponse = await this.groupByDuilian(duilian)
             for (let item of duilianResponse ){
                 if (item.length !== 0)  response.push(item)
             }
         }
-        console.log(quan_shu)
         if (quan_shu.length !== 0) {
              quan_shuResponse = await this.groupByQuan_shu(quan_shu)
             for (let item of quan_shuResponse ){
                 if (item.length !== 0) response.push(item)
             }
         }
-        console.log(cisse)
+
         if (cisse.length !== 0) {
             cisseResponse = await this.groupByCisse(cisse)
             for (let item of cisseResponse ){
                 if (item.length !== 0) response.push(item)
             }
         }
-        console.log(tai_chi_quan_shu)
+
         if (tai_chi_quan_shu.length !== 0) {
             tai_chi_quan_shuResponse = await this.groupByTai_chi_quan_shu(tai_chi_quan_shu)
             for (let item of tai_chi_quan_shuResponse ){
                 if (item.length !== 0) response.push(item)
             }
         }
-        console.log(tai_chi_quan_cisse)
+
         if (tai_chi_quan_cisse.length !== 0) {
             tai_chi_quan_cisseResponse = await this.groupByTai_chi_quan_cisse(tai_chi_quan_cisse)
             for (let item of tai_chi_quan_cisseResponse ){
                 if (item.length !== 0)  response.push(item)
             }
         }
+        console.log(response)
         for (let i=0;i<response.length;i++) {
             let createSubgroupDto = new CreateSubgroupDto()
             createSubgroupDto.event = id
@@ -121,10 +121,12 @@ export class SubgroupsService {
                 s += item.performance_duration
                 if (item.age >= 8 && item.age < 14){ age = 13}
             }
-            s = s/response[i].length
+            //let length = response[i].length
+          //  s = s/length
             if (age == 13 && s < 1) createSubgroupDto.arena = ArenaEnum.EAST
             if (age!==13 && s > 1 ) createSubgroupDto.arena = ArenaEnum.SOUTH_NORTH
             if (age!==13 && s < 1 ) createSubgroupDto.arena = ArenaEnum.NORTH
+
             let checkSubgroupName = await this.subgroupRepository.findOne({
                 where:
                     {
