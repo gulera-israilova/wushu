@@ -7,5 +7,7 @@ export class CreateMessageDto {
   edited: boolean;
   read: MessageStatusEnum;
   lobby: number;
-  attachment?: string;
+  attachment?:string ;
+  file?:Express.Multer.File
+  fileType:string;
 }

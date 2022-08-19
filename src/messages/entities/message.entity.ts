@@ -32,6 +32,8 @@ export class MessageEntity {
     nullable: true,
   })
   attachment: string;
+  @Column({nullable:true})
+  fileType:string;
 }
 @EntityRepository(MessageEntity)
 export class MessageRepository extends Repository<MessageEntity> {}
