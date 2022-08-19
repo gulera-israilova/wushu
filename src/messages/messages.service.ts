@@ -33,8 +33,7 @@ export class MessagesService {
             const photo = await this.cloudinary.upload_file(createMessageDto.file).catch((e) => {
                 throw new BadRequestException('Invalid file type.');
             });
-            console.log(photo)
-            createMessageDto.fileType = photo.resource_type
+            createMessageDto.fileType = photo.photo.resource_type
             createMessageDto.attachment = photo.secure_url;
         } else {
             createMessageDto.attachment = null;
