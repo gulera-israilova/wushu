@@ -74,8 +74,9 @@ export class ClubsService {
     async destroy(id: number): Promise<void> {
         const club = await this.clubRepository.findOne({id})
         if (!club) {throw new NotFoundException("No club for this id")}
-        try{
-            await this.clubRepository.delete(club)
+       try {
+
+             await this.clubRepository.delete(club)
         } catch (e){
             throw new BadGatewayException('Deletion didn\'t happen');
         }

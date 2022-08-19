@@ -53,6 +53,9 @@ export class EventsService {
         event = await this.getEventFormat(event)
         return event;
     }
+    async getByIdEvent (id:number):Promise<EventEntity>{
+        return await this.eventRepository.findOne(id)
+    }
 
     async update(id: number, updateEventDto: UpdateEventDto): Promise<EventEntity> {
         let event = await this.eventRepository.findOne(id)

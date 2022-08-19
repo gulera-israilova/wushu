@@ -2,13 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
-  EntityRepository,
+  EntityRepository, JoinTable, ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   Repository,
 } from 'typeorm';
 import { RoleEnum } from '../enum/role.enum';
 import { User_lobbyEntity } from '../../lobby/entities/user_lobby.entity';
+import {Notification} from "../../notifications/entities/notification.entity";
 @Entity({
   name: 'user',
 })
@@ -142,6 +143,7 @@ export class UserEntity {
   @ApiProperty()
   @OneToMany(() => User_lobbyEntity, (user_lobby) => user_lobby.user)
   public user_lobby!: User_lobbyEntity[];
+
 }
 
 @EntityRepository(UserEntity)

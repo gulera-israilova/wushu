@@ -1,6 +1,7 @@
-import {Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
 import {UserEntity} from "../../users/entity/user.entity";
+import {SportsmanEntity} from "../../sportsmen/entity/sportsman.entity";
 
 @Entity({
     name:'club'
@@ -32,7 +33,28 @@ export class ClubEntity{
             type: 'number',
         },
     })
-    @ManyToMany(() => UserEntity,{ eager:true })
+    @ManyToMany(() => UserEntity,{ eager:false,cascade:true })
     @JoinTable()
     trainers: UserEntity[];
+
+    @OneToMany(() => SportsmanEntity, (sportsman) => sportsman.club, {eager:false,cascade:false})
+    @ApiProperty({
+        type: 'array',
+    })
+    sportsmen: SportsmanEntity[]
+
+    @ApiProperty()
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    options: string;
+
+    @ApiProperty()
+    @Column({
+        type: 'real',
+        nullable: true,
+    })
+    rating: number;
+
 }

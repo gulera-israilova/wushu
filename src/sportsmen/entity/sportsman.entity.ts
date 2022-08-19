@@ -1,7 +1,8 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn, Repository} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Repository} from "typeorm";
 import {ApiProperty} from "@nestjs/swagger";
 import {GenderEnum} from "../enum/gender.enum";
 import {ClubEntity} from "../../clubs/entity/club.entity";
+import {AchievementEntity} from "../../achievements/entity/achievement.entity";
 
 @Entity({
     name:'sportsman'
@@ -87,102 +88,43 @@ export class SportsmanEntity {
     })
     duan: number;
 
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    agility: number;
-
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    stretching: number;
-
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    power: number;
-
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    speed: number;
-
-    @ApiProperty()
-    @Column({
-        type:'int',
-        nullable: false,
-    })
-    endurance: number;
-
-    @ManyToOne(() => ClubEntity, (club) => club.id,{ nullable: true })
-    @ApiProperty({
-        type: ClubEntity,
-    })
+    @ManyToOne((type) => ClubEntity, (club) => club.sportsmen,{ nullable: true,eager:false,cascade:true })
     club: ClubEntity;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: '7.5',
+        description: "Ofp",
+    })
     @Column({
-        type: "varchar",
+        type:'real',
         nullable: true,
     })
-    quan_shu: string;
+    ofp:number;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: '7',
+        description: "Achievement points",
+    })
     @Column({
-        type: "varchar",
+        type:'real',
         nullable: true,
     })
-    cisse: string;
+    points:number;
+    // @OneToMany(() => AchievementEntity, (achievement) => achievement.sportsman, {eager:true})
+    // @ApiProperty({
+    //     type: [AchievementEntity],
+    // })
+    // achievements: AchievementEntity[]
+    @ApiProperty({
+        example: '7',
+        description: "Achievement points",
+    })
+    @Column({
+        type:'real',
+        nullable: true,
+    })
+    rating:number;
 
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    tai_chi_quan_shu: string;
-
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    tai_chi_quan_cisse: string;
-
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    duilian: string;
-
-    @ApiProperty()
-    @Column({
-        type: "int",
-        nullable: true,
-    })
-    team_member: string;
-
-    @ApiProperty()
-    @Column({
-        type: "int",
-        nullable: true,
-    })
-    performance_duration: string;
-
-    @ApiProperty()
-    @Column({
-        type: "varchar",
-        nullable: true,
-    })
-    comment: string;
 }
 
 
