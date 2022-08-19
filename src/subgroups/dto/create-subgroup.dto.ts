@@ -50,6 +50,11 @@ export class CreateSubgroupDto {
     @IsEnum(StatusEnum)
     status: StatusEnum;
 
+    @ApiProperty({
+        required:false
+    })
+    area:number;
+
 }
  export class CreateRefereeTeamDto {
      @ApiProperty({type: [CreateRefereeDto],required:false})

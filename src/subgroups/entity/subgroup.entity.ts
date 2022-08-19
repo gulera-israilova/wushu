@@ -73,9 +73,17 @@ export class SubgroupEntity{
     })
     status: StatusEnum;
 
+    @ApiProperty()
+    @Column({
+        type:"int",
+        nullable:true
+    })
+    area:number;
+
     @OneToMany(() => SportsmanSubgroupEntity, ns => ns.subgroup,{cascade:["insert",'update'],eager:true})
     @ApiProperty({type: SportsmanSubgroupEntity})
     applications: SportsmanSubgroupEntity[]
+
 
     // @Column({
     //     type:'jsonb',
