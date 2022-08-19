@@ -13,8 +13,7 @@ export class CloudinaryService {
           if (error) return reject(error);
           resolve(result);
         },
-      );
-      toStream(file.buffer).pipe(upload);
+      ).end(file)
     });
   }
 

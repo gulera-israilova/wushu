@@ -9,7 +9,6 @@ import { S3Module } from './s3/s3.module';
 import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
-import { DirectModule } from './direct/direct.module';
 import { LobbyModule } from './lobby/lobby.module';
 import {CloudinaryModule} from "./services/cloudinary/cloudinary.module";
 import { DocsModule } from './docs/docs.module';
@@ -34,7 +33,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     NewsModule,
     EventsModule,
     MessagesModule,
-    DirectModule,
     LobbyModule,
     CloudinaryModule,
     DocsModule,
