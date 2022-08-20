@@ -123,6 +123,8 @@ export class SubgroupsService {
             createSubgroupDto.name = "Подгруппа " + a
             let s = 0
             let age = 0
+            let gender
+            let ageDescription
             for (let item of response[i]) {
                 let sportsmanSubgroupDto = new SportsmanSubgroupsDto()
                 sportsmanSubgroupDto.application = item
@@ -130,7 +132,46 @@ export class SubgroupsService {
                 s += item.performance_duration
                 if (item.age >= 8 && item.age < 14) {
                     age = 13
+                    ageDescription = '8-13'
                 }
+                if (item.age >= 8 && item.age < 11) {
+                    ageDescription = '8-10'
+                    if(item.gender ==='male'){
+                        gender = 'Мальчики'
+                    } else gender = 'Девочки'
+                }
+                if (item.age >= 11 && item.age < 14) {
+                    ageDescription = '11-13'
+                    if(item.gender ==='male'){
+                        gender = 'Мальчики'
+                    } else gender = 'Девочки'
+                }
+                if (item.age >= 14 && item.age < 18) {
+                    ageDescription = '14-17'
+                    if(item.gender ==='male'){
+                        gender = 'Юноши'
+                    } else gender = 'Девушки'
+                }
+                if (item.age >= 18 && item.age < 40) {
+                    ageDescription = '18-39'
+                    if(item.gender ==='male'){
+                        gender = 'Мужчины'
+                    } else gender = 'Женщины'
+                }
+                if (item.age >= 40 && item.age < 60) {
+                    ageDescription = '40-59'
+                    if(item.gender ==='male'){
+                        gender = 'Мужчины'
+                    } else gender = 'Женщины'
+                }
+                if (item.age >= 60 ) {
+                    ageDescription = 'от 60ти и старше'
+                    if(item.gender ==='male'){
+                        gender = 'Мужчины'
+                    } else gender = 'Женщины'
+                }
+
+               createSubgroupDto.description = gender + ', '+ ageDescription
             }
             let length = response[i].length
             s = s / length

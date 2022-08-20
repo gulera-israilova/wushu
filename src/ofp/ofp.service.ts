@@ -48,9 +48,6 @@ export class OfpService {
                 sportsman: id,
             }
         });
-        if (ofp.length === 0) {
-            throw new NotFoundException("No ofp for this sportsman")
-        }
         return ofp;
     }
 
