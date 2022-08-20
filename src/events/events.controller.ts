@@ -49,10 +49,10 @@ export class EventsController {
     })
     @Get('by-date')
     async getEventsByDate(@Query('start') start: Date,@Query('end') end: Date,) {
-        return this.eventsService.getEventsByDate(start,end);
+        return this.eventsService.getEvents(start,end);
     }
 
-    @ApiOperation({summary: 'Get a list of all events'})
+    @ApiOperation({summary: 'Get a list of all events/Marlen'})
     @ApiQuery({name: 'start', description: 'example: 2022-03-03',required:false})
     @ApiQuery({name: 'end', description: 'example: 2022-03-03',required:false})
     @ApiResponse({
@@ -62,7 +62,7 @@ export class EventsController {
     })
     @Get()
     async getEvents(@Query('start') start: Date,@Query('end') end: Date,) {
-        return this.eventsService.getEvents(start,end);
+        return this.eventsService.getEventsByDate(start,end);
     }
 
     @ApiOperation({summary: 'Get event by id'})

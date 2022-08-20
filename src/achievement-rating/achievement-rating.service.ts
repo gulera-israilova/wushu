@@ -48,9 +48,7 @@ export class AchievementRatingService {
                 sportsman: id,
             }
         });
-        if (ofp.length === 0) {
-            throw new NotFoundException("No points for this sportsman")
-        }
+
         return ofp;
     }
 

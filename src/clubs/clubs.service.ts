@@ -133,7 +133,6 @@ export class ClubsService {
         const club = await this.clubRepository.findOne({id})
         if (!club) {throw new NotFoundException("No club for this id")}
        try {
-
              await this.clubRepository.delete(club)
         } catch (e){
             throw new BadGatewayException('Deletion didn\'t happen');
@@ -149,8 +148,8 @@ export class ClubsService {
         })
         let ofpResponse=[]
         let achievementResponse=[]
-        for (let sportsman of sportsmen){
 
+        for (let sportsman of sportsmen){
             let ofp = await this.ofpService.getBySportsman(sportsman.id,null)
             let points = await this.achievementRatingService.getBySportsman(sportsman.id,null)
             let map1 = ofp.reduce((r, i) => {

@@ -42,6 +42,7 @@ export class EventsService {
         return this.eventRepository.find();
     }
 
+
     async getEvents(start:Date,end:Date): Promise<EventEntity[]> {
         let events = []
         if (start !== undefined && end !== undefined) {
@@ -54,7 +55,28 @@ export class EventsService {
                             end: Between(startedAt, endedAt)
                         }
                 })
-        } else events = await this.eventRepository.find()
+        }
+        else if (start !== undefined) {
+            let startedAt = new Date(start)
+            events = await this.eventRepository.find(
+                {
+                    where:
+                        {
+                            end: MoreThan(startedAt)
+                        }
+                })
+        }
+        else if (end !== undefined) {
+            let endedAt = new Date(end)
+            events = await this.eventRepository.find(
+                {
+                    where:
+                        {
+                            end: LessThan(endedAt)
+                        }
+                })
+        }
+        else events = await this.eventRepository.find()
         for (let event of events) {
            event = await this.getEventFormat(event)
         }
