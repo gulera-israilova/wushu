@@ -51,7 +51,6 @@ export class MessagesGateway {
 
     @SubscribeMessage('join-to-lobby')
     async join(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-        console.log(data);
         data['lobby_list'].forEach((e) => {
             client.join(e.toString());
         });
