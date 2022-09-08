@@ -274,46 +274,46 @@ export class SubgroupsService {
         return await this.subgroupRepository.save(subgroup)
     }
 
-    async createRefereeTeam (id: number, createRefereeTeamDto: CreateRefereeTeamDto) {
-        let findSubgroup = await this.subgroupRepository.findOne(id)
-        if (!findSubgroup) {
-            throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
-        }
-        if (findSubgroup.applications && findSubgroup.applications.length !== 0) {
-            const applications = await this.sportsmenSubgroupsService.get({subgroup: findSubgroup.id})
-            await this.sportsmenSubgroupsService.removeUseless(applications)
+    // async createRefereeTeam (id: number, createRefereeTeamDto: CreateRefereeTeamDto) {
+    //     let findSubgroup = await this.subgroupRepository.findOne(id)
+    //     if (!findSubgroup) {
+    //         throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
+    //     }
+    //     if (findSubgroup.applications && findSubgroup.applications.length !== 0) {
+    //         const applications = await this.sportsmenSubgroupsService.get({subgroup: findSubgroup.id})
+    //         await this.sportsmenSubgroupsService.removeUseless(applications)
+    //
+    //         for (const e of findSubgroup.applications) {
+    //             // @ts-ignore
+    //             e.subgroup = findSubgroup.id
+    //           //  e.referee_team = createRefereeTeamDto.referee_team
+    //             await this.sportsmenSubgroupsService.create(e);
+    //         }
+    //     }
+    //
+    //     Object.assign(findSubgroup,createRefereeTeamDto)
+    //     return await this.subgroupRepository.save(findSubgroup)
+    // }
 
-            for (const e of findSubgroup.applications) {
-                // @ts-ignore
-                e.subgroup = findSubgroup.id
-              //  e.referee_team = createRefereeTeamDto.referee_team
-                await this.sportsmenSubgroupsService.create(e);
-            }
-        }
-
-        Object.assign(findSubgroup,createRefereeTeamDto)
-        return await this.subgroupRepository.save(findSubgroup)
-    }
-
-    async createGradeSportsman (id: number, createGradeSportsman: CreateGradeSportsman) {
-        let findSubgroup = await this.subgroupRepository.findOne(id)
-        if (!findSubgroup) {
-            throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
-        }
-        if (findSubgroup.applications && findSubgroup.applications.length !== 0) {
-            const applications = await this.sportsmenSubgroupsService.get({subgroup: findSubgroup.id})
-            await this.sportsmenSubgroupsService.removeUseless(applications)
-
-            for (const e of findSubgroup.applications) {
-                // @ts-ignore
-                e.subgroup = findSubgroup.id
-                await this.sportsmenSubgroupsService.create(e);
-            }
-        }
-
-        Object.assign(findSubgroup,createGradeSportsman)
-        return await this.subgroupRepository.save(findSubgroup)
-    }
+    // async createGradeSportsman (id: number, createGradeSportsman: CreateGradeSportsman) {
+    //     let findSubgroup = await this.subgroupRepository.findOne(id)
+    //     if (!findSubgroup) {
+    //         throw new HttpException("No subgroup for this id", HttpStatus.BAD_REQUEST)
+    //     }
+    //     if (findSubgroup.applications && findSubgroup.applications.length !== 0) {
+    //         const applications = await this.sportsmenSubgroupsService.get({subgroup: findSubgroup.id})
+    //         await this.sportsmenSubgroupsService.removeUseless(applications)
+    //
+    //         for (const e of findSubgroup.applications) {
+    //             // @ts-ignore
+    //             e.subgroup = findSubgroup.id
+    //             await this.sportsmenSubgroupsService.create(e);
+    //         }
+    //     }
+    //
+    //     Object.assign(findSubgroup,createGradeSportsman)
+    //     return await this.subgroupRepository.save(findSubgroup)
+    // }
 
     async approve (id: number, approveProtocolDto: ApproveProtocolDto) {
         let findSubgroups = await this.subgroupRepository.find({
